@@ -1,0 +1,106 @@
+@import "./common";
+.ca-header {
+  width:100%;
+  .pass {
+    height:40px;
+    background: #ffffff;
+    text-align: right;
+    .words {
+      font-size: 16px;
+      color: @commonColor;
+      padding:0 22px;
+      line-height: 40px;
+      box-sizing: border-box;
+      &:hover {
+        text-decoration: none;
+      }
+    }
+  }
+  .box {
+    height:100px;
+    background: @commonColor;
+    color:#fff;
+    .logo {
+      width:100px;
+      height:100px;
+      float: left;
+      .img {
+        display: block;
+        margin:0 0;
+        margin-top: 15px;
+        width:70px;
+        height:70px;
+      }
+    }
+    .nav {
+      width:1100px;
+      height:100px;
+      float: right;
+      .cell {
+        float: left;
+        box-sizing: border-box;
+        width:183px;
+        .link {
+          display: block;
+          width:100%;
+          position: relative;
+          color:#fff;
+          font-size: 22px;
+          font-weight: 600;
+          .word {
+            display: block;
+            width:100%;
+            line-height: 100px;
+          }
+          &:hover {
+            text-decoration: none;
+          }
+          &:before {
+            content: '';
+            display: block;
+            position: absolute;
+            height:24px;
+            width:1px;
+            left:0;
+            top:50%;
+            background: #fff;
+            transform: translateY(-50%);
+            -webkit-transform: translateY(-50%);
+          }
+        }
+        &:first-child {
+          width:185px;
+        }
+        &.active {
+          background: #fff;
+          .link {
+            color:@commonColor;
+          }
+        }
+        &.active + .cell{
+          .link {
+            &:before {
+              display: none;
+            }
+          }
+        }
+        &:nth-child(6) {
+          .link {
+            &:after {
+              content: '';
+              display: block;
+              position: absolute;
+              height:24px;
+              width:1px;
+              right:0;
+              top:50%;
+              background: #fff;
+              transform: translateY(-50%);
+              -webkit-transform: translateY(-50%);
+            }
+          }
+        }
+      }
+    }
+  }
+}
