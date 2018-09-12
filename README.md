@@ -1,2 +1,2 @@
 # myVue
-Framework template based on vue
+Framework template based on vues
