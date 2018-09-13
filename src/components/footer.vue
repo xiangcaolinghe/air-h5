@@ -11,7 +11,7 @@
         <ul class="right table">
           <li class="cell">联系我们：</li>
           <li class="cell">E-MAIL：WEBMASTER@ATMB.NET.CN</li>
-          <li class="cell">京顺义区空港街道天柱路23号空域管理中心</li>
+          <li class="cell">京顺义区空港街道天柱路23号空域管理中心 </li>
         </ul>
       </div>
     </div>
