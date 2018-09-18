@@ -12,7 +12,7 @@
                         <div class="item" :class="{active:isActive == 2}" @click="newsTab(2)">动态</div>
                         <div class="item" :class="{active:isActive == 3}" @click="newsTab(3)">公告</div>
                     </div>
-                    <div class="more">查看更多</div>
+                    <div class="more" @click="newsList()">查看更多</div>
                     <div class="tab-content">
                         <div class="item" :class="{active:isActive == 1}">
                             <div class="list">
@@ -125,6 +125,16 @@
         // 新闻 动态 公告切换
       newsTab(id) {
         this.isActive = id
+      },
+      newsList(){
+        if (this.isActive ===1){
+          this.$router.push({path: '/news/list'});
+        }else if (this.isActive===2){
+          this.$router.push({path: '/dynamic/list'});
+        }else if (this.isActive===3) {
+          this.$router.push({path: '/notice/list'});
+        }
+
       }
     },
     created() {
