@@ -284,11 +284,7 @@
   }
 </script>
 
-<style lang="less">
-  @import '../../assets/styles/base.less';
-  @import '../../assets/iconfonts/iconfont.css';
-  @import '../../assets/styles/header.less';
-  @import '../../assets/styles/footer.less';
+<style lang="less" scoped>
   @import '../../assets/styles/list.less';
   .current_banner{
     font-size: 18px;
