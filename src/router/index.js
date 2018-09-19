@@ -2,6 +2,7 @@ import Vue from 'vue'
 import Router from 'vue-router'
 // import HelloWorld from '@/components/HelloWorld'
 import Home from '@/views/index'
+import Login from '@/views/login/index'
 import Design from '@/views/design'
 import Manage from '@/views/manage'
 import Planning from '@/views/planning'
@@ -22,6 +23,14 @@ export default new Router({
       path: '/',
       name: 'home',
       component: Home
+    },
+    {
+      path: '/login',
+      name: 'login',
+      component: Login,
+      meta: {
+        auth: true
+      }
     },
     {
       path: '/design',
