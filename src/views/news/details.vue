@@ -5,15 +5,17 @@
       <ul class="current_position">
         <li>当前位置：</li>
         <li><a href="/">首页</a>&nbsp;&nbsp;</li>
-        <li>图>片&nbsp;&nbsp;</li>
+        <li><i class="icon iconfont icon-youjiantou"></i>&nbsp;&nbsp;</li>
         <li><a href="/news/list">新闻</a></li>
-        <li>&nbsp;&nbsp;图>片&nbsp;&nbsp;&nbsp;</li>
+        <li>&nbsp;&nbsp;<i class="icon iconfont icon-youjiantou"></i>&nbsp;&nbsp;&nbsp;</li>
         <li><a href="/news/details">详情</a></li>
       </ul>
     </div>
     <br/>
     <div class="title_hr">
-      <div class="bar_hr"></div>
+      <div class="banner_hr">
+        <div class="bar_hr"></div>
+      </div>
     </div>
     <br/>
     <div class="news_tails">

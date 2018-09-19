@@ -2,104 +2,26 @@
   <div class="list">
     <br/><br/>
     <div class="contain">
-      <div>
+      <div class="current_header">
         <span class="plan">节能减排</span><span class="current_plan">{{currentPlanName}}</span>
       </div>
       <br/><br/>
       <ul class="current_banner">
-        <li><a @click="switcher(1)" class="banner_color" :class="{active:isActive == 1}"><span>当前临时航线状况</span>&nbsp;&nbsp;&nbsp;&nbsp;</a><span class="">图片箭头</span></li>
+        <li><a @click="switcher(1)" class="banner_color" :class="{active:isActive == 1}"><span>当前临时航线状况</span>&nbsp;&nbsp;&nbsp;&nbsp;<i class="icon iconfont icon-paly icon-postion"></i></a></li>
         <li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</li>
-        <li><a @click="switcher(2)" class="banner_color" :class="{active:isActive == 2}"><span>各地区临时航线使用情况公告</span>&nbsp;&nbsp;&nbsp;&nbsp;</a><span>图片箭头</span></li>
+        <li><a @click="switcher(2)" class="banner_color" :class="{active:isActive == 2}"><span>各地区临时航线使用情况公告</span>&nbsp;&nbsp;&nbsp;&nbsp;<i class="icon iconfont icon-paly icon-postion"></i></a></li>
         <li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</li>
-        <li><a @click="switcher(3)" class="banner_color" :class="{active:isActive == 3}"><span>全国临时航线使用情况的通报</span>&nbsp;&nbsp;&nbsp;&nbsp;</a><span>图片箭头</span></li>
+        <li><a @click="switcher(3)" class="banner_color" :class="{active:isActive == 3}"><span>全国临时航线使用情况的通报</span>&nbsp;&nbsp;&nbsp;&nbsp;<i class="icon iconfont icon-paly icon-postion"></i></a></li>
         <li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</li>
-        <li><a @click="switcher(4)" class="banner_color" :class="{active:isActive == 4}"><span>临时航线管理办法</span>&nbsp;&nbsp;&nbsp;&nbsp;</a><span>图片箭头</span></li>
+        <li><a @click="switcher(4)" class="banner_color" :class="{active:isActive == 4}"><span>临时航线管理办法</span>&nbsp;&nbsp;&nbsp;&nbsp;<i class="icon iconfont icon-paly icon-postion"></i></a></li>
         <li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</li>
-        <li><a @click="switcher(5)" class="banner_color" :class="{active:isActive == 5}"><span>临时航线勘误表格下载</span>&nbsp;&nbsp;&nbsp;&nbsp;</a><span>图片箭头</span></li>
+        <li><a @click="switcher(5)" class="banner_color" :class="{active:isActive == 5}"><span>临时航线勘误表格下载</span>&nbsp;&nbsp;&nbsp;&nbsp;<i class="icon iconfont icon-paly icon-postion"></i></a></li>
         <li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</li>
-        <li><a @click="switcher(6)" class="banner_color" :class="{active:isActive == 6}"><span>各地区临时航线负责人信息</span>&nbsp;&nbsp;&nbsp;&nbsp;</a><span>图片箭头</span></li>
+        <li><a @click="switcher(6)" class="banner_color" :class="{active:isActive == 6}"><span>各地区临时航线负责人信息</span>&nbsp;&nbsp;&nbsp;&nbsp;<i class="icon iconfont icon-paly icon-postion"></i></a></li>
       </ul>
     </div>
     <div class="contain">
-      <div class="contentList" :class="{active:isActive == 1}">
-        <div v-for="(item,index) in list">
-          <div class="content-hr"></div>
-          <br/><br/><br/>
-          <ul class="content">
-            <li class="title"><a href="javascript:;">{{item.title}}</a></li>
-            <li :class="item.show ? 'contents' : 'limitC'"><a href="javascript:;"  @click="showContent(item,index)">{{item.content}}</a></li>
-            <li class="time">{{item.time}}</li>
-            <li><br/></li>
-          </ul>
-          <!--<div v-if="index<list.length-1" class="content-hr"></div>-->
-        </div>
-        <div class="content-hr"></div>
-        <br/><br/>
-        <!--分页-->
-        <el-pagination
-          @size-change="handleSizeChange"
-          @current-change="handleCurrentChange"
-          :current-page="currentPage"
-          :page-sizes="[10, 20, 30, 40]"
-          :page-size="pageSize"
-          layout="total, sizes, prev, pager, next, jumper"
-          :total=parseInt(total)>
-        </el-pagination>
-        <br/><br/>
-      </div>
-      <div class="contentList" :class="{active:isActive == 2}">
-        <div v-for="(item,index) in list">
-          <div class="content-hr"></div>
-          <br/><br/><br/>
-          <ul class="content">
-            <li class="title"><a href="javascript:;">{{item.title}}</a></li>
-            <li :class="item.show ? 'contents' : 'limitC'"><a href="javascript:;"  @click="showContent(item,index)">{{item.content}}</a></li>
-            <li class="time">{{item.time}}</li>
-            <li><br/></li>
-          </ul>
-          <!--<div v-if="index<list.length-1" class="content-hr"></div>-->
-        </div>
-        <div class="content-hr"></div>
-        <br/><br/>
-        <!--分页-->
-        <el-pagination
-          @size-change="handleSizeChange"
-          @current-change="handleCurrentChange"
-          :current-page="currentPage"
-          :page-sizes="[10, 20, 30, 40]"
-          :page-size="pageSize"
-          layout="total, sizes, prev, pager, next, jumper"
-          :total=parseInt(total)>
-        </el-pagination>
-        <br/><br/>
-      </div>
-      <div class="contentList" :class="{active:isActive == 3}">
-        <div v-for="(item,index) in list">
-          <div class="content-hr"></div>
-          <br/><br/><br/>
-          <ul class="content">
-            <li class="title"><a href="javascript:;">{{item.title}}</a></li>
-            <li :class="item.show ? 'contents' : 'limitC'"><a href="javascript:;"  @click="showContent(item,index)">{{item.content}}</a></li>
-            <li class="time">{{item.time}}</li>
-            <li><br/></li>
-          </ul>
-          <!--<div v-if="index<list.length-1" class="content-hr"></div>-->
-        </div>
-        <div class="content-hr"></div>
-        <br/><br/>
-        <!--分页-->
-        <el-pagination
-          @size-change="handleSizeChange"
-          @current-change="handleCurrentChange"
-          :current-page="currentPage"
-          :page-sizes="[10, 20, 30, 40]"
-          :page-size="pageSize"
-          layout="total, sizes, prev, pager, next, jumper"
-          :total=parseInt(total)>
-        </el-pagination>
-        <br/><br/>
-      </div>
-      <div class="contentList" :class="{active:isActive == 4}">
+      <div class="contentList" :class="{active:isActive == this.isActive}">
         <div v-for="(item,index) in list">
           <div class="content-hr"></div>
           <br/><br/><br/>
@@ -149,7 +71,6 @@
         week:'',
         changeNoticeList:[],
         temporaryRoutesList:[],
-        meetingNoticeList:[],
         meetingNoticeList:[],
         isActive:1,
         currentPlanName:'当前临时航线状况'
@@ -305,7 +226,9 @@
               '柜台前，还挂出了暂时停止办理登机手续的提示牌。', time: '2018/08/18 13:30', show: true}
 
           ];
+          console.log(this.meetingNoticeList);
           this.list=this.meetingNoticeList;
+          console.log(this.list);
         }else if (number===6){
           this.isActive=number;
           this.currentPlanName="各地区临时航线负责人信息";
@@ -379,6 +302,9 @@
 
 <style lang="less" scoped>
   @import '../assets/styles/list.less';
+  .current_header{
+    text-align: left;
+  }
   .plan{
     font-size: 30px;
     font-weight: bolder;
@@ -389,7 +315,8 @@
     font-size: 26px;
     font-weight: bolder;
     color: #026ab3;
-    margin-left: -40%;
+    margin-left: 11%;
+    text-align: left;
   }
   .current_banner{
     font-size: 18px;
@@ -399,13 +326,25 @@
   .current_banner li{
     text-decoration: none;  /*去掉前面的圆点*/
     list-style: none;
-    /*float: left;*///横向排列
-
-    width: 160px;   //(定义宽度)
+    /*float: left;*///横向排列\
+    text-align: left;
+  }
+  .current_banner li span{
+    /*width: 160px;   //(定义宽度)
     white-space: nowrap; //（不换行，一行显示）
     text-overflow: ellipsis;  //（溢出用省略号）
-    -o-text-overflow: ellipsis;
-    overflow: hidden;   //（多出的文字，隐藏）
+    -o-text-overflow: ellipsis;!*超出部分用...代替*!
+    overflow: hidden;   //（多出的文字，隐藏）*/
+    display: block;
+    width: 160px;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
+  .icon-postion{
+    position: absolute;
+    margin-top: -1.5%;
+    margin-left: 140px;
   }
   .current_banner li a {
     text-decoration: none;
@@ -415,9 +354,6 @@
     color: #999999;
     text-align: left;
   }
-  .banner_color span{
-
-  }
   .content-hr{
     background-color: #cccccc;
     padding: 1px 0 0;
@@ -426,8 +362,8 @@
   }
   .contentList{
     display: none;
-    margin-top: -25%;
-    margin-left: 15%;
+    margin-top: -36%;
+    margin-left: 11%;
 
   }
   .active{

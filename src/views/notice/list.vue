@@ -200,7 +200,7 @@
       switcher(number){
         if (number===1){
           this.isActive=number;
-          list=this.changeNoticeList;
+          this.list=this.changeNoticeList;
         }else if (number===2){
           this.isActive=number;
           this.temporaryRoutesList=[

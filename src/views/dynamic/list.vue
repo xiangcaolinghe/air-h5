@@ -5,7 +5,7 @@
       <ul class="current_position">
         <li>当前位置：</li>
         <li><a href="/">首页</a>&nbsp;&nbsp;</li>
-        <li>图>片&nbsp;&nbsp;</li>
+        <li><i class="icon iconfont icon-youjiantou"></i>&nbsp;&nbsp;</li>
         <li><a href="/dynamic/list">动态</a></li>
       </ul>
     </div>
