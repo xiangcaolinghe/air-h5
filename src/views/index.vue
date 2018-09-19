@@ -224,7 +224,7 @@
                                 background: #026ab3;
                                 .icon {
                                     color:#fff;
-                                    font-size: 30px;
+                                    font-size: 28px;
                                 }
                             }
                             &.button {
