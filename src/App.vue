@@ -1,8 +1,8 @@
 <template>
   <div id="app">
-    <c-header v-show="!$route.meta"></c-header>
+    <c-header v-show="!$route.meta.auth"></c-header>
     <router-view/>
-    <c-footer v-show="!$route.meta"></c-footer>
+    <c-footer v-show="!$route.meta.auth"></c-footer>
   </div>
 </template>
 
@@ -11,7 +11,10 @@
   import CFooter from './components/footer.vue'
 export default {
   name: 'App',
-  components:{ CHeader, CFooter }
+  components:{ CHeader, CFooter },
+  created() {
+    console.log(this.$route.meta)
+  }
 }
 </script>
 
