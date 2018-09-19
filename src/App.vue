@@ -13,7 +13,7 @@ export default {
   name: 'App',
   components:{ CHeader, CFooter },
   created() {
-    console.log(this.$route.meta)
+
   }
 }
 </script>
