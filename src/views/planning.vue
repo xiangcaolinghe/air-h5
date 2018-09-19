@@ -7,67 +7,15 @@
       </div>
       <br/><br/>
       <ul class="current_banner">
-        <li><a @click="switcher(1)" class="banner_color" :class="{active:isActive == 1}">空域规划1&nbsp;&nbsp;&nbsp;&nbsp;图片箭头</a></li>
+        <li><a @click="switcher(1)" class="banner_color" :class="{active:isActive == 1}">空域规划1&nbsp;&nbsp;&nbsp;&nbsp;<i class="icon iconfont icon-you"></i></a></li>
         <li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</li>
-        <li><a @click="switcher(2)" class="banner_color" :class="{active:isActive == 2}">空域规划2&nbsp;&nbsp;&nbsp;&nbsp;图片箭头</a></li>
+        <li><a @click="switcher(2)" class="banner_color" :class="{active:isActive == 2}">空域规划2&nbsp;&nbsp;&nbsp;&nbsp;<i class="icon iconfont icon-you"></i></a></li>
         <li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</li>
-        <li><a @click="switcher(3)" class="banner_color" :class="{active:isActive == 3}">空域规划3&nbsp;&nbsp;&nbsp;&nbsp;图片箭头</a></li>
+        <li><a @click="switcher(3)" class="banner_color" :class="{active:isActive == 3}">空域规划3&nbsp;&nbsp;&nbsp;&nbsp;<i class="icon iconfont icon-you"></i></a></li>
       </ul>
     </div>
     <div class="contain">
-      <div class="contentList" :class="{active:isActive == 1}">
-        <div v-for="(item,index) in list">
-          <div class="content-hr"></div>
-          <br/><br/><br/>
-          <ul class="content">
-            <li class="title"><a href="javascript:;">{{item.title}}</a></li>
-            <li :class="item.show ? 'contents' : 'limitC'"><a href="javascript:;"  @click="showContent(item,index)">{{item.content}}</a></li>
-            <li class="time">{{item.time}}</li>
-            <li><br/></li>
-          </ul>
-          <!--<div v-if="index<list.length-1" class="content-hr"></div>-->
-        </div>
-        <div class="content-hr"></div>
-        <br/><br/>
-        <!--分页-->
-        <el-pagination
-          @size-change="handleSizeChange"
-          @current-change="handleCurrentChange"
-          :current-page="currentPage"
-          :page-sizes="[10, 20, 30, 40]"
-          :page-size="pageSize"
-          layout="total, sizes, prev, pager, next, jumper"
-          :total=parseInt(total)>
-        </el-pagination>
-        <br/><br/>
-      </div>
-      <div class="contentList" :class="{active:isActive == 2}">
-        <div v-for="(item,index) in list">
-          <div class="content-hr"></div>
-          <br/><br/><br/>
-          <ul class="content">
-            <li class="title"><a href="javascript:;">{{item.title}}</a></li>
-            <li :class="item.show ? 'contents' : 'limitC'"><a href="javascript:;"  @click="showContent(item,index)">{{item.content}}</a></li>
-            <li class="time">{{item.time}}</li>
-            <li><br/></li>
-          </ul>
-          <!--<div v-if="index<list.length-1" class="content-hr"></div>-->
-        </div>
-        <div class="content-hr"></div>
-        <br/><br/>
-        <!--分页-->
-        <el-pagination
-          @size-change="handleSizeChange"
-          @current-change="handleCurrentChange"
-          :current-page="currentPage"
-          :page-sizes="[10, 20, 30, 40]"
-          :page-size="pageSize"
-          layout="total, sizes, prev, pager, next, jumper"
-          :total=parseInt(total)>
-        </el-pagination>
-        <br/><br/>
-      </div>
-      <div class="contentList" :class="{active:isActive == 3}">
+      <div class="contentList" :class="{active:isActive == this.isActive}">
         <div v-for="(item,index) in list">
           <div class="content-hr"></div>
           <br/><br/><br/>
@@ -134,7 +82,7 @@
         if (number===1){
           this.isActive=number;
           this.currentPlanName="空域调整";
-          list=this.changeNoticeList;
+          this.list=this.changeNoticeList;
         }else if (number===2){
           this.isActive=number;
           this.currentPlanName="班机航线";
