@@ -272,6 +272,7 @@
                             &.active {
                                 font-size: 24px;
                                 line-height: 77px;
+                                font-weight: 600;
                                 color:#026ab3;
                              }
                         }
@@ -296,6 +297,7 @@
                                 float: left;
                                 display: block;
                                 cursor: pointer;
+                                height:auto;
                                 margin-right:18px;
                                 width:240px;
                                 .img {
@@ -337,6 +339,7 @@
                                 .list {
                                     clear:both;
                                     width:770px;
+                                    height:auto;
                                     padding-right:30px;
                                     box-sizing: border-box;
                                     text-align: left;
