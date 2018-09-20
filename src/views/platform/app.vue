@@ -1,5 +1,6 @@
 <template>
     <div>
+        <div class="r">jidnvldhuibkdjgvyufvbud</div>
         <router-view/>
     </div>
 </template>
