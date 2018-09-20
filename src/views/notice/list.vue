@@ -32,7 +32,7 @@
               </div>
               <ul class="content">
                 <li class="title"><a href="/notice/details">{{item.title}}</a></li>
-                <li class="contents"><a href="/notice/details">{{item.content | limitNum}}</a></li>
+                <li class="contents"><a href="/notice/details">{{item.content}}</a></li>
                 <li class="time">{{item.time}}</li>
                 <li><br/></li>
               </ul>
@@ -59,7 +59,7 @@
               </div>
               <ul class="content">
                 <li class="title"><a href="/notice/details">{{item.title}}</a></li>
-                <li class="contents"><a href="/notice/details">{{item.content | limitNum}}</a></li>
+                <li class="contents"><a href="/notice/details">{{item.content}}</a></li>
                 <li class="time">{{item.time}}</li>
                 <li><br/></li>
               </ul>
@@ -86,7 +86,7 @@
               </div>
               <ul class="content">
                 <li class="title"><a href="/notice/details">{{item.title}}</a></li>
-                <li class="contents"><a href="/notice/details">{{item.content | limitNum}}</a></li>
+                <li class="contents"><a href="/notice/details">{{item.content}}</a></li>
                 <li class="time">{{item.time}}</li>
                 <li><br/></li>
               </ul>
@@ -113,7 +113,7 @@
               </div>
               <ul class="content">
                 <li class="title"><a href="/notice/details">{{item.title}}</a></li>
-                <li class="contents"><a href="/notice/details">{{item.content | limitNum}}</a></li>
+                <li class="contents"><a href="/notice/details">{{item.content}}</a></li>
                 <li class="time">{{item.time}}</li>
                 <li><br/></li>
               </ul>

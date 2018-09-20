@@ -16,7 +16,7 @@
         <div class="news_img"><img :src="item.img"/></div>
         <ul class="content">
           <li class="title"><a href="/news/details">{{item.title}}</a></li>
-          <li class="contents"><a href="/news/details">{{item.content | limitNum}}</a></li>
+          <li class="contents"><a href="/news/details">{{item.content}}</a></li>
           <li class="time">{{item.time}}</li>
           <li><br/></li>
         </ul>
