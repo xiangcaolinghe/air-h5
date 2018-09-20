@@ -33,13 +33,15 @@
                 </div>
             </div>
             <div class="nav-tabs">
-                <div class="tab active">会议简介</div>
-                <div class="tab">主办单位</div>
-                <div class="tab">参会相关单位</div>
-                <div class="tab">会议联系人</div>
-                <div class="tab">会议日程</div>
+                <a class="tab" @click="tabActive(1)" :class="{active:active == 1}" href="#detail">会议简介</a>
+                <a class="tab" @click="tabActive(2)" :class="{active:active == 2}" href="#unit">主办单位</a>
+                <a class="tab" @click="tabActive(3)" :class="{active:active == 3}" href="#join">参会相关单位</a>
+                <a class="tab" @click="tabActive(4)" :class="{active:active == 4}" href="#name">会议联系人</a>
+                <a class="tab" @click="tabActive(5)" :class="{active:active == 5}" href="#date">会议日程</a>
             </div>
             <div class="nav-content">
+                <!--会议简介-->
+                <a name="detail"></a>
                 <div class="tab">
                   <div class="intro">
                       亚洲和中国是全球经济未来增长的重要引擎，亚洲中金联盟从亚洲角度纵览全球经济格局，分析投资市场新形式，发掘投资新机遇，以实现我国金融业平等协商，兼顾各方利益，反映各方诉求，携手推动更大范围、更高水平、更深层次的大开放、大交流、大融合。
@@ -47,6 +49,8 @@
                       届时，由亚洲中金联盟、亚洲金融协会、全国商业银行联合会、中国金融诚信联盟、818绿色金融日组委会、《金融天下》杂志社等机构联合主办，以“防控金融风险—共筑创新、诚信、绿色的金融生态圈”为主题的第九届中国金融峰会暨2018年度“绿色金融”颁奖盛典将于2018年8月于上海隆重召开，相关部委领导、亚洲知名企业代表、行业专家将隆重出席，数百家主流媒体共同见证。
                   </div>
                 </div>
+                <!--主办单位-->
+                <a name="unit"></a>
                 <div class="tab">
                     <div class="title">主办单位</div>
                     <ul>
@@ -55,6 +59,8 @@
                         <li>互联网金融</li>
                     </ul>
                 </div>
+                <!--参会相关单位-->
+                <a name="join"></a>
                 <div class="tab">
                     <div class="title">参会相关单位</div>
                     <ul>
@@ -63,6 +69,8 @@
                         <li>互联网金融</li>
                     </ul>
                 </div>
+                <!--会议联系人-->
+                <a name="name"></a>
                 <div class="tab">
                     <div class="title">会议联系人</div>
                     <ul>
@@ -71,6 +79,8 @@
                         <li>电话 13121349367</li>
                     </ul>
                 </div>
+                <!--会议日程-->
+                <a name="date"></a>
                 <div class="tab">
                     <div class="title">会议日程</div>
                     <ul>
@@ -85,6 +95,7 @@
                     </ul>
                     <span class="upload">附件点击下载.doc</span>
                 </div>
+                <!--备注-->
                 <div class="tab">
                     <div class="title">备注</div>
                     <ul>
@@ -117,7 +128,7 @@
                 <el-form-item label="到会日期：" :label-width="formLabelWidth">
                     <el-input v-model="form.date" autocomplete="off" placeholder="请填写您的真实信息"></el-input>
                 </el-form-item>
-                <el-form-item label="乘坐交通工具:" prop="resource" :label-width="formLabelWidth">
+                <el-form-item label="乘坐交通工具：" prop="resource" :label-width="formLabelWidth">
                     <el-radio-group v-model="form.traffic">
                         <el-radio label="1">火车</el-radio>
                         <el-radio label="2">飞机</el-radio>
@@ -131,8 +142,8 @@
                 </el-form-item>
             </el-form>
             <div slot="footer" class="dialog-footer">
-                <el-button @click="dialogFormVisible = false">取 消</el-button>
-                <el-button type="primary" @click="dialogFormVisible = false">确 定</el-button>
+                <el-button type="primary" @click="dialogFormVisible = false" class="confirm">确 定</el-button>
+                <el-button @click="dialogFormVisible = false" class="cancel">取 消</el-button>
             </div>
         </el-dialog>
     </div>
@@ -144,6 +155,7 @@
       return {
         dialogTableVisible: false,
         dialogFormVisible: false,
+        active:1,
         form: {
           name: '',
           shape: '1',
@@ -159,7 +171,9 @@
       }
     },
     methods:{
-
+      tabActive(id) {
+        this.active = id
+      }
     },
     created() {
 
@@ -176,9 +190,51 @@
                 .el-form-item__label {
                     font-size: 18px;
                     color:#000;
-                    /*width:150px !important;*/
+                    width:150px !important;
+                }
+                .el-form-item__content {
+                    margin-left: 150px !important;
+                }
+                .el-select {
+                    position: relative;
+                    font-size: 14px;
+                    display: inline-block;
+                    width: 100%;
+                    .el-input__inner {
+                        color: #da422a;
+                    }
+                }
+                .el-radio-group {
+                    text-align: left;
+                    font-size: 18px;
+                    width:100%;
+                    .el-radio__input.is-checked .el-radio__inner {
+                        border-color: #da422a;
+                        background: #da422a;
+                    }
+                    .el-radio__input.is-checked+.el-radio__label {
+                        color:#da422a;
+                    }
                 }
             }
+            .dialog-footer {
+                text-align: center;
+                .confirm {
+                    margin-right: 75px;
+                    background-color: #da422a;
+                    border-color: #da422a;
+                }
+                .cancel {
+                    background-color: #e99082;
+                    border-color: #e99082;
+                    color:#fff;
+                }
+            }
+        }
+    }
+    .el-select-dropdown.el-popper {
+        .el-select-dropdown__item.selected {
+            color: #da422a;
         }
     }
 </style>
@@ -289,6 +345,7 @@
             text-align: center;
             .tab {
                 width:224px;
+                cursor: pointer;
                 color:#000;
                 font-size: 24px;
                 float: left;
@@ -354,6 +411,7 @@
                 .upload {
                     font-size: 18px;
                     color:#da422a;
+                    cursor: pointer;
                     text-decoration: underline;
                     font-weight: 600;
                     line-height: 60px;
