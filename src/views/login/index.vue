@@ -84,7 +84,7 @@
           return
         }
         storage.set('token','3333333333333');
-        this.$router.push({name:'platform'})
+        this.$router.push({name:'home'})
       },
       //登陆
       login() {
