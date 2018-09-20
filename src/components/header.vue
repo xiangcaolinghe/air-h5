@@ -2,7 +2,7 @@
   <div class="ca-header">
     <div class="pass">
       <div class="inner-c">
-        <a href="javascript:;" class="words">管理员通道</a>
+        <router-link :to="{name:'login'}" class="words">管理员通道</router-link>
       </div>
     </div>
     <div class="box">

@@ -98,8 +98,8 @@
             <el-form :model="form">
                 <el-form-item label="报名形式：" :label-width="formLabelWidth">
                     <el-select v-model="form.shape" placeholder="请选择报名形式">
-                        <el-option label="以个人形式报名" value="shanghai"></el-option>
-                        <el-option label="以单位集体形式报名" value="beijing"></el-option>
+                        <el-option label="以个人形式报名" value="1"></el-option>
+                        <el-option label="以单位集体形式报名" value="2"></el-option>
                     </el-select>
                 </el-form-item>
                 <el-form-item label="参会名称：" :label-width="formLabelWidth">
@@ -117,10 +117,10 @@
                 <el-form-item label="到会日期：" :label-width="formLabelWidth">
                     <el-input v-model="form.date" autocomplete="off" placeholder="请填写您的真实信息"></el-input>
                 </el-form-item>
-                <el-form-item label="乘坐交通工具:" prop="resource">
+                <el-form-item label="乘坐交通工具:" prop="resource" :label-width="formLabelWidth">
                     <el-radio-group v-model="form.traffic">
-                        <el-radio label="火车"></el-radio>
-                        <el-radio label="飞机"></el-radio>
+                        <el-radio label="1">火车</el-radio>
+                        <el-radio label="2">飞机</el-radio>
                     </el-radio-group>
                 </el-form-item>
                 <el-form-item label="车次：" :label-width="formLabelWidth">
@@ -146,12 +146,12 @@
         dialogFormVisible: false,
         form: {
           name: '',
-          shape: '',
+          shape: '1',
           meeting:'',
           mobile:'',
           unit:'',
           time: '',
-          traffic:'',
+          traffic:'1',
           date:'',
           train:''
         },
@@ -171,6 +171,14 @@
         .el-dialog {
             position: relative;
             width: 1200px;
+            .el-dialog__body {
+                padding:40px 252px 40px 150px;
+                .el-form-item__label {
+                    font-size: 18px;
+                    color:#000;
+                    /*width:150px !important;*/
+                }
+            }
         }
     }
 </style>

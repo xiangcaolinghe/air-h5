@@ -107,7 +107,7 @@
             <div class="inner-c module">
               <div class="cell"><img src="./../assets/images/module-01.png" alt="" class="img"><p class="words">规范文件</p></div>
               <div class="cell"><img src="./../assets/images/module-02.png" alt="" class="img"><p class="words">新技术应用</p></div>
-              <div class="cell"><img src="./../assets/images/module-01.png" alt="" class="img"><p class="words">会议报名系统</p></div>
+              <router-link :to="{name:'sign.list'}" class="cell"><img src="./../assets/images/module-01.png" alt="" class="img"><p class="words">会议报名系统</p></router-link>
             </div>
         </div>
     </div>
@@ -381,6 +381,7 @@
                         margin-bottom:15px;
                         .cell {
                             display: block;
+                            cursor: pointer;
                             width:120px;
                             padding-top: 15px;
                             height:120px;

@@ -13,6 +13,23 @@ window.API = API;
 Vue.config.productionTip = false
 const storage = new LocalStorageUtils();
 window.storage = storage;
+
+router.beforeEach(function (to, from, next) {
+  let meta = to.meta.auth;
+  console.log(meta)
+  if (meta) {
+    storage.get('token') ? next() : next({name:'login'})
+  }else {
+    next()
+  }
+})
+router.afterEach(function (to) {
+  // store.commit('updateLoadingStatus', {isLoading: false})
+})
+
+
+
+
 new Vue({
   el: '#app',
   router,

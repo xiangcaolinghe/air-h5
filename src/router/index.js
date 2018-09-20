@@ -16,6 +16,8 @@ import NoticeList from '@/views/notice/list'
 import NoticeDetails from '@/views/notice/details'
 import signUpList from '@/views/signUp/list'
 import signUpDetail from '@/views/signUp/detail'
+import Platform from '@/views/platform/app'
+import platformIndex from '@/views/platform/children/index'
 Vue.use(Router)
 
 export default new Router({
@@ -98,6 +100,24 @@ export default new Router({
       path: "/notice/details",
       name: "noticeDetails",
       component: NoticeDetails
-    }
+    },
+    {
+      path: '/platform/',
+      name: 'platform',
+      component: Platform,
+      redirect: '/platform/index',
+      meta: {
+        auth: true
+      },
+      children:[
+        {
+          path: 'index',
+          component: platformIndex,
+          meta: {
+            auth: true
+          },
+        }
+      ]
+    },
   ]
 })
