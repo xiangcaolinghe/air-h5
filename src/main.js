@@ -17,7 +17,10 @@ window.storage = storage;
 router.beforeEach(function (to, from, next) {
   let meta = to.meta.auth;
   if (meta) {
-    storage.get('token') ? next() : next({name:'login'})
+    if (storage.get('token')) {
+      next({name:'login'})
+    }
+     next()
   }else {
     next()
   }
