@@ -12,8 +12,8 @@
       <div class="down_header">
           <div class="header_nav">
             <ul>
-              <li><a href="javascript:;" @click="switcher(0)" :class="{active:isActive == 0}"><i class="iconfont icon-home"></i>&nbsp;&nbsp;首页</a></li>
-              <li><a href="javascript:;" @click="switcher(1)" :class="{active:isActive == 1}"><i class="iconfont icon-tongji1"></i>&nbsp;&nbsp;月度管理</a></li>
+              <li><router-link :to="{name: 'platform'}"><i class="iconfont icon-home"></i>&nbsp;&nbsp;首页</router-link></li>
+              <li><router-link :to="{name: 'platform.flowpath'}" :class="{active:isActive == 1}"><i class="iconfont icon-tongji1"></i>&nbsp;&nbsp;月度管理</router-link></li>
               <li><a href="javascript:;" @click="switcher(2)" :class="{active:isActive == 2}"><i class="iconfont icon-shenqing"></i>&nbsp;&nbsp;月度申请</a></li>
               <li><a href="javascript:;" @click="switcher(3)" :class="{active:isActive == 3}"><i class="iconfont icon-chulizhong"></i>&nbsp;&nbsp;月度处理</a></li>
               <li><a href="javascript:;" @click="switcher(4)" :class="{active:isActive == 4}"><i class="iconfont icon-ji"></i>&nbsp;&nbsp;季度管理</a></li>
@@ -27,11 +27,11 @@
           <div class="nav_left"  :class="{active:isActive == 1}">
             <div class="">
               <ul>
-                <li><a href="javascript:;"><div><div>月度上报流程</div></div></a></li>
-                <li><a href="javascript:;"><div><div>上报数据导入</div></div></a></li>
-                <li><a href="javascript:;"><div><div>上报数据管理</div></div></a></li>
-                <li><a href="javascript:;"><div><div>上报数据统计</div></div></a></li>
-                <li><a href="javascript:;"><div><div>批复数据导入</div></div></a></li>
+                <li><a href="flowpath" style="height: 88px" @click="switcher(1)" :class="{active:isLeftActive == 1}"><div class="active"><div>月度上报流程</div></div></a></li>
+                <li><a href="javascript:;" @click="switcher(2)" :class="{active:isLeftActive == 2}"><div><div>上报数据导入</div></div></a></li>
+                <li><a href="javascript:;" @click="switcher(3)" :class="{active:isLeftActive == 3}"><div><div>上报数据管理</div></div></a></li>
+                <li><a href="javascript:;" @click="switcher(4)" :class="{active:isLeftActive == 4}"><div><div>上报数据统计</div></div></a></li>
+                <li><a href="javascript:;" @click="switcher(5)" :class="{active:isLeftActive == 5}"><div><div>批复数据导入</div></div></a></li>
               </ul>
             </div>
           </div>
@@ -92,14 +92,13 @@
       name: 'PHeader',
       data(){
         return{
-          isActive:1
+          isActive:1,
+          isLeftActive:1
         }
       },
       methods:{
         switcher(number){
-          console.log(number);
-          this.isActive=number;
-          console.log(this.isActive);
+          this.isLeftActive=number;
         }
       }
     }
@@ -196,9 +195,17 @@
     text-decoration:none;//去掉下划线
     color: #a3afbc;
   }
-  li div:hover{
-    color: #003b64;
-    background-color: white;
+  .nav_left li a {
+    div.active {
+      color: #003b64 !important;
+      background-color: white !important;
+    }
+  }
+  .nav_left li a:hover{
+    div {
+      color: #003b64;
+      background-color: white;
+    }
   }
   .active{
     display: block;
@@ -214,6 +221,8 @@
     }
     .view {
       flex: 1;
+      padding: 0 5%;
+      box-sizing: border-box;
     }
   }
 </style>

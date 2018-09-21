@@ -19,6 +19,7 @@
     font-size: 24px;
     text-align: center;
     color:#fff;
+    margin-top: 965px;
   }
   .p_footer div{
     padding-top: 40px;
