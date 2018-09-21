@@ -1,16 +1,19 @@
 <template>
-    <div>
-        <div class="r">jidnvldhuibkdjgvyufvbud</div>
-        <router-view/>
-    </div>
+  <div>
+    <p-header></p-header>
+    <p-left></p-left>
+    <!--<router-view/>-->
+    <p-footer></p-footer>
+  </div>
 </template>
 
 <script>
-  import CHeader from './../../components/header.vue'
-  import CFooter from './../../components/footer.vue'
+  import PHeader from './../../components/pheader.vue'
+  import PFooter from './../../components/pfooter.vue'
+  import PLeft from './../../components/leftnavigation.vue'
   export default {
     name: '',
-    components:{ CHeader, CFooter },
+    components:{ PHeader,PLeft,PFooter },
     created() {
 
     }
