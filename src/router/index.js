@@ -19,6 +19,7 @@ import signUpDetail from '@/views/signUp/detail'
 import Platform from '@/views/platform/app'
 import platformIndex from '@/views/platform/children/index'
 import platformAirway from '@/views/platform/children/airway/list'
+import FlowPath from '@/views/platform/children/monthlyManager/flowPath'
 Vue.use(Router)
 
 export default new Router({
@@ -125,6 +126,14 @@ export default new Router({
           meta: {
             auth: true
           },
+        },
+        {
+          path: 'flowpath',
+          name: 'platform.flowpath',
+          component: FlowPath,
+          meta: {
+            auth: true
+          }
         }
       ]
     },
