@@ -1,9 +1,11 @@
 <template>
   <div>
     <p-header></p-header>
-    <p-left></p-left>
       <div class="p-content">
-          <router-view/>
+          <p-left></p-left>
+          <div class="view">
+              <router-view/>
+          </div>
       </div>
     <p-footer></p-footer>
   </div>
@@ -25,5 +27,9 @@
 <style lang="less">
     .p-content {
         width:100%;
+        display: flex;
+        .view {
+            flex: 1;
+        }
     }
 </style>
