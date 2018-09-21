@@ -5,20 +5,20 @@
           <img src="./../assets/logo.png" alt="">
         </span>
         <span class="welcome">
-          <i class="icon iconfont icon-wode"></i>&nbsp;&nbsp;<strong>欢迎您：admin</strong>&nbsp;&nbsp;<i class="icon iconfont icon-wode">
+          <i class="iconfont icon-yonghu"></i>&nbsp;&nbsp;<strong>欢迎您：admin</strong>&nbsp;&nbsp;<i class="iconfont icon-tuichu-copy">
         </i>&nbsp;&nbsp;<strong>退出</strong>&nbsp;&nbsp;
         </span>
       </div>
       <div class="down_header">
           <div class="header_nav">
             <ul>
-              <li><a href="javascript:;">首页</a></li>
-              <li><a href="javascript:;">月度管理</a></li>
-              <li><a href="javascript:;">月度申请</a></li>
-              <li><a href="javascript:;">月度处理</a></li>
-              <li><a href="javascript:;">季度管理</a></li>
-              <li><a href="javascript:;">区内管理</a></li>
-              <li><a href="javascript:;">班机航线</a></li>
+              <li><a href="javascript:;"><i class="iconfont icon-home"></i>&nbsp;&nbsp;首页</a></li>
+              <li><a href="javascript:;"><i class="iconfont icon-tongji1"></i>&nbsp;&nbsp;月度管理</a></li>
+              <li><a href="javascript:;"><i class="iconfont icon-shenqing"></i>&nbsp;&nbsp;月度申请</a></li>
+              <li><a href="javascript:;"><i class="iconfont icon-chulizhong"></i>&nbsp;&nbsp;月度处理</a></li>
+              <li><a href="javascript:;"><i class="iconfont icon-ji"></i>&nbsp;&nbsp;季度管理</a></li>
+              <li><a href="javascript:;"><i class="iconfont icon-tongji"></i>&nbsp;&nbsp;区内管理</a></li>
+              <li><a href="javascript:;"><i class="iconfont icon-flightSchedule"></i>&nbsp;&nbsp;班机航线</a></li>
             </ul>
           </div>
       </div>
@@ -84,5 +84,8 @@
   a:hover{
     color: #ffffff;
     font-weight: bolder;
+  }
+  .iconfont{
+    font-size: 22px;
   }
 </style>
