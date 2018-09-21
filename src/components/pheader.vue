@@ -23,7 +23,7 @@
           </div>
       </div>
       <div class="p-content">
-        <div class="p-left" v-show="!$route.meta.hideLeft">
+        <div class="p-left">
           <div class="nav_left"  :class="{active:isActive == 1}">
             <div class="">
               <ul>
@@ -214,8 +214,6 @@
     }
     .view {
       flex: 1;
-      padding:0 5%;
-      box-sizing: border-box;
     }
   }
 </style>

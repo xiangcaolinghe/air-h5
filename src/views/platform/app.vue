@@ -14,10 +14,9 @@
 <script>
   import PHeader from './../../components/pheader.vue'
   import PFooter from './../../components/pfooter.vue'
-  import PLeft from './../../components/leftnavigation.vue'
   export default {
     name: '',
-    components:{ PHeader,PLeft,PFooter },
+    components:{ PHeader,PFooter },
     created() {
 
     }
@@ -25,8 +24,4 @@
 </script>
 
 <style lang="less">
-
-  .footer{
-    margin-top: 890px;
-  }
 </style>
