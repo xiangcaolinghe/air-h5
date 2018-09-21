@@ -27,11 +27,11 @@
           <div class="nav_left"  :class="{active:isActive == 1}">
             <div class="">
               <ul>
-                <li><a href="flowpath" style="height: 88px" @click="switcher(1)" :class="{active:isLeftActive == 1}"><div class="active"><div>月度上报流程</div></div></a></li>
-                <li><a href="javascript:;" @click="switcher(2)" :class="{active:isLeftActive == 2}"><div><div>上报数据导入</div></div></a></li>
-                <li><a href="javascript:;" @click="switcher(3)" :class="{active:isLeftActive == 3}"><div><div>上报数据管理</div></div></a></li>
-                <li><a href="javascript:;" @click="switcher(4)" :class="{active:isLeftActive == 4}"><div><div>上报数据统计</div></div></a></li>
-                <li><a href="javascript:;" @click="switcher(5)" :class="{active:isLeftActive == 5}"><div><div>批复数据导入</div></div></a></li>
+                <li><a href="flowpath" style="height: 88px" @click="switcher(1)" :class="{active:isLeftActive == 1}"><div :class="{active:isLeftActive == 1}"><div>月度上报流程</div></div></a></li>
+                <li><a href="javascript:;" @click="switcher(2)" :class="{active:isLeftActive == 2}"><div :class="{active:isLeftActive == 2}"><div>上报数据导入</div></div></a></li>
+                <li><a href="javascript:;" @click="switcher(3)" :class="{active:isLeftActive == 3}"><div :class="{active:isLeftActive == 3}"><div>上报数据管理</div></div></a></li>
+                <li><a href="javascript:;" @click="switcher(4)" :class="{active:isLeftActive == 4}"><div :class="{active:isLeftActive == 4}"><div>上报数据统计</div></div></a></li>
+                <li><a href="javascript:;" @click="switcher(5)" :class="{active:isLeftActive == 5}"><div :class="{active:isLeftActive == 5}"><div>批复数据导入</div></div></a></li>
               </ul>
             </div>
           </div>
@@ -93,7 +93,8 @@
       data(){
         return{
           isActive:1,
-          isLeftActive:1
+          isLeftActive:1,
+          isLeftNav: 1
         }
       },
       methods:{
@@ -180,20 +181,19 @@
   .nav_left li{
     list-style: none;
     height: 85px;
+    line-height: 85px;
   }
   .nav_left li a div{
-    height: 100%;
+    height: 85px;
   }
   .nav_left li a div div{
-    height: 50%;
-  }
-  .nav_left li a div div{
-    margin-left: 20px;
-    padding-top: 30px;
+    padding-left: 20px;
   }
   .nav_left li a,a:hover{
+    display: block;
     text-decoration:none;//去掉下划线
     color: #a3afbc;
+    /*height: 85px;*/
   }
   .nav_left li a {
     div.active {
