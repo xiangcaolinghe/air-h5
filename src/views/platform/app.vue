@@ -2,12 +2,14 @@
   <div>
     <p-header></p-header>
       <div class="p-content">
-          <p-left></p-left>
+          <!--<p-left></p-left>-->
           <div class="view">
               <router-view/>
           </div>
       </div>
-    <p-footer></p-footer>
+    <div class="footer">
+      <p-footer></p-footer>
+    </div>
   </div>
 </template>
 
@@ -32,4 +34,7 @@
             flex: 1;
         }
     }
+  .footer{
+    margin-top: 890px;
+  }
 </style>
