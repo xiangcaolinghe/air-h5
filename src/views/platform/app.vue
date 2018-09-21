@@ -1,12 +1,15 @@
 <template>
   <div>
-    <p-header></p-header>
-      <div class="p-content">
-          <!--<p-left></p-left>-->
-          <div class="view">
-              <router-view/>
-          </div>
-      </div>
+    <p-header>
+        <div slot="right-view">
+            <router-view/>
+        </div>
+    </p-header>
+      <!--<div class="p-content">-->
+          <!--<div class="view">-->
+
+          <!--</div>-->
+      <!--</div>-->
     <div class="footer">
       <p-footer></p-footer>
     </div>
@@ -27,13 +30,7 @@
 </script>
 
 <style lang="less">
-    .p-content {
-        width:100%;
-        display: flex;
-        .view {
-            flex: 1;
-        }
-    }
+
   .footer{
     margin-top: 890px;
   }
