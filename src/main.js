@@ -3,7 +3,6 @@
 import Vue from 'vue'
 import App from './App'
 import router from './router'
-// import API from './config/API';
 import API from './config/APIHeader';
 import LocalStorageUtils from  './utils/LocalStorageUtils'
 import ElementUI from 'element-ui';

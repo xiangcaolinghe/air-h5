@@ -27,7 +27,7 @@
           <div class="nav_left"  :class="{active:isActive == 1}">
             <div class="">
               <ul>
-                <li><a href="flowpath"><div><div>月度上报流程</div></div></a></li>
+                <li><a href="javascript:;"><div><div>月度上报流程</div></div></a></li>
                 <li><a href="javascript:;"><div><div>上报数据导入</div></div></a></li>
                 <li><a href="javascript:;"><div><div>上报数据管理</div></div></a></li>
                 <li><a href="javascript:;"><div><div>上报数据统计</div></div></a></li>
@@ -84,7 +84,6 @@
           <slot name="right-view"></slot>
         </div>
       </div>
-
     </div>
 </template>
 

@@ -1,9 +1,9 @@
 <template>
   <div>
     <p-header>
-      <div slot="right-view">
-        <router-view/>
-      </div>
+        <div slot="right-view">
+            <router-view/>
+        </div>
     </p-header>
     <div class="footer">
       <p-footer></p-footer>
@@ -24,5 +24,4 @@
 </script>
 
 <style lang="less">
-
 </style>

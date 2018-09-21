@@ -110,7 +110,7 @@ export default new Router({
       redirect: '/platform/index',
       meta: {
         auth: true,
-        hideLeft:true
+        hideLeft: true
       },
       children:[
         {
@@ -127,8 +127,8 @@ export default new Router({
           component: platformAirway,
           meta: {
             auth: true,
-            hideLeft:true
-          },
+            hideLeft: true
+          }
         },
         {
           path: 'flowpath',
