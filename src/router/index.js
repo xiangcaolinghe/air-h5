@@ -18,6 +18,7 @@ import signUpList from '@/views/signUp/list'
 import signUpDetail from '@/views/signUp/detail'
 import Platform from '@/views/platform/app'
 import platformIndex from '@/views/platform/children/index'
+import platformAirway from '@/views/platform/children/airway/list'
 Vue.use(Router)
 
 export default new Router({
@@ -113,6 +114,14 @@ export default new Router({
         {
           path: 'index',
           component: platformIndex,
+          meta: {
+            auth: true
+          },
+        },
+        {
+          path: 'airway',
+          name: 'platform.airway',
+          component: platformAirway,
           meta: {
             auth: true
           },

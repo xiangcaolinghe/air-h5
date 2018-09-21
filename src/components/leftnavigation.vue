@@ -23,7 +23,6 @@
     background-color: #003b64;
     width: 16%;
     min-height: 880px;
-    margin-top: 85px;
     font-weight: bolder;
     font-size: 18px;
   }

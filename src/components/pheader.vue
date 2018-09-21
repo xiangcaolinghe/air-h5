@@ -34,7 +34,7 @@
 <style lang="less" scoped>
   .up_header{
     min-width: 1200px;
-    height: 100px;
+    height: 180px;
     background-color: #026ab3;
     position: inherit;
     margin: auto;
@@ -47,7 +47,7 @@
   }
   .up_nav{
     width: 90%;
-    height: 100%;
+    height: 100px;
     margin: auto;
   }
   .up_nav img{
