@@ -2,7 +2,9 @@
   <div>
     <p-header></p-header>
     <p-left></p-left>
-    <!--<router-view/>-->
+      <div class="p-content">
+          <router-view/>
+      </div>
     <p-footer></p-footer>
   </div>
 </template>
@@ -21,5 +23,7 @@
 </script>
 
 <style lang="less">
-
+    .p-content {
+        width:100%;
+    }
 </style>
