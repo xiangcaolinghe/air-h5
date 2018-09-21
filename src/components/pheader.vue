@@ -22,61 +22,69 @@
             </ul>
           </div>
       </div>
-      <div class="nav_left"  :class="{active:isActive == 1}">
-        <div class="">
-          <ul>
-            <li><a href="javascript:;"><div><div>月度上报流程</div></div></a></li>
-            <li><a href="javascript:;"><div><div>上报数据导入</div></div></a></li>
-            <li><a href="javascript:;"><div><div>上报数据管理</div></div></a></li>
-            <li><a href="javascript:;"><div><div>上报数据统计</div></div></a></li>
-            <li><a href="javascript:;"><div><div>批复数据导入</div></div></a></li>
-          </ul>
+      <div class="p-content">
+        <div class="p-left" v-show="!$route.meta.hideLeft">
+          <div class="nav_left"  :class="{active:isActive == 1}">
+            <div class="">
+              <ul>
+                <li><a href="flowpath"><div><div>月度上报流程</div></div></a></li>
+                <li><a href="javascript:;"><div><div>上报数据导入</div></div></a></li>
+                <li><a href="javascript:;"><div><div>上报数据管理</div></div></a></li>
+                <li><a href="javascript:;"><div><div>上报数据统计</div></div></a></li>
+                <li><a href="javascript:;"><div><div>批复数据导入</div></div></a></li>
+              </ul>
+            </div>
+          </div>
+          <div class="nav_left"  :class="{active:isActive == 2}">
+            <div class="">
+              <ul>
+                <li><a href="javascript:;"><div><div>月度上报流程2</div></div></a></li>
+                <li><a href="javascript:;"><div><div>上报数据导入2</div></div></a></li>
+                <li><a href="javascript:;"><div><div>上报数据管理2</div></div></a></li>
+                <li><a href="javascript:;"><div><div>上报数据统计2</div></div></a></li>
+                <li><a href="javascript:;"><div><div>批复数据导入2</div></div></a></li>
+              </ul>
+            </div>
+          </div>
+          <div class="nav_left"  :class="{active:isActive == 3}">
+            <div class="">
+              <ul>
+                <li><a href="javascript:;"><div><div>月度上报流程3</div></div></a></li>
+                <li><a href="javascript:;"><div><div>上报数据导入3</div></div></a></li>
+                <li><a href="javascript:;"><div><div>上报数据管理3</div></div></a></li>
+                <li><a href="javascript:;"><div><div>上报数据统计3</div></div></a></li>
+                <li><a href="javascript:;"><div><div>批复数据导入3</div></div></a></li>
+              </ul>
+            </div>
+          </div>
+          <div class="nav_left"  :class="{active:isActive == 4}">
+            <div class="">
+              <ul>
+                <li><a href="javascript:;"><div><div>月度上报流程4</div></div></a></li>
+                <li><a href="javascript:;"><div><div>上报数据导入4</div></div></a></li>
+                <li><a href="javascript:;"><div><div>上报数据管理4</div></div></a></li>
+                <li><a href="javascript:;"><div><div>上报数据统计4</div></div></a></li>
+                <li><a href="javascript:;"><div><div>批复数据导入4</div></div></a></li>
+              </ul>
+            </div>
+          </div>
+          <div class="nav_left"  :class="{active:isActive == 5}">
+            <div class="">
+              <ul>
+                <li><a href="javascript:;"><div><div>月度上报流程5</div></div></a></li>
+                <li><a href="javascript:;"><div><div>上报数据导入5</div></div></a></li>
+                <li><a href="javascript:;"><div><div>上报数据管理5</div></div></a></li>
+                <li><a href="javascript:;"><div><div>上报数据统计5</div></div></a></li>
+                <li><a href="javascript:;"><div><div>批复数据导入5</div></div></a></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <div class="view">
+          <slot name="right-view"></slot>
         </div>
       </div>
-      <div class="nav_left"  :class="{active:isActive == 2}">
-        <div class="">
-          <ul>
-            <li><a href="javascript:;"><div><div>月度上报流程2</div></div></a></li>
-            <li><a href="javascript:;"><div><div>上报数据导入2</div></div></a></li>
-            <li><a href="javascript:;"><div><div>上报数据管理2</div></div></a></li>
-            <li><a href="javascript:;"><div><div>上报数据统计2</div></div></a></li>
-            <li><a href="javascript:;"><div><div>批复数据导入2</div></div></a></li>
-          </ul>
-        </div>
-      </div>
-      <div class="nav_left"  :class="{active:isActive == 3}">
-        <div class="">
-          <ul>
-            <li><a href="javascript:;"><div><div>月度上报流程3</div></div></a></li>
-            <li><a href="javascript:;"><div><div>上报数据导入3</div></div></a></li>
-            <li><a href="javascript:;"><div><div>上报数据管理3</div></div></a></li>
-            <li><a href="javascript:;"><div><div>上报数据统计3</div></div></a></li>
-            <li><a href="javascript:;"><div><div>批复数据导入3</div></div></a></li>
-          </ul>
-        </div>
-      </div>
-      <div class="nav_left"  :class="{active:isActive == 4}">
-        <div class="">
-          <ul>
-            <li><a href="javascript:;"><div><div>月度上报流程4</div></div></a></li>
-            <li><a href="javascript:;"><div><div>上报数据导入4</div></div></a></li>
-            <li><a href="javascript:;"><div><div>上报数据管理4</div></div></a></li>
-            <li><a href="javascript:;"><div><div>上报数据统计4</div></div></a></li>
-            <li><a href="javascript:;"><div><div>批复数据导入4</div></div></a></li>
-          </ul>
-        </div>
-      </div>
-      <div class="nav_left"  :class="{active:isActive == 5}">
-        <div class="">
-          <ul>
-            <li><a href="javascript:;"><div><div>月度上报流程5</div></div></a></li>
-            <li><a href="javascript:;"><div><div>上报数据导入5</div></div></a></li>
-            <li><a href="javascript:;"><div><div>上报数据管理5</div></div></a></li>
-            <li><a href="javascript:;"><div><div>上报数据统计5</div></div></a></li>
-            <li><a href="javascript:;"><div><div>批复数据导入5</div></div></a></li>
-          </ul>
-        </div>
-      </div>
+
     </div>
 </template>
 
@@ -159,7 +167,7 @@
 
   .nav_left{
     background-color: #003b64;
-    width: 16%;
+    width: 100%;
     min-height: 880px;
     font-weight: bolder;
     font-size: 18px;
@@ -198,5 +206,17 @@
   }
   .header_nav li .active{
     color: white;
+  }
+  .p-content {
+    width:100%;
+    display: flex;
+    .p-left {
+      width: 16%;
+    }
+    .view {
+      flex: 1;
+      padding:0 5%;
+      box-sizing: border-box;
+    }
   }
 </style>
