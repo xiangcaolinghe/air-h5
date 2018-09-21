@@ -5,11 +5,6 @@
             <router-view/>
         </div>
     </p-header>
-      <!--<div class="p-content">-->
-          <!--<div class="view">-->
-
-          <!--</div>-->
-      <!--</div>-->
     <div class="footer">
       <p-footer></p-footer>
     </div>
