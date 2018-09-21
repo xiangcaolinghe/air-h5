@@ -50,5 +50,11 @@
             text-align: left;
             line-height: 40px;
         }
+        .progress-table {
+            width:900px;
+            height:3px;
+            background: #003b64;
+            margin:54px auto 160px;
+        }
     }
 </style>
