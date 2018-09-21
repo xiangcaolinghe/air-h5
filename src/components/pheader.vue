@@ -34,11 +34,11 @@
 <style lang="less" scoped>
   .up_header{
     min-width: 1200px;
-    height: 180px;
+    height: 185px;
     background-color: #026ab3;
     position: inherit;
     margin: auto;
-    top: 0px;
+    top: 0;
     bottom: 0;
     left: 0;
     right: 0;
