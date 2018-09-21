@@ -109,14 +109,16 @@ export default new Router({
       component: Platform,
       redirect: '/platform/index',
       meta: {
-        auth: true
+        auth: true,
+        hideLeft: true
       },
       children:[
         {
           path: 'index',
           component: platformIndex,
           meta: {
-            auth: true
+            auth: true,
+            hideLeft: true
           },
         },
         {
@@ -124,7 +126,8 @@ export default new Router({
           name: 'platform.airway',
           component: platformAirway,
           meta: {
-            auth: true
+            auth: true,
+            hideLeft: true
           },
         },
         {
