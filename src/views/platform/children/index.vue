@@ -21,7 +21,7 @@
             </li>
         </ul>
         <div class="notice">
-            <div class="title">通知公告</div>
+            <div class="title">通知公告 <span class="more">更多</span></div>
             <div class="n-lists">
                 <div class="n-list">
                     <i class="icon iconfont icon-ep--"></i>
@@ -110,6 +110,23 @@
             }
         }
         .notice {
+            .title {
+                padding:0;
+                position: relative;
+                .more {
+                    position: absolute;
+                    top:50%;
+                    right:0;
+                    width:85px;
+                    height:40px;
+                    line-height: 40px;
+                    background: #003b64;
+                    font-size: 18px;
+                    text-align: center;
+                    color:#fff;
+                    cursor: pointer;
+                }
+            }
             .n-lists {
                 width:100%;
                 .n-list {
