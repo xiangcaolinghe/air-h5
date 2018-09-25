@@ -8,7 +8,7 @@
             </div>
             <div class="right">
                 <div class="cell"><span class="label">编号：</span><el-input v-model="search.code" placeholder="请输入起点" class="input"></el-input></div>
-                <div class="cell no-margin-bottom">
+                <div class="cell no-margin-bottom last">
                     <span class="label type">类型：</span>
                     <div class="check-box">
                         <el-checkbox-group v-model="checkList">
@@ -82,11 +82,37 @@
                 </div>
                 <div class="d-cell">
                     <span class="name">点航路：</span>
-                    <div class="info">CZ3151</div>
+                    <div class="info-body">
+                        <div class="hb">
+                            <div class="c">入点</div>
+                            <div class="c">航路</div>
+                            <div class="c">出点</div>
+                        </div>
+                        <div class="bd-table">
+                            <div class="bd">
+                                <div class="c">eeeeeeeeeeeee</div>
+                                <div class="c">eeeeeeeeeeeee</div>
+                                <div class="c">eeeeeeeeeeeee</div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
                 <div class="d-cell">
                     <span class="name">点串：</span>
-                    <div class="info">CZ3151</div>
+                    <div class="info-body">
+                        <div class="hb">
+                            <div class="c">顺序</div>
+                            <div class="c">航路</div>
+                            <div class="c">航路点</div>
+                        </div>
+                        <div class="bd-table">
+                            <div class="bd">
+                                <div class="c">eeeeeeeeeeeee</div>
+                                <div class="c">eeeeeeeeeeeee</div>
+                                <div class="c">eeeeeeeeeeeee</div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
                 <div class="d-cell">
                     <span class="name">限制条件：</span>
@@ -185,6 +211,9 @@
                     color:#fff;
                     font-weight: 600;
                 }
+                .el-table__header {
+                    width:100% !important;
+                }
             }
         }
         .airway-pic-dialog {
@@ -237,6 +266,50 @@
                                 border:1px solid #ccc;
                                 border-radius: 5px;
                                 box-sizing: border-box;
+                            }
+                            .info-body {
+                                flex: 1;
+                                .hb {
+                                    display: flex;
+                                    background: #026ab3;
+                                    border-top: 1px solid #ccc;
+                                    box-sizing: border-box;
+                                    width:100%;
+                                    .c {
+                                        flex: 1;
+                                        height:40px;
+                                        line-height: 40px;
+                                        color:#fff;
+                                        text-align: center;
+                                        box-sizing: border-box;
+                                        border-right:1px solid #ccc;
+                                        &:last-child {
+                                             border-right:none;
+                                         }
+                                    }
+                                }
+                                .bd-table {
+                                    width:100%;
+                                    display: flex;
+                                    .bd {
+                                        display: flex;
+                                        border: 1px solid #ccc;
+                                        box-sizing: border-box;
+                                        border-top: none;
+                                        width:100%;
+                                        .c {
+                                            flex: 1;
+                                            height:40px;
+                                            line-height: 40px;
+                                            text-align: center;
+                                            box-sizing: border-box;
+                                            border-right:1px solid #ccc;
+                                            &:last-child {
+                                                 border-right:none;
+                                             }
+                                        }
+                                    }
+                                }
                             }
                             .cell {
                                 flex: 1;
@@ -294,6 +367,7 @@
                 padding-left: 20px;
                 box-sizing: border-box;
                 .cell {
+                    position: relative;
                     overflow:hidden;
                     .label {
                         line-height: 40px;
@@ -309,8 +383,33 @@
                         float: right;
                     }
                     .btn-box {
+                        position: absolute;
+                        height:35px;
+                        top:73px;
+                        width:86%;
+                        right:0;
                         clear: both;
+                        .btn {
+                            width:130px;
+                            float: left;
+                            text-align: center;
+                            height:35px;
+                            cursor: pointer;
+                            line-height: 35px;
+                            font-weight: 400;
+                            color:#fff;
+                            &.search {
+                                 margin-right: 30px;
+                                 background: #026ab3;
+                             }
+                            &.clears {
+                                 background: #ccc;
+                             }
+                        }
                     }
+                    &.last {
+                        height:110px;
+                     }
                 }
             }
         }
