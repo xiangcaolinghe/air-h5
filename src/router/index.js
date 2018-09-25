@@ -20,6 +20,7 @@ import Platform from '@/views/platform/app'
 import platformIndex from '@/views/platform/children/index'
 import platformAirway from '@/views/platform/children/airway/list'
 import FlowPath from '@/views/platform/children/monthlyManager/flowPath'
+import platformLocal from '@/views/platform/children/localManager/index'
 Vue.use(Router)
 
 export default new Router({
@@ -126,8 +127,17 @@ export default new Router({
           name: 'platform.airway',
           component: platformAirway,
           meta: {
-            auth: true
+            auth: true,
+            hideLeft:true
           },
+        },
+        {
+          path: 'local',
+          name: 'platform.local',
+          component: platformLocal,
+          meta: {
+            auth: true
+          }
         },
         {
           path: 'flowpath',
