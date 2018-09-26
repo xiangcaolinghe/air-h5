@@ -80,7 +80,7 @@
             </div>
           </div>
         </div>
-        <div class="view">
+        <div class="view" :class="{views : $route.meta.hideLeft}">
           <slot name="right-view"></slot>
         </div>
       </div>
@@ -142,7 +142,7 @@
     width: 90%;
     height: 100%;
     margin: auto;
-    //background-color: #cccccc;
+    /*background-color: #cccccc;*/
   }
   .header_nav li{
     list-style: none;
@@ -223,6 +223,10 @@
       flex: 1;
       padding: 0 5%;
       box-sizing: border-box;
+      &.views {
+        flex: auto;
+        width:100%;
+       }
     }
   }
 </style>
