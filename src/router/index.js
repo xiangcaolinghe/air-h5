@@ -20,6 +20,7 @@ import Platform from '@/views/platform/app'
 import platformIndex from '@/views/platform/children/index'
 import platformAirway from '@/views/platform/children/airway/list'
 import FlowPath from '@/views/platform/children/monthlyManager/flowPath'
+import FlowImport from '@/views/platform/children/monthlyManager/import'
 Vue.use(Router)
 
 export default new Router({
@@ -134,6 +135,14 @@ export default new Router({
           name: 'platform.flowpath',
           component: FlowPath,
           meta: {
+            auth: true
+          }
+        },
+        {
+          path: 'flowimport',
+          name: 'platform.flowimport',
+          component: FlowImport,
+          meta:{
             auth: true
           }
         }
