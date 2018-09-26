@@ -27,8 +27,8 @@
           <div class="nav_left"  :class="{active:isActive == 1}">
             <div class="">
               <ul>
-                <li><a href="flowpath" style="height: 88px" @click="switcher(1)" :class="{active:isLeftActive == 1}"><div :class="{active:isLeftActive == 1}"><div>月度上报流程</div></div></a></li>
-                <li><a href="javascript:;" @click="switcher(2)" :class="{active:isLeftActive == 2}"><div :class="{active:isLeftActive == 2}"><div>上报数据导入</div></div></a></li>
+                <li><router-link :to="{name:'platform.flowpath'}" @click="switcher(1)" :class="{active:isLeftActive == 1}"><div :class="{active:isLeftActive == 1}"><div>月度上报流程</div></div></router-link></li>
+                <li><router-link :to="{name:'platform.flowimport'}" @click="switcher(2)" :class="{active:isLeftActive == 2}"><div :class="{active:isLeftActive == 2}"><div>上报数据导入</div></div></router-link></li>
                 <li><a href="javascript:;" @click="switcher(3)" :class="{active:isLeftActive == 3}"><div :class="{active:isLeftActive == 3}"><div>上报数据管理</div></div></a></li>
                 <li><a href="javascript:;" @click="switcher(4)" :class="{active:isLeftActive == 4}"><div :class="{active:isLeftActive == 4}"><div>上报数据统计</div></div></a></li>
                 <li><a href="javascript:;" @click="switcher(5)" :class="{active:isLeftActive == 5}"><div :class="{active:isLeftActive == 5}"><div>批复数据导入</div></div></a></li>
