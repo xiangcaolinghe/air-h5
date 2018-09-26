@@ -1,19 +1,21 @@
 <template>
     <div class="up_header">
       <div class="up_nav">
+        <div class="up_nav_content">
         <span>
           <img src="./../assets/logo.png" alt="">
         </span>
-        <span class="welcome">
+          <span class="welcome">
           <i class="iconfont icon-yonghu"></i>&nbsp;&nbsp;<strong>欢迎您：admin</strong>&nbsp;&nbsp;<i class="iconfont icon-tuichu-copy">
         </i>&nbsp;&nbsp;<strong>退出</strong>&nbsp;&nbsp;
         </span>
+        </div>
       </div>
       <div class="down_header">
           <div class="header_nav">
             <ul>
               <li><router-link :to="{name: 'platform'}"><i class="iconfont icon-home"></i>&nbsp;&nbsp;首页</router-link></li>
-              <li><router-link :to="{name: 'platform.flowpath'}" :class="{active:isActive == 1}"><i class="iconfont icon-tongji1"></i>&nbsp;&nbsp;月度管理</router-link></li>
+              <li><router-link :to="{name: 'platform.flowpath'}" :class="{active:$route.meta.manager == true}"><i class="iconfont icon-tongji1"></i>&nbsp;&nbsp;月度管理</router-link></li>
               <li><a href="javascript:;" @click="switcher(2)" :class="{active:isActive == 2}"><i class="iconfont icon-shenqing"></i>&nbsp;&nbsp;月度申请</a></li>
               <li><a href="javascript:;" @click="switcher(3)" :class="{active:isActive == 3}"><i class="iconfont icon-chulizhong"></i>&nbsp;&nbsp;月度处理</a></li>
               <li><a href="javascript:;" @click="switcher(4)" :class="{active:isActive == 4}"><i class="iconfont icon-ji"></i>&nbsp;&nbsp;季度管理</a></li>
@@ -24,11 +26,11 @@
       </div>
       <div class="p-content">
         <div class="p-left" v-show="!$route.meta.hideLeft">
-          <div class="nav_left"  :class="{active:isActive == 1}">
+          <div class="nav_left" :class="{active:$route.meta.manager == true}">
             <div class="">
               <ul>
-                <li><router-link :to="{name:'platform.flowpath'}" @click="switcher(1)" :class="{active:isLeftActive == 1}"><div :class="{active:isLeftActive == 1}"><div>月度上报流程</div></div></router-link></li>
-                <li><router-link :to="{name:'platform.flowimport'}" @click="switcher(2)" :class="{active:isLeftActive == 2}"><div :class="{active:isLeftActive == 2}"><div>上报数据导入</div></div></router-link></li>
+                <li><router-link :to="{name:'platform.flowpath'}" :class="{active:$route.meta.manager == true}" class="left-cell">月度上报流程</router-link></li>
+                <li><router-link :to="{name:'platform.flowimport'}" :class="{active:$route.meta.manager == true}" class="left-cell">上报数据导入</router-link></li>
                 <li><a href="javascript:;" @click="switcher(3)" :class="{active:isLeftActive == 3}"><div :class="{active:isLeftActive == 3}"><div>上报数据管理</div></div></a></li>
                 <li><a href="javascript:;" @click="switcher(4)" :class="{active:isLeftActive == 4}"><div :class="{active:isLeftActive == 4}"><div>上报数据统计</div></div></a></li>
                 <li><a href="javascript:;" @click="switcher(5)" :class="{active:isLeftActive == 5}"><div :class="{active:isLeftActive == 5}"><div>批复数据导入</div></div></a></li>
@@ -108,49 +110,54 @@
 <style lang="less" scoped>
   .up_header{
     min-width: 1200px;
-    height: 100px;
-    background-color: #026ab3;
-    position: inherit;
-    margin: auto;
-    top: 0px;
-    bottom: 0;
-    left: 0;
-    right: 0;
+    height: 100%;
+    margin: 0 auto;
     font-size: 18px;
     font-weight: bold;
   }
   .up_nav{
-    width: 90%;
-    height: 100%;
+    background-color: #026ab3;
+    width: 100%;
     margin: auto;
-  }
-  .up_nav img{
-    float: left;
-    margin-top: 0.8%;
-  }
-  .welcome{
-    float: right;
-    color: #d5e0ee;
-    margin-top: 40px;
+    .up_nav_content{
+      width: 90%;
+      height: 100px;
+      margin: auto;
+      img{
+        float: left;
+        margin-top: 0.8%;
+      }
+      .welcome{
+        float: right;
+        color: #d5e0ee;
+        margin-top: 40px;
+      }
+    }
   }
   .down_header{
     background-color: #003b64;
     width: 100%;
     height: 85px;
+    .header_nav{
+      width: 90%;
+      height: 100%;
+      margin: auto;
+      li{
+        list-style: none;
+        float: left;
+        width: 12%;
+        text-align: left;
+        margin-top: 30px;
+        &.active{
+          color: white !important;
+        }
+      }
+    }
   }
-  .header_nav{
-    width: 90%;
-    height: 100%;
-    margin: auto;
-    //background-color: #cccccc;
+  .iconfont{
+    font-size: 22px;
   }
-  .header_nav li{
-    list-style: none;
-    float: left;
-    width: 12%;
-    text-align: left;
-    margin-top: 30px;
-  }
+
   a,a:hover{
     text-decoration:none;//去掉下划线
     color: #a3afbc;
@@ -159,65 +166,45 @@
     color: #ffffff;
     font-weight: bolder;
   }
-  .iconfont{
-    font-size: 22px;
-  }
-
-
-  .nav_left{
-    background-color: #003b64;
-    width: 100%;
-    min-height: 880px;
-    font-weight: bolder;
-    font-size: 18px;
-    display: none;
-  }
-  .nav_list{
-    background-color: #026ab3;
-    width: 70%;
-    height: 100%;
-    float: right;
-  }
-  .nav_left li{
-    list-style: none;
-    height: 85px;
-    line-height: 85px;
-  }
-  .nav_left li a div{
-    height: 85px;
-  }
-  .nav_left li a div div{
-    padding-left: 20px;
-  }
-  .nav_left li a,a:hover{
-    display: block;
-    text-decoration:none;//去掉下划线
-    color: #a3afbc;
-    /*height: 85px;*/
-  }
-  .nav_left li a {
-    div.active {
-      color: #003b64 !important;
-      background-color: white !important;
-    }
-  }
-  .nav_left li a:hover{
-    div {
-      color: #003b64;
-      background-color: white;
-    }
-  }
-  .active{
-    display: block;
-  }
-  .header_nav li .active{
-    color: white;
-  }
   .p-content {
     width:100%;
     display: flex;
+    height: 100%;
+    overflow:hidden;
+    zoom:1;
     .p-left {
       width: 16%;
+      min-height: 1200px;
+      height: auto;
+      background-color: #003b64;
+      .nav_left{
+        width: 100%;
+        height: auto;
+        font-weight: bolder;
+        font-size: 18px;
+        display: none;
+        &.active{
+          display: block;
+        }
+        li{
+          list-style: none;
+          height: 85px;
+          line-height: 85px;
+          .left-cell,.left-cell:hover{
+            display: block;
+            text-decoration:none;//去掉下划线
+            color: #a3afbc;
+          }
+          .left-cell:hover{
+            color: #003b64 !important;
+            background-color: white !important;
+          }
+          a:hover{
+            color: #003b64 !important;
+            background-color: white !important;
+          }
+        }
+      }
     }
     .view {
       flex: 1;

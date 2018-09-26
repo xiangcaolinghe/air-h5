@@ -145,7 +145,9 @@ export default new Router({
           name: 'platform.flowpath',
           component: FlowPath,
           meta: {
-            auth: true
+            auth: true,
+            manager: true
+
           }
         },
         {
@@ -153,7 +155,8 @@ export default new Router({
           name: 'platform.flowimport',
           component: FlowImport,
           meta:{
-            auth: true
+            auth: true,
+            manager: true
           }
         }
       ]

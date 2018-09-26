@@ -14,12 +14,12 @@
   .p_footer{
     background-color: #026ab3;
     height: 100px;
-    min-width: 1200px;
-    max-width: 100%;
+    width: 100%;
     font-size: 24px;
     text-align: center;
     color:#fff;
-    margin-top: 965px;
+    position: fixed;
+    bottom: 0;
   }
   .p_footer div{
     padding-top: 40px;
