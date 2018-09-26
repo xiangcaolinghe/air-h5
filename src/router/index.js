@@ -1,7 +1,6 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-// import HelloWorld from '@/components/HelloWorld'
-import test from '@/views/test'
+// 网页
 import Home from '@/views/index'
 import Login from '@/views/login/index'
 import Design from '@/views/design'
@@ -17,12 +16,19 @@ import NoticeList from '@/views/notice/list'
 import NoticeDetails from '@/views/notice/details'
 import signUpList from '@/views/signUp/list'
 import signUpDetail from '@/views/signUp/detail'
+// 班机航线平台
 import Platform from '@/views/platform/app'
 import platformIndex from '@/views/platform/children/index'
 import platformAirway from '@/views/platform/children/airway/list'
 import FlowPath from '@/views/platform/children/monthlyManager/flowPath'
 import FlowImport from '@/views/platform/children/monthlyManager/import'
 import platformLocal from '@/views/platform/children/localManager/index'
+// 后台
+import Backstage from '@/views/backstage/app'
+import BackstageNews from '@/views/backstage/children/news'
+import BackstageNotice from '@/views/backstage/children/notice'
+import BackstageMeeting from '@/views/backstage/children/meeting'
+import BackstageUser from '@/views/backstage/children/user'
 Vue.use(Router)
 
 export default new Router({
@@ -32,11 +38,6 @@ export default new Router({
       path: '/',
       name: 'home',
       component: Home
-    },
-    {
-      path: '/test',
-      name: 'test',
-      component: test
     },
     {
       path: '/login',
@@ -160,6 +161,53 @@ export default new Router({
           component: FlowImport,
           meta:{
             auth: true
+          }
+        }
+      ]
+    },
+    {
+      path: '/backstage/',
+      name: 'backstage',
+      component: Backstage,
+      redirect: '/backstage/news',
+      meta: {
+        auth: true,
+        hideLeft:true
+      },
+      children:[
+        {
+          path: 'news',
+          component: BackstageNews,
+          meta: {
+            auth: true,
+            hideLeft:true
+          }
+        },
+        {
+          path: 'notice',
+          name: 'backstage.notice',
+          component: BackstageNotice,
+          meta: {
+            auth: true,
+            hideLeft:true
+          }
+        },
+        {
+          path: 'meeting',
+          name: 'backstage.meeting',
+          component: BackstageMeeting,
+          meta: {
+            auth: true,
+            hideLeft:true
+          }
+        },
+        {
+          path: 'user',
+          name: 'backstage.user',
+          component: BackstageUser,
+          meta: {
+            auth: true,
+            hideLeft:true
           }
         }
       ]
