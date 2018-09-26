@@ -5,18 +5,16 @@
             <router-view/>
         </div>
     </b-header>
-    <div class="footer">
-      <p-footer></p-footer>
-    </div>
+      <b-footer></b-footer>
   </div>
 </template>
 
 <script>
   import BHeader from './../../components/bheader.vue'
-  import PFooter from './../../components/pfooter.vue'
+  import BFooter from './../../components/bfooter.vue'
   export default {
     name: '',
-    components:{ BHeader,PFooter },
+    components:{ BHeader,BFooter },
     created() {
 
     }
