@@ -17,8 +17,8 @@
               <li><a href="javascript:;" @click="switcher(2)" :class="{active:isActive == 2}"><i class="iconfont icon-shenqing"></i>&nbsp;&nbsp;月度申请</a></li>
               <li><a href="javascript:;" @click="switcher(3)" :class="{active:isActive == 3}"><i class="iconfont icon-chulizhong"></i>&nbsp;&nbsp;月度处理</a></li>
               <li><a href="javascript:;" @click="switcher(4)" :class="{active:isActive == 4}"><i class="iconfont icon-ji"></i>&nbsp;&nbsp;季度管理</a></li>
-              <li><a href="javascript:;" @click="switcher(5)" :class="{active:isActive == 5}"><i class="iconfont icon-tongji"></i>&nbsp;&nbsp;区内管理</a></li>
-              <li><a href="javascript:;" @click="switcher(6)" :class="{active:isActive == 6}"><i class="iconfont icon-flightSchedule"></i>&nbsp;&nbsp;班机航线</a></li>
+              <li><router-link :to="{name:'platform.local'}" :class="{active:isActive == 5}"><i class="iconfont icon-tongji"></i>&nbsp;&nbsp;区内管理</router-link></li>
+              <li><router-link :to="{name:'platform.airway'}" :class="{active:isActive == 6}"><i class="iconfont icon-flightSchedule"></i>&nbsp;&nbsp;班机航线</router-link></li>
             </ul>
           </div>
       </div>
