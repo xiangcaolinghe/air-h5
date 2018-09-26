@@ -177,6 +177,7 @@ export default new Router({
       children:[
         {
           path: 'news',
+          name: 'backstage.news',
           component: BackstageNews,
           meta: {
             auth: true,
