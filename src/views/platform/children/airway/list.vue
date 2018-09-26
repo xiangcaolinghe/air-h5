@@ -31,11 +31,13 @@
                 <el-table
                         :data="tableData"
                         border
-                        style="width: 100%">
+                        :fit="true"
+                        style="width: 100%;min-width: 1200px;">
                     <el-table-column
                             type="index"
                             label="序号"
-                            width="100">
+                            width="100"
+                            class="column">
                     </el-table-column>
                     <el-table-column
                             prop="name"
