@@ -18,7 +18,6 @@
     font-size: 24px;
     text-align: center;
     color:#fff;
-    position: fixed;
     bottom: 0;
   }
   .p_footer div{
