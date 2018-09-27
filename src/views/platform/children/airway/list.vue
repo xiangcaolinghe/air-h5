@@ -30,12 +30,11 @@
             <div class="lists">
                 <el-table
                         :data="tableData"
-                        border
-                        style="width: 100%">
+                        border>
                     <el-table-column
                             type="index"
                             label="序号"
-                            width="100">
+                            class="column">
                     </el-table-column>
                     <el-table-column
                             prop="name"
@@ -212,7 +211,7 @@
                     font-weight: 600;
                 }
                 .el-table__header {
-                    width:100% !important;
+                    /*width:100% !important;*/
                 }
             }
         }
@@ -337,6 +336,7 @@
         margin-bottom: 0 !important;
     }
     .airway-list-page {
+        width:100%;
         .search-table {
             margin:30px 0;
             background: #fff;

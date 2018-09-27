@@ -43,42 +43,73 @@
     <div class="i_content">
       <div class="i_rule">
         <ul>
-          <li><a href="javascript:;" @click="switcher(2)" :class="{active:isActive == 1}">规则数据</a></li>
-          <li><a href="javascript:;" @click="switcher(2)" :class="{active:isActive == 2}">规则数据</a></li>
-          <li><a href="javascript:;" @click="switcher(2)" :class="{active:isActive == 3}">规则数据</a></li>
+          <li :class="{active:isActive == 1}"><a href="javascript:;" @click="switcher(1)">规则数据</a></li>
+          <li :class="{active:isActive == 2}"><a href="javascript:;" @click="switcher(2)">规则数据</a></li>
+          <li :class="{active:isActive == 3}"><a href="javascript:;" @click="switcher(3)">规则数据</a></li>
         </ul>
       </div>
-      <div class="i_tree">
-        <ul>
-          <li class="i_tree_left">
-            <el-tree
-              :data="treeData"
-              show-checkbox
-              node-key="id"
-              :default-expanded-keys="[2]"
-              :default-checked-keys="[5]">
-            </el-tree>
-          </li>
-          <li class="i_tree_middle">
-            <div></div>
-          </li>
-          <li  class="i_tree_right">
-            <div class="i_detail">
-              <div class="title_hr"></div>
-              <div class="detail_title">
-                班机航线详情
+      <div class="i_change">
+        <div class="i_tree" :class="{active:isActive == this.isActive}">
+          <ul>
+            <li class="i_tree_left">
+              <div class="left_data">
+                <el-tree
+                  :data="treeData"
+                  show-checkbox
+                  node-key="id"
+                  ref="tree"
+                  highlight-current
+                  :props="defaultProps">
+                </el-tree>
               </div>
-              <div>
-                航空公司：<input/>
-                申请类型：<input/><br/>
-                出发机场：<input/>
-                到达机场：<input/><br/>
-                使用机型：<input/>
-                飞翔高度：<input/>
+            </li>
+            <li class="i_tree_middle">
+              <div></div>
+            </li>
+            <li  class="i_tree_right">
+              <div class="i_detail">
+                <div class="title_hr"></div>
+                <div class="detail_title">
+                  班机航线详情
+                </div>
+                <div class="i_detail_content">
+                  航空公司：<el-input readonly placeholder="民航局空管局"/>
+                  申请类型：<el-input readonly placeholder="申请类型"/><br/><br/>
+                  出发机场：<el-input readonly placeholder="出发机场"/>
+                  到达机场：<el-input readonly placeholder="到达机场"/><br/><br/>
+                  使用机型：<el-input readonly placeholder="使用机型"/>
+                  飞翔高度：<el-input readonly placeholder="飞翔高度"/>
+                </div>
+                <table class="i_detail_report">
+                  <tr>
+                    <td>
+                      上报走向（去程）
+                      <div>
+                      </div>
+                    </td>
+                    <td>
+                      上报走向（回程）
+                      <div>
+                      </div>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      走向解析（去程）
+                      <div>
+                      </div>
+                    </td>
+                    <td>
+                      走向解析（回程）
+                      <div>
+                      </div>
+                    </td>
+                  </tr>
+                </table>
               </div>
-            </div>
-          </li>
-        </ul>
+            </li>
+          </ul>
+        </div>
       </div>
     </div>
   </div>
@@ -127,6 +158,32 @@
                 label: '三级 3-2-1'
               }]
             }]
+          }, {
+            label: '一级 3',
+            children: [{
+              label: '二级 3-1',
+              children: [{
+                label: '三级 3-1-1'
+              }]
+            }, {
+              label: '二级 3-2',
+              children: [{
+                label: '三级 3-2-1'
+              }]
+            }]
+          }, {
+            label: '一级 3',
+            children: [{
+              label: '二级 3-1',
+              children: [{
+                label: '三级 3-1-1'
+              }]
+            }, {
+              label: '二级 3-2',
+              children: [{
+                label: '三级 3-2-1'
+              }]
+            }]
           }],
           defaultProps: {
             children: 'children',
@@ -135,11 +192,11 @@
         }
       },
     methods: {
-      handleNodeClick(data) {
-        console.log(data);
-      },
       onSubmit(){
         console.log(1);
+      },
+      switcher(number){
+        this.isActive = number;
       }
     }
     }
@@ -150,16 +207,36 @@
       display: none;
     }
   }
+  .i_detail_content{
+    .el-input {
+      position: relative;
+      font-size: 14px;
+      display: inline-block;
+      width: 30%;
+    }
+    input::-webkit-input-placeholder{
+      color:#666666;
+      font-size: 16px;
+    }
+    input::-moz-placeholder{   /* Mozilla Firefox 19+ */
+      color:#666666;
+      font-size: 16px;
+    }
+    input:-moz-placeholder{    /* Mozilla Firefox 4 to 18 */
+      color:#666666;
+      font-size: 16px;
+    }
+    input:-ms-input-placeholder{  /* Internet Explorer 10-11 */
+      color:#666666;
+      font-size: 16px;
+    }
+  }
 </style>
 <style lang="less" scoped>
   .container{
-    margin: auto;
-    top: 0px;
-    bottom: 0;
-    left: 0;
-    right: 0;
     font-size: 18px;
     width: 100%;
+    height: 100%;
   }
   .i_title{
     padding-top: 56px;
@@ -238,19 +315,26 @@
         width: 140px;
         border: 1px #d6d6d6 solid;
         text-align: center;
+        &.active{
+          background-color: #026ab3;
+          a{
+            color: white;
+          }
+        }
       }
-      li active{
-        background-color: #026ab3;
-      }
+    }
+    .i_change{
+      width: 100%;
+      height: 100%;
     }
     .i_tree{
       margin-top: 25.5px;
       width: 100%;
       height: 100%;
       ul{
-        border-top: 1px #d6d6d6 solid;
+        border: 1px #d6d6d6 solid;
         width: 100%;
-        height: auto;
+        height: 550px;
       }
       li{
         text-decoration: none;  /*去掉前面的圆点*/
@@ -259,13 +343,22 @@
         margin-top: 20px;
       }
       .i_tree_left{
-        width: 45%;
-        height: auto;
-        border-left: 1px #d6d6d6 solid;
+        width: 42%;
+        height: 500px;
+        .left_data{
+          height: 100%;
+          overflow-y: scroll;
+          overflow-x: hidden;
+          height: 500px;
+          .el-tree {
+            min-width: 100%;
+            display:inline-block !important;
+          }
+        }
       }
       .i_tree_middle{
-        width: 10%;
-        height: 100%;
+        width: 6%;
+        height: 90%;
         div{
           width: 1px;
           height: 100%;
@@ -273,13 +366,13 @@
         }
       }
       .i_tree_right{
-        width: 45%;
+        width: 52%;
         height: auto;
-        border-right: 1px #d6d6d6 solid;
+        /*border-right: 1px #d6d6d6 solid;*/
         .i_detail{
           width: 100%;
           height: 100%;
-          margin-left: 10px;
+          margin-left: 5px;
           .title_hr{
             background-color: #026ab3;
             width: 5px;
@@ -288,6 +381,27 @@
           .detail_title{
             margin-top: -20px;
             margin-left: 10px;
+          }
+          .i_detail_content{
+            margin-top: 35px;
+            font-weight: normal;
+            color: #666666;
+          }
+          .i_detail_report{
+            font-weight: normal;
+            color: #666666;
+            margin-top: 50px;
+            width: 100%;
+            /*margin-bottom: 180px;*/
+            td{
+              width: 50%;
+              div{
+                width: 80%;
+                height: 80px;
+                border: 1px #d6d6d6 solid;
+                margin-top: 10px;
+              }
+            }
           }
         }
       }

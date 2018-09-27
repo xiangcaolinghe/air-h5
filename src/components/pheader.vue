@@ -31,9 +31,9 @@
               <ul>
                 <li><router-link :to="{name:'platform.flowpath'}" :class="{active:$route.meta.manager == true}" class="left-cell">月度上报流程</router-link></li>
                 <li><router-link :to="{name:'platform.flowimport'}" :class="{active:$route.meta.manager == true}" class="left-cell">上报数据导入</router-link></li>
-                <li><a href="javascript:;" @click="switcher(3)" :class="{active:isLeftActive == 3}"><div :class="{active:isLeftActive == 3}"><div>上报数据管理</div></div></a></li>
-                <li><a href="javascript:;" @click="switcher(4)" :class="{active:isLeftActive == 4}"><div :class="{active:isLeftActive == 4}"><div>上报数据统计</div></div></a></li>
-                <li><a href="javascript:;" @click="switcher(5)" :class="{active:isLeftActive == 5}"><div :class="{active:isLeftActive == 5}"><div>批复数据导入</div></div></a></li>
+                <li><router-link :to="{name:'platform.flowmanager'}" :class="{active:$route.meta.manager == true}" class="left-cell">上报数据管理</router-link></li>
+                <li><router-link :to="{name:'platform.flowimport'}" :class="{active:$route.meta.manager == true}" class="left-cell">上报数据统计</router-link></li>
+                <li><router-link :to="{name:'platform.flowimport'}" :class="{active:$route.meta.manager == true}" class="left-cell">批复数据导入</router-link></li>
               </ul>
             </div>
           </div>
@@ -82,7 +82,7 @@
             </div>
           </div>
         </div>
-        <div class="view">
+        <div class="view" :class="{views : $route.meta.hideLeft}">
           <slot name="right-view"></slot>
         </div>
       </div>
@@ -154,10 +154,9 @@
       }
     }
   }
-  .iconfont{
+  .iconfont {
     font-size: 22px;
   }
-
   a,a:hover{
     text-decoration:none;//去掉下划线
     color: #a3afbc;
@@ -210,6 +209,10 @@
       flex: 1;
       padding: 0 5%;
       box-sizing: border-box;
+      &.views {
+        flex: auto;
+        width:100%;
+       }
     }
   }
 </style>
