@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="backstage-news-page">
 
     </div>
 </template>
@@ -14,5 +14,8 @@
   }
 </script>
 
-<style lang="less">
+<style lang="less" scoped>
+    .backstage-news-page {
+
+    }
 </style>

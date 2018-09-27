@@ -23,7 +23,7 @@
             </ul>
           </div>
         </div>
-        <div class="view" :class="{views : $route.meta.hideLeft}">
+        <div class="view">
           <slot name="right-view"></slot>
         </div>
       </div>
@@ -126,18 +126,16 @@
   }
   .p-content {
     width:100%;
-    display: flex;
+    overflow:hidden;
     .p-left {
+      float: left;
       width: 16%;
     }
     .view {
-      flex: 1;
+      float: left;
+      width: 84%;
       padding: 0 5%;
       box-sizing: border-box;
-      &.views {
-        flex: auto;
-        width:100%;
-       }
     }
   }
 </style>
