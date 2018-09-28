@@ -33,7 +33,7 @@
                   <li><router-link :to="{name:'platform.flowpath'}" :class="{active:$route.meta.manager == true}" class="left-cell">月度上报流程</router-link></li>
                   <li><router-link :to="{name:'platform.flowimport'}" :class="{active:$route.meta.manager == true}" class="left-cell">上报数据导入</router-link></li>
                   <li><router-link :to="{name:'platform.flowmanager'}" :class="{active:$route.meta.manager == true}" class="left-cell">上报数据管理</router-link></li>
-                  <li><router-link :to="{name:'platform.flowimport'}" :class="{active:$route.meta.manager == true}" class="left-cell">上报数据统计</router-link></li>
+                  <li><router-link :to="{name:'platform.flowstatistics'}" :class="{active:$route.meta.manager == true}" class="left-cell">上报数据统计</router-link></li>
                   <li><router-link :to="{name:'platform.flowimport'}" :class="{active:$route.meta.manager == true}" class="left-cell">批复数据导入</router-link></li>
                 </ul>
               </div>
@@ -84,7 +84,7 @@
             </div>
           </div>
         </div>
-        <div class="view" :class="{views : $route.meta.hideLeft}">
+        <div class="view" :class="{views : $route.meta.hideLeft,manager_statistics:$route.name == 'platform.flowstatistics'}">
           <slot name="right-view"></slot>
         </div>
       </div>
@@ -172,6 +172,7 @@
     overflow:hidden;
     position: relative;
     zoom:1;
+    min-height: 800px;
     .p-left {
       width: 16%;
       float: left;
@@ -223,6 +224,9 @@
       &.views {
         width:100%;
        }
+      &.manager_statistics {
+        padding: 0 5% 0 0;
+      }
     }
   }
 </style>

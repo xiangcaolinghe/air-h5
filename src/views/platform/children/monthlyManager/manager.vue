@@ -93,7 +93,7 @@
               <template slot-scope="scope">
                 <el-button @click="handleClick(scope.row,scope.$index)" type="text" size="small">地图展示</el-button>
                 <el-button type="text" size="small" @click="detailClick(scope.row,scope.$index)">编辑</el-button>
-                <el-button type="text" size="small" class="detele-cl" @click="detailClick(scope.row,scope.$index)">删除</el-button>
+                <el-button type="text" size="small" class="detele-cl" @click="deteleClick(scope.row,scope.$index)">删除</el-button>
                 <el-button type="text" size="small" class="detail-cl" @click="detailClick(scope.row,scope.$index)">详情</el-button>
                 <el-button type="text" size="small" class="untreated-cl" @click="detailClick(scope.row,scope.$index)">未处理</el-button>
                 <el-button type="text" size="small" @click="detailClick(scope.row,scope.$index)">特别关注</el-button>
@@ -185,16 +185,26 @@
         }
       },
       methods:{
+        handleSizeChange(val) {
+          this.pageSize = val;
+//        console.log(`每页 ${val} 条`);
+        },
+        handleCurrentChange(val) {
+          this.currentPage = val;
+        },
         handleClick(row,idx) {
           this.airwayPic = true
           console.log(row,idx)
         },
         detailClick(row,idx) {
-          this.airwayDetail = true
-          this.$router.push({path: '/platform/flowManagerAdd',params:{id: idx}});
+          this.airwayDetail = true;
+          this.$router.push({name: 'platform.flowmanageradd',params:{id: 1}});
+        },
+        deteleClick(row,idx){
+          alert("删除该条信息！");
         },
         addPage(){
-          this.$router.push({path: '/platform/flowManagerAdd'});
+          this.$router.push({name: 'platform.flowmanageradd',params:{id: 0}});
         }
       }
     }

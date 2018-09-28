@@ -10,14 +10,14 @@
       </div>
       <div class="form_content">
         <div>
-          出发城市：<input type="text" name="manager.startCity"/>&nbsp;&nbsp;&nbsp;&nbsp;
-          航线名称：<input type="text" name="manager.hxName"/>&nbsp;&nbsp;&nbsp;&nbsp;
-          总距离值：<input type="text" name="manager.totalDistance"/>
+          出发城市：<input type="text" v-model="manager.startCity"/>&nbsp;&nbsp;&nbsp;&nbsp;
+          航线名称：<input type="text" v-model="manager.hxName"/>&nbsp;&nbsp;&nbsp;&nbsp;
+          总距离值：<input type="text" v-model="manager.totalDistance"/>
         </div>
         <div>
-          出发城市：<input type="text" name="manager.arriveCity"/>&nbsp;&nbsp;&nbsp;&nbsp;
-          航线名称：<input type="text" name="manager.hkCompany"/>&nbsp;&nbsp;&nbsp;&nbsp;
-          总距离值：<input type="text" name="manager.minHeight"/>
+          出发城市：<input type="text" v-model="manager.arriveCity"/>&nbsp;&nbsp;&nbsp;&nbsp;
+          航线名称：<input type="text" v-model="manager.hkCompany"/>&nbsp;&nbsp;&nbsp;&nbsp;
+          总距离值：<input type="text" v-model="manager.minHeight"/>
         </div>
       </div>
       <div class="form_title">
@@ -28,16 +28,19 @@
         <table class="describe-cl">
           <tr>
             <td>
-              <p>去程描述：</p><textarea/>
+              <p>去程描述：</p><textarea v-model="manager.goDescribe"/>
             </td>
             <td>
-              <p>回程描述：</p><textarea/>
+              <p>回程描述：</p><textarea v-model="manager.returnDescribe"/>
             </td>
           </tr>
         </table>
-        <div class="btn-box">
-          <div class="btn search">确认</div>
-          <div class="btn clears">取消</div>
+        <div class="btn-div">
+          <el-checkbox v-model="manager.goReturn">往返同</el-checkbox>
+          <div class="btn-box">
+            <div class="btn search">确认</div>
+            <div class="btn clears" @click="cancel()">取消</div>
+          </div>
         </div>
       </div>
     </div>
@@ -56,13 +59,34 @@
             arriveCity: '',
             hkCompany: '',
             minHeight: '',
-            id: ''
+            id: '',
+            goDescribe: '',
+            returnDescribe: '',
+            goReturn: true
           }
         }
       },
-      methods: {},
+      methods: {
+        cancel(){
+          this.$router.push({path: '/platform/flowManager'});
+        }
+      },
       created(){
-        console.log(this.$route.query.id);
+        var id = this.$route.params.id;
+        if (id != 0){
+          this.manager={
+            startCity: '鄂尔多斯伊金霍洛',
+              hxName: '鄂尔多斯伊金霍洛',
+              totalDistance: '鄂尔多斯伊金霍洛',
+              arriveCity: '秦皇岛北戴河',
+              hkCompany: '上海航空公司',
+              minHeight: '鄂尔多斯伊金霍洛',
+              goDescribe: '鄂尔多斯伊金霍洛  鄂尔多斯VOR H57 P284  B215 行唐NDB  W132  天津NDB  A326 KALBA  H7  滦县VOR 秦皇岛北戴河 ',
+              returnDescribe: '鄂尔多斯伊金霍洛  鄂尔多斯VOR H57 P284  B215 行唐NDB  W132  天津NDB  A326 KALBA  H7  滦县VOR 秦皇岛北戴河 ',
+              goReturn: true
+          }
+          console.log(this.manager);
+        }
     }
     }
 </script>
@@ -122,9 +146,42 @@
             }
           }
         }
-        .btn-box{
+        .btn-div{
+          width: 100%;
+          height: 100%;
+          padding-top: 40px;
+          .el-checkbox{
+            margin-left: 80px;
+          }
+          .btn-box{
+            margin-top:-25px;
+            margin-left: 35%;
+            .el-checkbox{
+              float: left;
+            }
+            .btn{
+              width:150px;
+              height: 0px;
+              float: left;
+              text-align: center;
+              color: white;
+              padding-top: 15px;
+              &.search {
+                margin-right: 30px;
+                background: #026ab3;
+              }
+              &.clears {
+                background: #ccc;
+              }
+            }
+          }
+        }
+        /*.btn-box{
           margin-top:30px;
           margin-left: 30%;
+          .el-checkbox{
+            !*float: left;*!
+          }
           .btn{
             width:150px;
             height: 0px;
@@ -140,7 +197,7 @@
               background: #ccc;
             }
           }
-        }
+        }*/
       }
     }
   }
