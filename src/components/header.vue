@@ -2,7 +2,7 @@
   <div class="ca-header">
     <div class="pass">
       <div class="inner-c">
-        <router-link :to="{name:'platform'}" class="words">管理员通道</router-link>
+        <router-link :to="{name:'home'}" class="words">管理员通道</router-link>
       </div>
     </div>
     <div class="box">
