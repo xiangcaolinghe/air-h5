@@ -112,6 +112,8 @@
   }
   .welcome{
     float: right;
+    height:100px;
+    overflow: hidden;
     line-height: 100px;
     font-size: 20px;
     color: #d5e0ee;
