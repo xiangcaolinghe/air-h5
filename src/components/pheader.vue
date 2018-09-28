@@ -26,59 +26,61 @@
       </div>
       <div class="p-content">
         <div class="p-left" v-show="!$route.meta.hideLeft">
-          <div class="nav_left" :class="{active:$route.meta.manager == true}">
-            <div class="">
-              <ul>
-                <li><router-link :to="{name:'platform.flowpath'}" :class="{active:$route.meta.manager == true}" class="left-cell">月度上报流程</router-link></li>
-                <li><router-link :to="{name:'platform.flowimport'}" :class="{active:$route.meta.manager == true}" class="left-cell">上报数据导入</router-link></li>
-                <li><router-link :to="{name:'platform.flowmanager'}" :class="{active:$route.meta.manager == true}" class="left-cell">上报数据管理</router-link></li>
-                <li><router-link :to="{name:'platform.flowimport'}" :class="{active:$route.meta.manager == true}" class="left-cell">上报数据统计</router-link></li>
-                <li><router-link :to="{name:'platform.flowimport'}" :class="{active:$route.meta.manager == true}" class="left-cell">批复数据导入</router-link></li>
-              </ul>
+          <div class="p-left-height">
+            <div class="nav_left" :class="{active:$route.meta.manager == true}">
+              <div class="">
+                <ul>
+                  <li><router-link :to="{name:'platform.flowpath'}" :class="{active:$route.meta.manager == true}" class="left-cell">月度上报流程</router-link></li>
+                  <li><router-link :to="{name:'platform.flowimport'}" :class="{active:$route.meta.manager == true}" class="left-cell">上报数据导入</router-link></li>
+                  <li><router-link :to="{name:'platform.flowmanager'}" :class="{active:$route.meta.manager == true}" class="left-cell">上报数据管理</router-link></li>
+                  <li><router-link :to="{name:'platform.flowimport'}" :class="{active:$route.meta.manager == true}" class="left-cell">上报数据统计</router-link></li>
+                  <li><router-link :to="{name:'platform.flowimport'}" :class="{active:$route.meta.manager == true}" class="left-cell">批复数据导入</router-link></li>
+                </ul>
+              </div>
             </div>
-          </div>
-          <div class="nav_left"  :class="{active:isActive == 2}">
-            <div class="">
-              <ul>
-                <li><a href="javascript:;"><div><div>月度上报流程2</div></div></a></li>
-                <li><a href="javascript:;"><div><div>上报数据导入2</div></div></a></li>
-                <li><a href="javascript:;"><div><div>上报数据管理2</div></div></a></li>
-                <li><a href="javascript:;"><div><div>上报数据统计2</div></div></a></li>
-                <li><a href="javascript:;"><div><div>批复数据导入2</div></div></a></li>
-              </ul>
+            <div class="nav_left"  :class="{active:isActive == 2}">
+              <div class="">
+                <ul>
+                  <li><a href="javascript:;"><div><div>月度上报流程2</div></div></a></li>
+                  <li><a href="javascript:;"><div><div>上报数据导入2</div></div></a></li>
+                  <li><a href="javascript:;"><div><div>上报数据管理2</div></div></a></li>
+                  <li><a href="javascript:;"><div><div>上报数据统计2</div></div></a></li>
+                  <li><a href="javascript:;"><div><div>批复数据导入2</div></div></a></li>
+                </ul>
+              </div>
             </div>
-          </div>
-          <div class="nav_left"  :class="{active:isActive == 3}">
-            <div class="">
-              <ul>
-                <li><a href="javascript:;"><div><div>月度上报流程3</div></div></a></li>
-                <li><a href="javascript:;"><div><div>上报数据导入3</div></div></a></li>
-                <li><a href="javascript:;"><div><div>上报数据管理3</div></div></a></li>
-                <li><a href="javascript:;"><div><div>上报数据统计3</div></div></a></li>
-                <li><a href="javascript:;"><div><div>批复数据导入3</div></div></a></li>
-              </ul>
+            <div class="nav_left"  :class="{active:isActive == 3}">
+              <div class="">
+                <ul>
+                  <li><a href="javascript:;"><div><div>月度上报流程3</div></div></a></li>
+                  <li><a href="javascript:;"><div><div>上报数据导入3</div></div></a></li>
+                  <li><a href="javascript:;"><div><div>上报数据管理3</div></div></a></li>
+                  <li><a href="javascript:;"><div><div>上报数据统计3</div></div></a></li>
+                  <li><a href="javascript:;"><div><div>批复数据导入3</div></div></a></li>
+                </ul>
+              </div>
             </div>
-          </div>
-          <div class="nav_left"  :class="{active:isActive == 4}">
-            <div class="">
-              <ul>
-                <li><a href="javascript:;"><div><div>月度上报流程4</div></div></a></li>
-                <li><a href="javascript:;"><div><div>上报数据导入4</div></div></a></li>
-                <li><a href="javascript:;"><div><div>上报数据管理4</div></div></a></li>
-                <li><a href="javascript:;"><div><div>上报数据统计4</div></div></a></li>
-                <li><a href="javascript:;"><div><div>批复数据导入4</div></div></a></li>
-              </ul>
+            <div class="nav_left"  :class="{active:isActive == 4}">
+              <div class="">
+                <ul>
+                  <li><a href="javascript:;"><div><div>月度上报流程4</div></div></a></li>
+                  <li><a href="javascript:;"><div><div>上报数据导入4</div></div></a></li>
+                  <li><a href="javascript:;"><div><div>上报数据管理4</div></div></a></li>
+                  <li><a href="javascript:;"><div><div>上报数据统计4</div></div></a></li>
+                  <li><a href="javascript:;"><div><div>批复数据导入4</div></div></a></li>
+                </ul>
+              </div>
             </div>
-          </div>
-          <div class="nav_left"  :class="{active:isActive == 5}">
-            <div class="">
-              <ul>
-                <li><a href="javascript:;"><div><div>月度上报流程5</div></div></a></li>
-                <li><a href="javascript:;"><div><div>上报数据导入5</div></div></a></li>
-                <li><a href="javascript:;"><div><div>上报数据管理5</div></div></a></li>
-                <li><a href="javascript:;"><div><div>上报数据统计5</div></div></a></li>
-                <li><a href="javascript:;"><div><div>批复数据导入5</div></div></a></li>
-              </ul>
+            <div class="nav_left"  :class="{active:isActive == 5}">
+              <div class="">
+                <ul>
+                  <li><a href="javascript:;"><div><div>月度上报流程5</div></div></a></li>
+                  <li><a href="javascript:;"><div><div>上报数据导入5</div></div></a></li>
+                  <li><a href="javascript:;"><div><div>上报数据管理5</div></div></a></li>
+                  <li><a href="javascript:;"><div><div>上报数据统计5</div></div></a></li>
+                  <li><a href="javascript:;"><div><div>批复数据导入5</div></div></a></li>
+                </ul>
+              </div>
             </div>
           </div>
         </div>
@@ -167,50 +169,58 @@
   }
   .p-content {
     width:100%;
-    display: flex;
-    height: 100%;
     overflow:hidden;
+    position: relative;
     zoom:1;
     .p-left {
       width: 16%;
-      min-height: 1200px;
-      height: auto;
+      float: left;
+      min-height: 800px;
+      height: 100%;
       background-color: #003b64;
-      .nav_left{
-        width: 100%;
-        height: auto;
-        font-weight: bolder;
-        font-size: 18px;
-        display: none;
-        &.active{
-          display: block;
-        }
-        li{
-          list-style: none;
-          height: 85px;
-          line-height: 85px;
-          .left-cell,.left-cell:hover{
+      .p-left-height{
+        position: absolute;
+        width: 16%;
+        top: 0;
+        left: 0;
+        background-color: #003b64;
+        height: 100%;
+        .nav_left{
+          width: 100%;
+          height: auto;
+          font-weight: bolder;
+          font-size: 18px;
+          display: none;
+          &.active{
             display: block;
-            text-decoration:none;//去掉下划线
-            color: #a3afbc;
           }
-          .left-cell:hover{
-            color: #003b64 !important;
-            background-color: white !important;
-          }
-          a:hover{
-            color: #003b64 !important;
-            background-color: white !important;
+          li{
+            list-style: none;
+            height: 85px;
+            line-height: 85px;
+            .left-cell,.left-cell:hover{
+              display: block;
+              text-decoration:none;//去掉下划线
+              color: #a3afbc;
+            }
+            .left-cell:hover{
+              color: #003b64 !important;
+              background-color: white !important;
+            }
+            a:hover{
+              color: #003b64 !important;
+              background-color: white !important;
+            }
           }
         }
       }
     }
     .view {
-      flex: 1;
+      float: left;
+      width: 84%;
       padding: 0 5%;
       box-sizing: border-box;
       &.views {
-        flex: auto;
         width:100%;
        }
     }

@@ -24,6 +24,7 @@ import FlowPath from '@/views/platform/children/monthlyManager/flowPath'
 import FlowImport from '@/views/platform/children/monthlyManager/import'
 import platformLocal from '@/views/platform/children/localManager/index'
 import FlowManager from '@/views/platform/children/monthlyManager/manager'
+import FlowManagerAdd from '@/views/platform/children/monthlyManager/manager_add'
 // 后台
 import Backstage from '@/views/backstage/app'
 import BackstageNews from '@/views/backstage/children/news'
@@ -171,6 +172,15 @@ export default new Router({
           path: 'flowManager',
           name: 'platform.flowmanager',
           component: FlowManager,
+          meta:{
+            auth: true,
+            manager: true
+          }
+        },
+        {
+          path: 'flowManagerAdd',
+          name: 'platform.flowmanageradd',
+          component: FlowManagerAdd,
           meta:{
             auth: true,
             manager: true

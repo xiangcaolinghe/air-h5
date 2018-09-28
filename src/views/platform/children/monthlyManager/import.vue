@@ -237,6 +237,7 @@
     font-size: 18px;
     width: 100%;
     height: 100%;
+    padding-bottom:50px;
   }
   .i_title{
     padding-top: 56px;
@@ -300,25 +301,25 @@
     margin-top: 50px;
     text-align: left;
     font-size: 18px;
-    width: 74%;
-    height: auto;
-    position: absolute;
+    width: 100%;
+    /*height: auto;*/
+    /*position: absolute;*/
     .i_rule{
       font-weight: normal;
-      .i_rule_li{
-        border-top: white;
-        border-right: white;
-      }
-      li{
-        list-style: none;
-        float: left;
-        width: 140px;
-        border: 1px #d6d6d6 solid;
-        text-align: center;
-        &.active{
-          background-color: #026ab3;
-          a{
-            color: white;
+      width: 100%;
+      height: 0.1px;
+      ul{
+        li{
+          list-style: none;
+          float: left;
+          width: 140px;
+          border: 1px #d6d6d6 solid;
+          text-align: center;
+          &.active{
+            background-color: #026ab3;
+            a{
+              color: white;
+            }
           }
         }
       }
@@ -326,80 +327,80 @@
     .i_change{
       width: 100%;
       height: 100%;
-    }
-    .i_tree{
-      margin-top: 25.5px;
-      width: 100%;
-      height: 100%;
-      ul{
-        border: 1px #d6d6d6 solid;
+      .i_tree{
+        margin-top: 25.5px;
         width: 100%;
-        height: 550px;
-      }
-      li{
-        text-decoration: none;  /*去掉前面的圆点*/
-        list-style: none;
-        float: left;
-        margin-top: 20px;
-      }
-      .i_tree_left{
-        width: 42%;
-        height: 500px;
-        .left_data{
-          height: 100%;
-          overflow-y: scroll;
-          overflow-x: hidden;
-          height: 500px;
-          .el-tree {
-            min-width: 100%;
-            display:inline-block !important;
-          }
-        }
-      }
-      .i_tree_middle{
-        width: 6%;
-        height: 90%;
-        div{
-          width: 1px;
-          height: 100%;
-          background-color: #d6d6d6;
-        }
-      }
-      .i_tree_right{
-        width: 52%;
-        height: auto;
-        /*border-right: 1px #d6d6d6 solid;*/
-        .i_detail{
+        height: 100%;
+        ul{
+          border: 1px #d6d6d6 solid;
           width: 100%;
-          height: 100%;
-          margin-left: 5px;
-          .title_hr{
-            background-color: #026ab3;
-            width: 5px;
-            height: 16px;
+          height: 550px;
+        }
+        li{
+          text-decoration: none;  /*去掉前面的圆点*/
+          list-style: none;
+          float: left;
+          margin-top: 20px;
+        }
+        .i_tree_left{
+          width: 42%;
+          height: 500px;
+          .left_data{
+            height: 100%;
+            overflow-y: scroll;
+            overflow-x: hidden;
+            height: 500px;
+            .el-tree {
+              min-width: 100%;
+              display:inline-block !important;
+            }
           }
-          .detail_title{
-            margin-top: -20px;
-            margin-left: 10px;
+        }
+        .i_tree_middle{
+          width: 6%;
+          height: 90%;
+          div{
+            width: 1px;
+            height: 100%;
+            background-color: #d6d6d6;
           }
-          .i_detail_content{
-            margin-top: 35px;
-            font-weight: normal;
-            color: #666666;
-          }
-          .i_detail_report{
-            font-weight: normal;
-            color: #666666;
-            margin-top: 50px;
+        }
+        .i_tree_right{
+          width: 52%;
+          height: auto;
+          /*border-right: 1px #d6d6d6 solid;*/
+          .i_detail{
             width: 100%;
-            /*margin-bottom: 180px;*/
-            td{
-              width: 50%;
-              div{
-                width: 80%;
-                height: 80px;
-                border: 1px #d6d6d6 solid;
-                margin-top: 10px;
+            height: 100%;
+            margin-left: 5px;
+            .title_hr{
+              background-color: #026ab3;
+              width: 5px;
+              height: 16px;
+            }
+            .detail_title{
+              margin-top: -20px;
+              margin-left: 10px;
+            }
+            .i_detail_content{
+              margin-top: 35px;
+              font-weight: normal;
+              color: #666666;
+            }
+            .i_detail_report{
+              font-weight: normal;
+              color: #666666;
+              margin-top: 50px;
+              width: 100%;
+              /*margin-bottom: 180px;*/
+              td{
+                width: 50%;
+                div{
+                  width: 80%;
+                  height: 80px;
+                  border: 1px #d6d6d6 solid;
+                  margin-top: 10px;
+                }
               }
             }
           }
