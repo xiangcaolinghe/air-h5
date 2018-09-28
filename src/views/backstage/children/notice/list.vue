@@ -24,6 +24,7 @@
                     ref="multipleTable"
                     :data="tableData"
                     tooltip-effect="dark"
+                    v-loading="loading"
                     border
                     style="width: 100%"
                     @selection-change="handleSelectionChange">
@@ -198,6 +199,7 @@
     components:{ quillEditor },
     data() {
       return {
+        loading:false,
         imageUrl: '',
         editContent:'',
         content: '<h2>I am Example</h2>',
@@ -395,7 +397,6 @@
       }
     },
     created() {
-
     },
     mounted() {
       // you can use current editor object to do something(editor methods)

@@ -15,6 +15,7 @@
                     :data="tableData"
                     tooltip-effect="dark"
                     border
+                    v-loading="loading"
                     style="width: 100%"
                     @selection-change="handleSelectionChange">
                 <el-table-column
@@ -147,6 +148,7 @@
     components:{ quillEditor },
     data() {
       return {
+        loading:false,
         editPop:false,
         addPop:false,
         imageUrl: '',
