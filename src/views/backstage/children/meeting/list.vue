@@ -57,6 +57,17 @@
                 </el-table-column>
             </el-table>
         </div>
+        <div class="pagination-table">
+            <el-pagination
+                    @size-change="handleSizeChange"
+                    @current-change="handleCurrentChange"
+                    :current-page="currentPage4"
+                    :page-sizes="[100, 200, 300, 400]"
+                    :page-size="100"
+                    layout="total, sizes, prev, pager, next, jumper"
+                    :total="400">
+            </el-pagination>
+        </div>
     </div>
 </template>
 
@@ -66,6 +77,7 @@
     components:{  },
     data() {
       return {
+        currentPage4: 4,
         input:'',
         tableData: [{
           date: '2016-05-03',
@@ -106,6 +118,12 @@
       }
     },
     methods: {
+      handleSizeChange(val) {
+        console.log(val);
+      },
+      handleCurrentChange(val) {
+        console.log(val);
+      },
       // 选择
       handleSelectionChange(val) {
         this.multipleSelection = val;
@@ -207,6 +225,9 @@
                 color:#ff3333;
                 font-size: 14px;
             }
+        }
+        .pagination-table {
+            margin-top: 40px;
         }
     }
 </style>
