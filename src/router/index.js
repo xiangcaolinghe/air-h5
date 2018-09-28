@@ -27,7 +27,8 @@ import FlowManager from '@/views/platform/children/monthlyManager/manager'
 import FlowManagerAdd from '@/views/platform/children/monthlyManager/manager_add'
 // 后台
 import Backstage from '@/views/backstage/app'
-import BackstageNews from '@/views/backstage/children/news'
+import BackstageNews from '@/views/backstage/children/news/list'
+import BackstageNewsDetai from '@/views/backstage/children/news/details'
 import BackstageNotice from '@/views/backstage/children/notice'
 import BackstageMeeting from '@/views/backstage/children/meeting'
 import BackstageUser from '@/views/backstage/children/user'
@@ -203,8 +204,15 @@ export default new Router({
           name: 'backstage.news',
           component: BackstageNews,
           meta: {
+            auth: true
+          }
+        },
+        {
+          path:'news/detail',
+          name:'backstage.news.detail',
+          component:BackstageNewsDetai,
+          meta: {
             auth: true,
-            hideLeft:true
           }
         },
         {
@@ -212,8 +220,7 @@ export default new Router({
           name: 'backstage.notice',
           component: BackstageNotice,
           meta: {
-            auth: true,
-            hideLeft:true
+            auth: true
           }
         },
         {
@@ -222,7 +229,6 @@ export default new Router({
           component: BackstageMeeting,
           meta: {
             auth: true,
-            hideLeft:true
           }
         },
         {
@@ -231,7 +237,6 @@ export default new Router({
           component: BackstageUser,
           meta: {
             auth: true,
-            hideLeft:true
           }
         }
       ]

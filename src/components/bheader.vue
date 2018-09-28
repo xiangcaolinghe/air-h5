@@ -97,8 +97,9 @@
   }
   .nav-left{
     background-color: #003b64;
-    width: 100%;
-    min-height: 880px;
+    position: absolute;
+    width:16%;
+    height:100%;
     font-weight: bolder;
     font-size: 18px;
     li{
@@ -126,15 +127,17 @@
   }
   .p-content {
     width:100%;
+    position: relative;
     overflow:hidden;
     .p-left {
       float: left;
+      min-height: 880px;
       width: 16%;
     }
     .view {
       float: left;
       width: 84%;
-      padding: 0 5%;
+      padding: 0 5% 0 2%;
       box-sizing: border-box;
     }
   }
