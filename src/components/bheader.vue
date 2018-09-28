@@ -20,7 +20,7 @@
         <div class="p-left">
           <div class="nav-left active">
             <ul>
-              <li><router-link :to="{name:'backstage'}" class="left-c" :class="{active: $route.name == 'backstage.news'}"><i class="icon iconfont icon-xinwen"></i>新闻管理</router-link></li>
+              <li><router-link :to="{name:'home'}" class="left-c" :class="{active: $route.name == 'backstage.news'}"><i class="icon iconfont icon-xinwen"></i>新闻管理</router-link></li>
               <li><router-link :to="{name:'backstage.notice'}" class="left-c" :class="{active: $route.name == 'backstage.notice'}"><i class="icon iconfont icon-gonggao"></i>公告管理</router-link></li>
               <li><router-link :to="{name:'backstage.meeting'}" class="left-c" :class="{active: $route.name == 'backstage.meeting'}"><i class="icon iconfont icon-huiyi"></i>会议管理</router-link></li>
               <li><router-link :to="{name:'backstage.user'}" class="left-c" :class="{active: $route.name == 'backstage.user'}"><i class="icon iconfont icon-yonghuguanli"></i>用户管理</router-link></li>
