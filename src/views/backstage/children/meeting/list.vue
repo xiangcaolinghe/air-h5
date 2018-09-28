@@ -27,14 +27,19 @@
                         class="column">
                 </el-table-column>
                 <el-table-column
-                        label="标题"
+                        label="会议名称"
                         show-overflow-tooltip>
                     <template slot-scope="scope">{{ scope.row.date }}</template>
                 </el-table-column>
                 <el-table-column
                         prop="name"
-                        label="时间"
+                        label="会议时间"
                         width="120">
+                </el-table-column>
+                <el-table-column
+                        prop="address"
+                        label="会议地点"
+                        width="200">
                 </el-table-column>
                 <el-table-column
                         prop="address"
@@ -128,7 +133,7 @@
       },
       // 进入详情
       linkDetail(id) {
-        this.$router.push({name:'backstage.news.detail',query:{id:id}})
+        this.$router.push({name:'backstage.meeting.detail',query:{id:id}})
       }
     },
     created() {
