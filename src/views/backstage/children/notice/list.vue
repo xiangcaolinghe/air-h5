@@ -1,9 +1,19 @@
 <template>
-    <div class="backstage-news-page">
+    <div class="backstage-notice-page">
         <div class="search-nav">
             <div class="input-table">
                 <el-input v-model="input" placeholder="请输入关键词汇" class="input-search"></el-input>
                 <i class="el-icon-search icon"></i>
+            </div>
+            <div class="select-table">
+                <el-select v-model="value" placeholder="请选择">
+                    <el-option
+                            v-for="item in options"
+                            :key="item.value"
+                            :label="item.label"
+                            :value="item.value">
+                    </el-option>
+                </el-select>
             </div>
             <div class="btn-cell">搜索</div>
             <div class="btn-cell">添加</div>
@@ -32,26 +42,67 @@
                     <template slot-scope="scope">{{ scope.row.date }}</template>
                 </el-table-column>
                 <el-table-column
-                        prop="name"
+                        prop="type"
+                        label="分类"
+                        width="100">
+                    <template slot-scope="scope">
+                        <el-button type="text" size="small" class="edit">{{scope.row.typeName}}</el-button>
+                    </template>
+                </el-table-column>
+                <el-table-column
+                        prop="date"
                         label="时间"
                         width="120">
                 </el-table-column>
                 <el-table-column
-                        prop="address"
+                        prop="name"
                         label="创建者"
                         width="120">
                 </el-table-column>
                 <el-table-column
+                        prop="top"
+                        label="置顶"
+                        width="120">
+                    <template slot-scope="scope">
+                        <el-button type="text" size="small" class="look"  @click="toggleTop(scope.row.id,scope.row.top)">{{scope.row.topName}}</el-button>
+                    </template>
+                </el-table-column>
+                <el-table-column
                         label="操作"
-                        width="200">
+                        width="250">
                     <template slot-scope="scope">
                         <el-button type="text" size="small" class="look" @click="linkDetail(scope.row.id)">查看</el-button>
                         <el-button type="text" size="small" class="edit">编辑</el-button>
                         <el-button type="text" size="small" class="del" @click="del(scope.row.id)">删除</el-button>
+                        <el-button type="text" size="small" class="tip" @click="tip(scope.row.id)">短信提醒</el-button>
                     </template>
                 </el-table-column>
             </el-table>
         </div>
+        <!--短信提醒弹框-->
+        <el-dialog title="短信提醒" :visible.sync="tipPop" class="tip-dialog">
+            <div class="content">
+                <div class="cell">
+                    <span class="name">短信内容：</span>
+                    <el-input
+                            type="textarea"
+                            :rows="5"
+                            class="flew-input"
+                            placeholder="请输入内容"
+                            v-model="textarea">
+                    </el-input>
+                </div>
+                <div class="cell">
+                    <span class="name">相关用户：</span>
+                    <el-input v-model="inputUser" placeholder="请输入内容" class="flew-input input-user"></el-input>
+                    <span class="btn">选择</span>
+                </div>
+            </div>
+            <div slot="footer" class="dialog-footer">
+                <el-button type="primary" @click="tipPop = false" class="confirm">确 定</el-button>
+                <el-button @click="tipPop = false" class="cancel">取 消</el-button>
+            </div>
+        </el-dialog>
     </div>
 </template>
 
@@ -61,41 +112,83 @@
     components:{  },
     data() {
       return {
+        tipPop:false,
         input:'',
+        textarea:'',
+        inputUser:'',
+        options: [{
+          value: '1',
+          label: '换季通知'
+        }, {
+          value: '2',
+          label: '临时航线'
+        }, {
+          value: '3',
+          label: '会议通知'
+        }],
+        value: '',
         tableData: [{
           date: '2016-05-03',
           id:'22',
           name: '王小虎',
-          address: '上海市普陀区金沙江路 1518 弄'
+          address: '上海市普陀区金沙江路 1518 弄',
+          top:'1',
+          topName:'取消置顶',
+          type:'1',
+          typeName:'换季通知'
         }, {
           date: '2016-05-02',
           name: '王小虎',
           id:'33',
-          address: '上海市普陀区金沙江路 1518 弄'
+          top:'0',
+          topName:'置顶',
+          address: '上海市普陀区金沙江路 1518 弄',
+          type:'2',
+          typeName:'临时航线'
         }, {
           date: '2016-05-04',
           name: '王小虎',
           id:'23',
-          address: '上海市普陀区金沙江路 1518 弄'
+          top:'1',
+          topName:'取消置顶',
+          address: '上海市普陀区金沙江路 1518 弄',
+          type:'3',
+          typeName:'会议通知'
         }, {
           date: '2016-05-01',
           name: '王小虎',
           id:'56',
-          address: '上海市普陀区金沙江路 1518 弄'
+          top:'1',
+          topName:'取消置顶',
+          address: '上海市普陀区金沙江路 1518 弄',
+          type:'3',
+          typeName:'会议通知'
         }, {
           date: '2016-05-08',
           name: '王小虎',
           id:'89',
-          address: '上海市普陀区金沙江路 1518 弄'
+          top:'1',
+          topName:'取消置顶',
+          address: '上海市普陀区金沙江路 1518 弄',
+          type:'3',
+          typeName:'会议通知'
         }, {
           date: '2016-05-06',
           name: '王小虎',
-          address: '上海市普陀区金沙江路 1518 弄'
+          top:'0',
+          topName:'置顶',
+          address: '上海市普陀区金沙江路 1518 弄',
+          type:'3',
+          typeName:'会议通知'
         }, {
           date: '2016-05-07',
           name: '王小虎',
           id:'98',
-          address: '上海市普陀区金沙江路 1518 弄'
+          top:'1',
+          topName:'取消置顶',
+          address: '上海市普陀区金沙江路 1518 弄',
+          type:'3',
+          typeName:'会议通知'
         }],
         multipleSelection: []
       }
@@ -126,9 +219,17 @@
           });
         });
       },
+      // 短信提醒
+      tip(id) {
+        this.tipPop = true
+      },
       // 进入详情
       linkDetail(id) {
         this.$router.push({name:'backstage.notice.detail',query:{id:id}})
+      },
+      // 置顶
+      toggleTop(id,top) {
+        console.log(id,top)
       }
     },
     created() {
@@ -138,7 +239,61 @@
 </script>
 
 <style lang="less">
-    .backstage-news-page {
+    .backstage-notice-page {
+        .tip-dialog {
+            .el-dialog {
+                max-width: 1200px;
+                width: 100%;
+                .dialog-footer {
+                    text-align: center;
+                    .el-button {
+                        margin-left: 80px;
+                    }
+                    .el-button--primary {
+                        background: #026ab3;
+                        border-color: #026ab3;
+                    }
+                }
+                .el-dialog__header {
+                    text-align: left;
+                    border-bottom: 1px solid #ccc;
+                }
+                .el-dialog__body {
+                    .content {
+                        width:100%;
+                        padding:10px 30px;
+                        box-sizing: border-box;
+                        .cell {
+                            display: flex;
+                            margin-bottom: 30px;
+                            width:100%;
+                            .name {
+                                display: block;
+                                width:120px;
+                                line-height: 40px;
+                                text-align: left;
+                                font-size: 20px;
+                                color:#333;
+                            }
+                            .flew-input {
+                                flex: 1;
+                            }
+                            .btn {
+                                display: block;
+                                width:120px;
+                                height:40px;
+                                line-height: 40px;
+                                text-align: center;
+                                font-size: 18px;
+                                color:#fff;
+                                margin-left: 30px;
+                                background: #026ab3;
+                            }
+                        }
+                    }
+                }
+            }
+        }
         .search-nav {
             padding:30px 30px 36px;
             margin-top: 30px;
@@ -148,7 +303,7 @@
             .input-table {
                 float: left;
                 position: relative;
-                width:50%;
+                width:35%;
                 .input-search {
                     .el-input__inner {
                         padding-left:30px;
@@ -161,6 +316,12 @@
                     font-size: 20px;
                     left:5px;
                 }
+            }
+            .select-table {
+                float: left;
+                margin-left: 30px;
+                position: relative;
+                width:15%;
             }
             .btn-cell {
                 float: left;
@@ -200,6 +361,10 @@
             }
             .el-button.del.el-button--text.el-button--small {
                 color:#ff3333;
+                font-size: 14px;
+            }
+            .el-button.tip.el-button--text.el-button--small {
+                color: #df9718;
                 font-size: 14px;
             }
         }
