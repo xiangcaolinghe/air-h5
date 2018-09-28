@@ -30,8 +30,10 @@ import FlowStatistics from '@/views/platform/children/monthlyManager/statistics'
 import Backstage from '@/views/backstage/app'
 import BackstageNews from '@/views/backstage/children/news/list'
 import BackstageNewsDetai from '@/views/backstage/children/news/details'
-import BackstageNotice from '@/views/backstage/children/notice'
-import BackstageMeeting from '@/views/backstage/children/meeting'
+import BackstageNotice from '@/views/backstage/children/notice/list'
+import BackstageNoticeDetail from '@/views/backstage/children/notice/details'
+import BackstageMeeting from '@/views/backstage/children/meeting/list'
+import BackstageMeetingDetail from '@/views/backstage/children/meeting/details'
 import BackstageUser from '@/views/backstage/children/user'
 Vue.use(Router)
 
@@ -234,9 +236,25 @@ export default new Router({
           }
         },
         {
+          path: 'notice/detail',
+          name: 'backstage.notice.detail',
+          component: BackstageNoticeDetail,
+          meta: {
+            auth: true
+          }
+        },
+        {
           path: 'meeting',
           name: 'backstage.meeting',
           component: BackstageMeeting,
+          meta: {
+            auth: true,
+          }
+        },
+        {
+          path: 'meeting/detail',
+          name: 'backstage.meeting.detail',
+          component: BackstageMeetingDetail,
           meta: {
             auth: true,
           }

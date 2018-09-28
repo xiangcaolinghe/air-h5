@@ -4,7 +4,7 @@
     <div class="contain">
       <ul class="current_position">
         <li>当前位置：</li>
-        <li><router-link :to="{name:'backstage.news'}">新闻管理</router-link></li>
+        <li><router-link :to="{name:'backstage.notice'}">公告管理</router-link></li>
         <li>&nbsp;&nbsp;<i class="icon iconfont icon-youjiantou"></i>&nbsp;&nbsp;&nbsp;</li>
         <li><a href="javascript:;">详情</a></li>
       </ul>

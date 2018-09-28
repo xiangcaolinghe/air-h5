@@ -7,8 +7,12 @@
           <span class="name">管理平台</span>
         </span>
           <span class="welcome">
-          <i class="iconfont icon-yonghu"></i>&nbsp;&nbsp;<strong>欢迎您：admin</strong>&nbsp;&nbsp;<i class="iconfont icon-tuichu-copy">
-        </i>&nbsp;&nbsp;<strong>退出</strong>&nbsp;&nbsp;
+            <span class="user">
+              <i class="iconfont icon icon-yonghu"></i><strong>欢迎您：admin</strong>
+            </span>
+            <span class="exit" @click="exit">
+              <i class="iconfont icon icon-tuichu-copy"></i><strong>退出</strong>
+            </span>
         </span>
         </div>
       </div>
@@ -43,6 +47,11 @@
       methods:{
         switcher(number){
           this.isLeftActive=number;
+        },
+        // 退出登陆
+        exit() {
+          storage.delete('token');
+          this.$router.push({name:'login'})
         }
       }
     }
@@ -85,8 +94,25 @@
   }
   .welcome{
     float: right;
+    line-height: 100px;
+    font-size: 20px;
     color: #d5e0ee;
-    margin-top: 40px;
+    .user {
+      cursor: pointer;
+      margin-right: 30px;
+      .iconfont {
+        font-size: 27px;
+        margin-right: 10px;
+      }
+    }
+    .exit {
+      cursor: pointer;
+      margin-right: 5px;
+      .iconfont {
+        font-size: 25px;
+        margin-right: 10px;
+      }
+    }
   }
   .header-nav li{
     list-style: none;
