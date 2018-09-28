@@ -7,6 +7,9 @@ import API from './config/APIHeader';
 import LocalStorageUtils from  './utils/LocalStorageUtils'
 import ElementUI from 'element-ui';
 import 'element-ui/lib/theme-chalk/index.css';
+import  VueQuillEditor from 'vue-quill-editor'
+
+Vue.use(VueQuillEditor)
 Vue.use(ElementUI);
 window.API = API;
 Vue.config.productionTip = false

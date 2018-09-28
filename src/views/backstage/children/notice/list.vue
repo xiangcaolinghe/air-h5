@@ -16,7 +16,7 @@
                 </el-select>
             </div>
             <div class="btn-cell">搜索</div>
-            <div class="btn-cell">添加</div>
+            <div class="btn-cell" @click="addPop = true">添加</div>
             <div class="btn-cell">删除</div>
         </div>
         <div class="result-table">
@@ -72,7 +72,7 @@
                         width="250">
                     <template slot-scope="scope">
                         <el-button type="text" size="small" class="look" @click="linkDetail(scope.row.id)">查看</el-button>
-                        <el-button type="text" size="small" class="edit">编辑</el-button>
+                        <el-button type="text" size="small" class="edit" @click="edit(scope.row.id)">编辑</el-button>
                         <el-button type="text" size="small" class="del" @click="del(scope.row.id)">删除</el-button>
                         <el-button type="text" size="small" class="tip" @click="tip(scope.row.id)">短信提醒</el-button>
                     </template>
@@ -114,17 +114,100 @@
                 <el-button @click="tipPop = false" class="cancel">取 消</el-button>
             </div>
         </el-dialog>
+        <!--添加弹框-->
+        <el-dialog title="添加新闻" :visible.sync="addPop" class="tip-dialog">
+            <div class="content">
+                <div class="cell">
+                    <span class="name">标题：</span>
+                    <el-input v-model="inputUser" placeholder="请输入内容" class="flew-input"></el-input>
+                </div>
+                <div class="cell">
+                    <span class="name">缩略图：</span>
+                    <el-upload
+                            class="avatar-uploader"
+                            action="https://jsonplaceholder.typicode.com/posts/"
+                            :show-file-list="false"
+                            :on-success="handleAvatarSuccess"
+                            :before-upload="beforeAvatarUpload">
+                        <img v-if="imageUrl" :src="imageUrl" class="avatar">
+                        <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+                    </el-upload>
+                </div>
+                <div class="cell">
+                    <span class="name">内容：</span>
+                    <quill-editor ref="myTextEditor"
+                                  v-model="content"
+                                  :config="editorOption"
+                                  @blur="onEditorBlur($event)"
+                                  @focus="onEditorFocus($event)"
+                                  @ready="onEditorReady($event)">
+                    </quill-editor>
+                </div>
+            </div>
+            <div slot="footer" class="dialog-footer">
+                <el-button type="primary" @click="tipPop = false" class="confirmAdd">确 定</el-button>
+                <el-button @click="tipPop = false" class="cancelAdd">取 消</el-button>
+            </div>
+        </el-dialog>
+        <!--编辑弹框-->
+        <el-dialog title="编辑" :visible.sync="editPop" class="tip-dialog">
+            <div class="content">
+                <div class="cell">
+                    <span class="name">标题：</span>
+                    <el-input v-model="inputUser" placeholder="请输入内容" class="flew-input"></el-input>
+                </div>
+                <div class="cell">
+                    <span class="name">缩略图：</span>
+                    <el-upload
+                            class="avatar-uploader"
+                            action="https://jsonplaceholder.typicode.com/posts/"
+                            :show-file-list="false"
+                            :on-success="handleAvatarSuccess"
+                            :before-upload="beforeAvatarUpload">
+                        <img v-if="imageUrl" :src="imageUrl" class="avatar">
+                        <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+                    </el-upload>
+                </div>
+                <div class="cell">
+                    <span class="name">内容：</span>
+                    <quill-editor ref="myTextEditor"
+                                  v-model="editContent"
+                                  :config="editorOption"
+                                  @blur="onEditorBlur($event)"
+                                  @focus="onEditorFocus($event)"
+                                  @ready="onEditorReady($event)">
+                    </quill-editor>
+                </div>
+            </div>
+            <div slot="footer" class="dialog-footer">
+                <el-button type="primary" @click="tipPop = false" class="confirmTip">确 定</el-button>
+                <el-button @click="tipPop = false" class="cancelTip">取 消</el-button>
+            </div>
+        </el-dialog>
     </div>
 </template>
 
 <script>
+  import 'quill/dist/quill.core.css'
+  import 'quill/dist/quill.snow.css'
+  import 'quill/dist/quill.bubble.css'
+
+  import { quillEditor } from 'vue-quill-editor'
   export default {
     name: '',
-    components:{  },
+    components:{ quillEditor },
     data() {
       return {
+        imageUrl: '',
+        editContent:'',
+        content: '<h2>I am Example</h2>',
+        editorOption: {
+          // something config
+        },
         currentPage4: 4,
         tipPop:false,
+        editPop:false,
+        addPop:false,
         input:'',
         textarea:'',
         inputUser:'',
@@ -205,7 +288,27 @@
         multipleSelection: []
       }
     },
+    computed: {
+      editor() {
+        return this.$refs.myTextEditor.quillEditor
+      }
+    },
     methods: {
+      handleAvatarSuccess(res, file) {
+        this.imageUrl = URL.createObjectURL(file.raw);
+      },
+      beforeAvatarUpload(file) {
+        const isJPG = file.type === 'image/jpeg';
+        const isLt2M = file.size / 1024 / 1024 < 2;
+
+        if (!isJPG) {
+          this.$message.error('上传头像图片只能是 JPG 格式!');
+        }
+        if (!isLt2M) {
+          this.$message.error('上传头像图片大小不能超过 2MB!');
+        }
+        return isJPG && isLt2M;
+      },
       handleSizeChange(val) {
         console.log(val);
       },
@@ -248,70 +351,63 @@
       // 置顶
       toggleTop(id,top) {
         console.log(id,top)
+      },
+      // 编辑
+      edit(id) {
+        this.editPop = true
+      },
+      //确定添加
+      confirmAdd() {
+
+      },
+      // 取消添加
+      cancelAdd() {
+
+      },
+      //确定编辑
+      confirmEdit() {
+
+      },
+      // 取消编辑
+      cancelEdit() {
+
+      },
+      //确定短信提醒
+      confirmEdit() {
+
+      },
+      // 取消短信提醒
+      cancelEdit() {
+
+      },
+      onEditorBlur(editor) {
+        console.log('editor blur!', editor)
+      },
+      onEditorFocus(editor) {
+        console.log('editor focus!', editor)
+      },
+      onEditorReady(editor) {
+        console.log('editor ready!', editor)
+      },
+      onEditorChange({ editor, html, text }) {
+        // console.log('editor change!', editor, html, text)
+        this.content = html
       }
     },
     created() {
 
-    }
+    },
+    mounted() {
+      // you can use current editor object to do something(editor methods)
+      console.log('this is my editor', this.editor)
+      // this.editor to do something...
+    },
   }
 </script>
 
 <style lang="less">
+    @import "./../../../../assets/styles/edit-pop.less";
     .backstage-notice-page {
-        .tip-dialog {
-            .el-dialog {
-                max-width: 1200px;
-                width: 100%;
-                .dialog-footer {
-                    text-align: center;
-                    .el-button {
-                        margin-left: 80px;
-                    }
-                    .el-button--primary {
-                        background: #026ab3;
-                        border-color: #026ab3;
-                    }
-                }
-                .el-dialog__header {
-                    text-align: left;
-                    border-bottom: 1px solid #ccc;
-                }
-                .el-dialog__body {
-                    .content {
-                        width:100%;
-                        padding:10px 30px;
-                        box-sizing: border-box;
-                        .cell {
-                            display: flex;
-                            margin-bottom: 30px;
-                            width:100%;
-                            .name {
-                                display: block;
-                                width:120px;
-                                line-height: 40px;
-                                text-align: left;
-                                font-size: 20px;
-                                color:#333;
-                            }
-                            .flew-input {
-                                flex: 1;
-                            }
-                            .btn {
-                                display: block;
-                                width:120px;
-                                height:40px;
-                                line-height: 40px;
-                                text-align: center;
-                                font-size: 18px;
-                                color:#fff;
-                                margin-left: 30px;
-                                background: #026ab3;
-                            }
-                        }
-                    }
-                }
-            }
-        }
         .search-nav {
             padding:30px 30px 36px;
             margin-top: 30px;

@@ -6,7 +6,7 @@
                 <i class="el-icon-search icon"></i>
             </div>
             <div class="btn-cell">搜索</div>
-            <div class="btn-cell">添加</div>
+            <div class="btn-cell" @click="addPop = true">添加</div>
             <div class="btn-cell">删除</div>
         </div>
         <div class="result-table">
@@ -46,7 +46,7 @@
                         width="200">
                     <template slot-scope="scope">
                         <el-button type="text" size="small" class="look" @click="linkDetail(scope.row.id)">查看</el-button>
-                        <el-button type="text" size="small" class="edit">编辑</el-button>
+                        <el-button type="text" size="small" class="edit" @click="edit(scope.row.id)">编辑</el-button>
                         <el-button type="text" size="small" class="del" @click="del(scope.row.id)">删除</el-button>
                     </template>
                 </el-table-column>
@@ -63,15 +63,98 @@
                     :total="400">
             </el-pagination>
         </div>
+        <!--添加弹框-->
+        <el-dialog title="添加新闻" :visible.sync="addPop" class="tip-dialog">
+            <div class="content">
+                <div class="cell">
+                    <span class="name">标题：</span>
+                    <el-input v-model="inputUser" placeholder="请输入内容" class="flew-input"></el-input>
+                </div>
+                <div class="cell">
+                    <span class="name">缩略图：</span>
+                    <el-upload
+                            class="avatar-uploader"
+                            action="https://jsonplaceholder.typicode.com/posts/"
+                            :show-file-list="false"
+                            :on-success="handleAvatarSuccess"
+                            :before-upload="beforeAvatarUpload">
+                        <img v-if="imageUrl" :src="imageUrl" class="avatar">
+                        <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+                    </el-upload>
+                </div>
+                <div class="cell">
+                    <span class="name">内容：</span>
+                    <quill-editor ref="myTextEditor"
+                                  v-model="content"
+                                  :config="editorOption"
+                                  @blur="onEditorBlur($event)"
+                                  @focus="onEditorFocus($event)"
+                                  @ready="onEditorReady($event)">
+                    </quill-editor>
+                </div>
+            </div>
+            <div slot="footer" class="dialog-footer">
+                <el-button type="primary" @click="tipPop = false" class="confirmAdd">确 定</el-button>
+                <el-button @click="tipPop = false" class="cancelAdd">取 消</el-button>
+            </div>
+        </el-dialog>
+        <!--编辑弹框-->
+        <el-dialog title="编辑" :visible.sync="editPop" class="tip-dialog">
+            <div class="content">
+                <div class="cell">
+                    <span class="name">标题：</span>
+                    <el-input v-model="inputUser" placeholder="请输入内容" class="flew-input"></el-input>
+                </div>
+                <div class="cell">
+                    <span class="name">缩略图：</span>
+                    <el-upload
+                            class="avatar-uploader"
+                            action="https://jsonplaceholder.typicode.com/posts/"
+                            :show-file-list="false"
+                            :on-success="handleAvatarSuccess"
+                            :before-upload="beforeAvatarUpload">
+                        <img v-if="imageUrl" :src="imageUrl" class="avatar">
+                        <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+                    </el-upload>
+                </div>
+                <div class="cell">
+                    <span class="name">内容：</span>
+                    <quill-editor ref="myTextEditor"
+                                  v-model="editContent"
+                                  :config="editorOption"
+                                  @blur="onEditorBlur($event)"
+                                  @focus="onEditorFocus($event)"
+                                  @ready="onEditorReady($event)">
+                    </quill-editor>
+                </div>
+            </div>
+            <div slot="footer" class="dialog-footer">
+                <el-button type="primary" @click="tipPop = false" class="confirmTip">确 定</el-button>
+                <el-button @click="tipPop = false" class="cancelTip">取 消</el-button>
+            </div>
+        </el-dialog>
     </div>
 </template>
 
 <script>
+  import 'quill/dist/quill.core.css'
+  import 'quill/dist/quill.snow.css'
+  import 'quill/dist/quill.bubble.css'
+
+  import { quillEditor } from 'vue-quill-editor'
   export default {
     name: '',
-    components:{  },
+    components:{ quillEditor },
     data() {
       return {
+        editPop:false,
+        addPop:false,
+        imageUrl: '',
+        editContent:'',
+        content: '<h2>I am Example</h2>',
+        editorOption: {
+          // something config
+        },
         currentPage4: 4,
         input:'',
         tableData: [{
@@ -112,7 +195,27 @@
         multipleSelection: []
       }
     },
+    computed: {
+      editor() {
+        return this.$refs.myTextEditor.quillEditor
+      }
+    },
     methods: {
+      handleAvatarSuccess(res, file) {
+        this.imageUrl = URL.createObjectURL(file.raw);
+      },
+      beforeAvatarUpload(file) {
+        const isJPG = file.type === 'image/jpeg';
+        const isLt2M = file.size / 1024 / 1024 < 2;
+
+        if (!isJPG) {
+          this.$message.error('上传头像图片只能是 JPG 格式!');
+        }
+        if (!isLt2M) {
+          this.$message.error('上传头像图片大小不能超过 2MB!');
+        }
+        return isJPG && isLt2M;
+      },
       handleSizeChange(val) {
         console.log(val);
       },
@@ -147,15 +250,54 @@
       // 进入详情
       linkDetail(id) {
         this.$router.push({name:'backstage.news.detail',query:{id:id}})
+      },
+      // 编辑
+      edit(id) {
+        this.editPop = true
+      },
+      //确定添加
+      confirmAdd() {
+
+      },
+      // 取消添加
+      cancelAdd() {
+
+      },
+      //确定编辑
+      confirmEdit() {
+
+      },
+      // 取消编辑
+      cancelEdit() {
+
+      },
+      onEditorBlur(editor) {
+        console.log('editor blur!', editor)
+      },
+      onEditorFocus(editor) {
+        console.log('editor focus!', editor)
+      },
+      onEditorReady(editor) {
+        console.log('editor ready!', editor)
+      },
+      onEditorChange({ editor, html, text }) {
+        // console.log('editor change!', editor, html, text)
+        this.content = html
       }
     },
     created() {
 
+    },
+    mounted() {
+      // you can use current editor object to do something(editor methods)
+      console.log('this is my editor', this.editor)
+      // this.editor to do something...
     }
   }
 </script>
 
 <style lang="less">
+    @import "./../../../../assets/styles/edit-pop.less";
     .backstage-news-page {
         .search-nav {
             padding:30px 30px 36px;
