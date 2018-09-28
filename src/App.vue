@@ -1,17 +1,13 @@
 <template>
   <div id="app">
-    <c-header v-show="!$route.meta.auth"></c-header>
     <router-view/>
-    <c-footer v-show="!$route.meta.auth"></c-footer>
   </div>
 </template>
 
 <script>
-  import CHeader from './components/header.vue'
-  import CFooter from './components/footer.vue'
 export default {
   name: 'App',
-  components:{ CHeader, CFooter },
+  components:{  },
   created() {
 
   }
