@@ -50,8 +50,26 @@
         },
         // 退出登陆
         exit() {
-          storage.delete('token');
-          this.$router.push({name:'login'})
+          this.$confirm('您确定要退出管理平台?', '提示', {
+            confirmButtonText: '确定',
+            cancelButtonText: '取消',
+            type: 'warning'
+          }).then(() => {
+            storage.delete('token');
+            this.$message({
+              type: 'success',
+              message: '您已成功退出!'
+            });
+            let that = this
+            setTimeout(function () {
+              that.$router.push({name:'login'})
+            },300)
+          }).catch(() => {
+            this.$message({
+              type: 'info',
+              message: '已取消退出'
+            });
+          });
         }
       }
     }
