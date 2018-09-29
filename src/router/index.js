@@ -12,6 +12,8 @@ import FlowManagerAdd from '@/views/platform/children/monthlyManager/manager_add
 import FlowStatistics from '@/views/platform/children/monthlyManager/statistics'
 import FlowReplyImport from '@/views/platform/children/monthlyManager/replyImport'
 import FlowReplyExport from '@/views/platform/children/monthlyManager/replyExport'
+import monthApplyRegular from '@/views/platform/children/monthlyApply/regular'
+import monthApplySpecial from '@/views/platform/children/monthlyApply/special'
 Vue.use(Router)
 
 export default new Router({
@@ -114,6 +116,24 @@ export default new Router({
           meta:{
             auth: true,
             manager: true
+          }
+        },
+        {
+          path: 'month/apply/regular',
+          name: 'month.apply.regular',
+          component: monthApplyRegular,
+          meta:{
+            auth: true,
+            monthApply:true
+          }
+        },
+        {
+          path: 'month/apply/special',
+          name: 'month.apply.special',
+          component: monthApplySpecial,
+          meta:{
+            auth: true,
+            monthApply:true
           }
         }
       ]

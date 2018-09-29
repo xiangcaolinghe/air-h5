@@ -1,5 +1,6 @@
 <template>
-    <div class="airway-list-page">
+    <div class="month-apply-page">
+        <div class="page-header">月度申请</div>
         <div class="search-table">
 
         </div>
@@ -61,7 +62,9 @@
   }
 </script>
 <style lang="less">
-    .airway-list-page {
+    .month-apply-page {
+        .search-table {
 
+        }
     }
 </style>
