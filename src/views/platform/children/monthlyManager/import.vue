@@ -5,10 +5,10 @@
     </div>
     <div class="i_select">
       <ul>
-        <li>
+        <li style="width: 25%">
           数据类型：<el-input v-model="type" class="i_input" placeholder="请输入内容"/>
         </li>
-        <li>
+        <li style="width: 25%">
           <div class="block">
             <span class="demonstration">申报时间：</span>
             <el-date-picker
@@ -19,17 +19,20 @@
             </el-date-picker>
           </div>
         </li>
-        <li>
-          文件名称：<el-input v-model="name"  class="i_input"  placeholder="请输入内容"/>
+        <li style="width: 35%">
+          文件名称：<el-input v-model="name"  class="i_input_file"  placeholder="请输入内容"/>
         </li>
-        <li>
-          <el-button type="primary" @click="onSubmit">选择检查数据</el-button>
+        <li style="width: 15%">
+          <div class="bnt search">选择检查数据</div>
         </li>
       </ul>
-      <el-button type="primary" @click="onSubmit" class="i_bnt">导入数据</el-button>
-      <el-button type="primary" @click="onSubmit" style="width: 10%">重新导入</el-button>
-      <el-button type="primary" @click="onSubmit" style="width: 10%">追加导入</el-button>
-      <el-button type="primary" @click="onSubmit" style="width: 15%">航空公司管理</el-button>
+      <br/><br/><br/>
+      <div class="find_bnt">
+        <div class="bnt search">导入数据</div>
+        <div class="bnt search">重新导入</div>
+        <div class="bnt search">追加导入</div>
+        <div class="bnt search">航空公司管理</div>
+      </div>
     </div>
     <div class="hint">
       <span class="marked_words"><i class="el-icon-info"></i>&nbsp;&nbsp;温馨提示</span>
@@ -250,6 +253,26 @@
     padding-top: 70px;
     text-align: left;
     width: 100%;
+    .i_input{
+      width: 55%;
+    }
+    .i_input_file{
+      width: 70%;
+    }
+    .bnt{
+      width: 130px;
+      float: left;
+      text-align: center;
+      height: 35px;
+      cursor: pointer;
+      line-height: 35px;
+      font-weight: 400;
+      color: #fff;
+      &.search {
+        margin-right: 30px;
+        background: #026ab3;
+      }
+    }
   }
   .declare_time{
     margin-top: -20px;
@@ -264,9 +287,6 @@
   }
   .block{
     margin-left: -5%;
-  }
-  .i_input{
-    width: 50%;
   }
   .el-button--primary{
     width: 80%;
