@@ -68,7 +68,7 @@
       },
       methods: {
         cancel(){
-          this.$router.push({path: '/platform/flowManager'});
+          this.$router.push({path: '/flowManager'});
         }
       },
       created(){

@@ -31,11 +31,11 @@
             <div class="nav_left" :class="{active:$route.meta.manager == true}">
               <div class="">
                 <ul>
-                  <li><router-link :to="{name:'platform.flowpath'}" :class="{active:$route.meta.manager == true}" class="left-cell">月度上报流程</router-link></li>
-                  <li><router-link :to="{name:'platform.flowimport'}" :class="{active:$route.meta.manager == true}" class="left-cell">上报数据导入</router-link></li>
-                  <li><router-link :to="{name:'platform.flowmanager'}" :class="{active:$route.meta.manager == true}" class="left-cell">上报数据管理</router-link></li>
-                  <li><router-link :to="{name:'platform.flowstatistics'}" :class="{active:$route.meta.manager == true}" class="left-cell">上报数据统计</router-link></li>
-                  <li><router-link :to="{name:'platform.flowreplyimport'}" :class="{active:$route.meta.manager == true}" class="left-cell">批复数据导入</router-link></li>
+                  <li><router-link :to="{name:'platform.flowpath'}" :class="{active:$route.name == 'platform.flowpath'}" class="left-cell">月度上报流程</router-link></li>
+                  <li><router-link :to="{name:'platform.flowimport'}" :class="{active:$route.name == 'platform.flowimport'}" class="left-cell">上报数据导入</router-link></li>
+                  <li><router-link :to="{name:'platform.flowmanager'}" :class="{active:$route.name == 'platform.flowmanager'}" class="left-cell">上报数据管理</router-link></li>
+                  <li><router-link :to="{name:'platform.flowstatistics'}" :class="{active:$route.name == 'platform.flowstatistics'}" class="left-cell">上报数据统计</router-link></li>
+                  <li><router-link :to="{name:'platform.flowreplyimport'}" :class="{active:$route.name == 'platform.flowreplyimport'}" class="left-cell">批复数据导入</router-link></li>
                 </ul>
               </div>
             </div>
@@ -222,18 +222,15 @@
             list-style: none;
             height: 85px;
             line-height: 85px;
-            .left-cell,.left-cell:hover{
+            .left-cell{
               display: block;
+              height: 85px;
               text-decoration:none;//去掉下划线
               color: #a3afbc;
-            }
-            .left-cell:hover{
-              color: #003b64 !important;
-              background-color: white !important;
-            }
-            a:hover{
-              color: #003b64 !important;
-              background-color: white !important;
+              &.active {
+                color: #003b64 !important;
+                background-color: white !important;
+              }
             }
           }
         }
