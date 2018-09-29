@@ -36,6 +36,7 @@
                   <li><router-link :to="{name:'platform.flowmanager'}" :class="{active:$route.name == 'platform.flowmanager'}" class="left-cell">上报数据管理</router-link></li>
                   <li><router-link :to="{name:'platform.flowstatistics'}" :class="{active:$route.name == 'platform.flowstatistics'}" class="left-cell">上报数据统计</router-link></li>
                   <li><router-link :to="{name:'platform.flowreplyimport'}" :class="{active:$route.name == 'platform.flowreplyimport'}" class="left-cell">批复数据导入</router-link></li>
+                  <li><router-link :to="{name:'platform.flowreplyexport'}" :class="{active:$route.name == 'platform.flowreplyexport'}" class="left-cell">批复数据导出</router-link></li>
                 </ul>
               </div>
             </div>

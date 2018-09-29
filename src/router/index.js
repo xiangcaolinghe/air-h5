@@ -11,6 +11,7 @@ import FlowManager from '@/views/platform/children/monthlyManager/manager'
 import FlowManagerAdd from '@/views/platform/children/monthlyManager/manager_add'
 import FlowStatistics from '@/views/platform/children/monthlyManager/statistics'
 import FlowReplyImport from '@/views/platform/children/monthlyManager/replyImport'
+import FlowReplyExport from '@/views/platform/children/monthlyManager/replyExport'
 Vue.use(Router)
 
 export default new Router({
@@ -101,6 +102,15 @@ export default new Router({
           path: 'flowreplyimport',
           name: 'platform.flowreplyimport',
           component: FlowReplyImport,
+          meta:{
+            auth: true,
+            manager: true
+          }
+        },
+        {
+          path: 'flowreplyexport',
+          name: 'platform.flowreplyexport',
+          component: FlowReplyExport,
           meta:{
             auth: true,
             manager: true
