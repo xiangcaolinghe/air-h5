@@ -2,7 +2,9 @@
     <div class="month-apply-page">
         <div class="page-header">月度申请</div>
         <div class="search-table">
-
+            <div class="first">
+                <el-input v-model="input" placeholder="请输入内容"></el-input>
+            </div>
         </div>
     </div>
 </template>
