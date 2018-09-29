@@ -15,9 +15,9 @@
                     </el-option>
                 </el-select>
             </div>
-            <div class="btn-cell">搜索</div>
+            <div class="btn-cell" @click="search">搜索</div>
             <div class="btn-cell" @click="addPop = true">添加</div>
-            <div class="btn-cell">删除</div>
+            <div class="btn-cell" @click="selectDel">删除</div>
         </div>
         <div class="result-table">
             <el-table
@@ -38,9 +38,8 @@
                         class="column">
                 </el-table-column>
                 <el-table-column
-                        label="标题"
-                        show-overflow-tooltip>
-                    <template slot-scope="scope">{{ scope.row.date }}</template>
+                        prop="title"
+                        label="标题">
                 </el-table-column>
                 <el-table-column
                         prop="type"
@@ -120,7 +119,7 @@
             <div class="content">
                 <div class="cell">
                     <span class="name">标题：</span>
-                    <el-input v-model="inputUser" placeholder="请输入内容" class="flew-input"></el-input>
+                    <el-input v-model="addObject.title" placeholder="请输入内容" class="flew-input"></el-input>
                 </div>
                 <div class="cell">
                     <span class="name">缩略图：</span>
@@ -130,18 +129,19 @@
                             :show-file-list="false"
                             :on-success="handleAvatarSuccess"
                             :before-upload="beforeAvatarUpload">
-                        <img v-if="imageUrl" :src="imageUrl" class="avatar">
+                        <img v-if="addObject.url" :src="addObject.url" class="avatar">
                         <i v-else class="el-icon-plus avatar-uploader-icon"></i>
                     </el-upload>
                 </div>
                 <div class="cell">
                     <span class="name">内容：</span>
                     <quill-editor ref="myTextEditor"
-                                  v-model="content"
+                                  v-model="addObject.content"
                                   :config="editorOption"
-                                  @blur="onEditorBlur($event)"
-                                  @focus="onEditorFocus($event)"
-                                  @ready="onEditorReady($event)">
+                                  @change="onAddChange($event)"
+                                  @blur="onAddBlur($event)"
+                                  @focus="onAddFocus($event)"
+                                  @ready="onAddReady($event)">
                     </quill-editor>
                 </div>
             </div>
@@ -155,7 +155,7 @@
             <div class="content">
                 <div class="cell">
                     <span class="name">标题：</span>
-                    <el-input v-model="inputUser" placeholder="请输入内容" class="flew-input"></el-input>
+                    <el-input v-model="editObject.title" placeholder="请输入内容" class="flew-input"></el-input>
                 </div>
                 <div class="cell">
                     <span class="name">缩略图：</span>
@@ -165,15 +165,16 @@
                             :show-file-list="false"
                             :on-success="handleAvatarSuccess"
                             :before-upload="beforeAvatarUpload">
-                        <img v-if="imageUrl" :src="imageUrl" class="avatar">
+                        <img v-if="editObject.url" :src="editObject.url" class="avatar">
                         <i v-else class="el-icon-plus avatar-uploader-icon"></i>
                     </el-upload>
                 </div>
                 <div class="cell">
                     <span class="name">内容：</span>
                     <quill-editor ref="myTextEditor"
-                                  v-model="editContent"
+                                  v-model="editObject.editContent"
                                   :config="editorOption"
+                                  @change="onEditorChange($event)"
                                   @blur="onEditorBlur($event)"
                                   @focus="onEditorFocus($event)"
                                   @ready="onEditorReady($event)">
@@ -200,11 +201,18 @@
     data() {
       return {
         loading:false,
-        imageUrl: '',
-        editContent:'',
-        content: '<h2>I am Example</h2>',
         editorOption: {
           // something config
+        },
+        addObject:{
+          title:'',
+          content:'',
+          url:''
+        },
+        editObject:{
+          title:'上海市普陀区金沙江路 1518',
+          content:'<h2>I am Example</h2>',
+          url:''
         },
         currentPage4: 4,
         tipPop:false,
@@ -224,64 +232,73 @@
           label: '会议通知'
         }],
         value: '',
+        activeTableDataId:[],
         tableData: [{
+          title:'宁夏空管分局飞行服务室开展安康杯“真情服务”主题辩论赛活动',
           date: '2016-05-03',
-          id:'22',
+          id:'234',
           name: '王小虎',
           address: '上海市普陀区金沙江路 1518 弄',
-          top:'1',
+          top:true,
           topName:'取消置顶',
           type:'1',
           typeName:'换季通知'
         }, {
+          title:'宁夏空管分局飞行服务室开展安康杯“真情服务”主题辩论赛活动',
           date: '2016-05-02',
           name: '王小虎',
-          id:'33',
-          top:'0',
+          id:'456',
+          top:false,
           topName:'置顶',
           address: '上海市普陀区金沙江路 1518 弄',
           type:'2',
           typeName:'临时航线'
         }, {
+          title:'宁夏空管分局飞行服务室开展安康杯“真情服务”主题辩论赛活动',
           date: '2016-05-04',
           name: '王小虎',
-          id:'23',
-          top:'1',
+          id:'56',
+          top:true,
           topName:'取消置顶',
           address: '上海市普陀区金沙江路 1518 弄',
           type:'3',
           typeName:'会议通知'
         }, {
+          title:'宁夏空管分局飞行服务室开展安康杯“真情服务”主题辩论赛活动',
           date: '2016-05-01',
           name: '王小虎',
-          id:'56',
-          top:'1',
+          id:'78',
+          top:true,
           topName:'取消置顶',
           address: '上海市普陀区金沙江路 1518 弄',
           type:'3',
           typeName:'会议通知'
         }, {
+          title:'宁夏空管分局飞行服务室开展安康杯“真情服务”主题辩论赛活动',
           date: '2016-05-08',
           name: '王小虎',
-          id:'89',
-          top:'1',
+          id:'78',
+          top:true,
           topName:'取消置顶',
           address: '上海市普陀区金沙江路 1518 弄',
           type:'3',
           typeName:'会议通知'
         }, {
+          title:'宁夏空管分局飞行服务室开展安康杯“真情服务”主题辩论赛活动',
           date: '2016-05-06',
           name: '王小虎',
-          top:'0',
+          id:'09',
+          top:false,
           topName:'置顶',
           address: '上海市普陀区金沙江路 1518 弄',
           type:'3',
           typeName:'会议通知'
         }, {
+          title:'宁夏空管分局飞行服务室开展安康杯“真情服务”主题辩论赛活动',
           date: '2016-05-07',
           name: '王小虎',
-          id:'98',
-          top:'1',
+          id:'786',
+          top:true,
           topName:'取消置顶',
           address: '上海市普陀区金沙江路 1518 弄',
           type:'3',
@@ -291,9 +308,9 @@
       }
     },
     computed: {
-      editor() {
-        return this.$refs.myTextEditor.quillEditor
-      }
+//      editor() {
+//        return this.$refs.myTextEditor.quillEditor
+//      }
     },
     methods: {
       handleAvatarSuccess(res, file) {
@@ -320,6 +337,38 @@
       // 选择
       handleSelectionChange(val) {
         this.multipleSelection = val;
+      },
+      // 搜索
+      search() {
+
+      },
+      // 选择删除
+      selectDel() {
+        if (this.multipleSelection.length == 0) {
+          this.$message({
+            type: 'info',
+            message: '请选择需要删除的数据'
+          });
+          return
+        }
+        this.multipleSelection.forEach(ele => {
+          this.activeTableDataId.push({'id': ele.id})
+        })
+        this.$confirm('您确定要删除这' + this.multipleSelection.length +'条数据吗?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          Array.from(this.activeTableDataId).forEach(element => {
+            this.tableData = this.tableData.filter(ele => {
+              return ele.id != element.id;
+            })
+          })
+          this.$message({
+            type: 'success',
+            message: '删除成功!'
+          });
+        })
       },
       // 删除
       del(id) {
@@ -352,7 +401,12 @@
       },
       // 置顶
       toggleTop(id,top) {
-        console.log(id,top)
+        this.tableData.forEach(ele => {
+          if (ele.id == id) {
+            ele.top = !ele.top
+            ele.top ? ele.topName = '取消置顶' : ele.topName = '置顶'
+          }
+        })
       },
       // 编辑
       edit(id) {
@@ -392,8 +446,21 @@
         console.log('editor ready!', editor)
       },
       onEditorChange({ editor, html, text }) {
-        // console.log('editor change!', editor, html, text)
-        this.content = html
+        console.log('editor change!', editor, html, text)
+//        this.content = html
+      },
+      // 添加弹框
+      onAddBlur(editor) {
+        console.log('editor blur!', editor)
+      },
+      onAddFocus(editor) {
+        console.log('editor focus!', editor)
+      },
+      onAddReady(editor) {
+        console.log('editor ready!', editor)
+      },
+      onAddChange({ editor, html, text }) {
+        console.log('editor change!', editor, html, text)
       }
     },
     created() {

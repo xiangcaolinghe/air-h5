@@ -10,7 +10,7 @@ import BackstageNotice from '@/views/backstage/children/notice/list'
 import BackstageNoticeDetail from '@/views/backstage/children/notice/details'
 import BackstageMeeting from '@/views/backstage/children/meeting/list'
 import BackstageMeetingDetail from '@/views/backstage/children/meeting/details'
-import BackstageUser from '@/views/backstage/children/user'
+import BackstageUser from '@/views/backstage/children/user/list'
 Vue.use(Router)
 
 export default new Router({

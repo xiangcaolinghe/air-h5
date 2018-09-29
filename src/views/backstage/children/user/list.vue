@@ -28,18 +28,16 @@
                         class="column">
                 </el-table-column>
                 <el-table-column
-                        prop="title"
-                        label="标题">
+                        prop="name"
+                        label="用户名">
                 </el-table-column>
                 <el-table-column
                         prop="date"
-                        label="时间"
-                        width="120">
+                        label="创建时间">
                 </el-table-column>
                 <el-table-column
-                        prop="name"
-                        label="创建者"
-                        width="120">
+                        prop="address"
+                        label="所在地区">
                 </el-table-column>
                 <el-table-column
                         label="操作"
@@ -172,46 +170,47 @@
           title:'宁夏空管分局飞行服务室开展安康杯“真情服务”主题辩论赛活动',
           date: '2016-05-03',
           id:'22',
-          name: '王小虎'
+          name: '王小虎',
+          address: '上海市普陀区金沙江路 1518 弄'
         }, {
           title:'宁夏空管分局飞行服务室开展安康杯“真情服务”主题辩论赛活动',
           date: '2016-05-02',
           name: '王小虎',
-          id:'33'
+          id:'33',
+          address: '上海市普陀区金沙江路 1518 弄'
         }, {
           title:'宁夏空管分局飞行服务室开展安康杯“真情服务”主题辩论赛活动',
           date: '2016-05-04',
           name: '王小虎',
-          id:'23'
+          id:'23',
+          address: '上海市普陀区金沙江路 1518 弄'
         }, {
           title:'宁夏空管分局飞行服务室开展安康杯“真情服务”主题辩论赛活动',
           date: '2016-05-01',
           name: '王小虎',
-          id:'56'
+          id:'56',
+          address: '上海市普陀区金沙江路 1518 弄'
         }, {
           title:'宁夏空管分局飞行服务室开展安康杯“真情服务”主题辩论赛活动',
           date: '2016-05-08',
           name: '王小虎',
-          id:'89'
+          id:'89',
+          address: '上海市普陀区金沙江路 1518 弄'
         }, {
           title:'宁夏空管分局飞行服务室开展安康杯“真情服务”主题辩论赛活动',
           date: '2016-05-06',
           name: '王小虎',
-          id:'567'
+          id:'334',
+          address: '上海市普陀区金沙江路 1518 弄'
         }, {
           title:'宁夏空管分局飞行服务室开展安康杯“真情服务”主题辩论赛活动',
           date: '2016-05-07',
           name: '王小虎',
-          id:'98'
+          id:'98',
+          address: '上海市普陀区金沙江路 1518 弄'
         }],
         multipleSelection: []
       }
-    },
-    computed: {
-//      editor() {
-//        console.log(this.$refs.myTextEditor,3333333333333333333)
-//        return this.$refs.myTextEditor.quillEditor
-//      }
     },
     methods: {
       handleAvatarSuccess(res, file) {
@@ -238,7 +237,6 @@
       // 选择
       handleSelectionChange(val) {
         this.multipleSelection = val;
-        console.log(this.multipleSelection)
       },
       // 搜索
       search() {
@@ -295,7 +293,7 @@
       },
       // 进入详情
       linkDetail(id) {
-        this.$router.push({name:'backstage.news.detail',query:{id:id}})
+        this.$router.push({name:'backstage.meeting.detail',query:{id:id}})
       },
       // 编辑
       edit(id) {
@@ -327,7 +325,7 @@
         console.log('editor ready!', editor)
       },
       onEditorChange({ editor, html, text }) {
-         console.log('editor change!', editor, html, text)
+        console.log('editor change!', editor, html, text)
 //        this.content = html
       },
       // 添加弹框

@@ -5,9 +5,9 @@
                 <el-input v-model="input" placeholder="请输入关键词汇" class="input-search"></el-input>
                 <i class="el-icon-search icon"></i>
             </div>
-            <div class="btn-cell">搜索</div>
+            <div class="btn-cell" @click="search">搜索</div>
             <div class="btn-cell" @click="addPop = true">添加</div>
-            <div class="btn-cell">删除</div>
+            <div class="btn-cell" @click="selectDel">删除</div>
         </div>
         <div class="result-table">
             <el-table
@@ -28,12 +28,11 @@
                         class="column">
                 </el-table-column>
                 <el-table-column
-                        label="会议名称"
-                        show-overflow-tooltip>
-                    <template slot-scope="scope">{{ scope.row.date }}</template>
+                        prop="title"
+                        label="会议名称">
                 </el-table-column>
                 <el-table-column
-                        prop="name"
+                        prop="date"
                         label="会议时间"
                         width="120">
                 </el-table-column>
@@ -43,7 +42,7 @@
                         width="200">
                 </el-table-column>
                 <el-table-column
-                        prop="address"
+                        prop="name"
                         label="创建者"
                         width="120">
                 </el-table-column>
@@ -74,7 +73,7 @@
             <div class="content">
                 <div class="cell">
                     <span class="name">标题：</span>
-                    <el-input v-model="inputUser" placeholder="请输入内容" class="flew-input"></el-input>
+                    <el-input v-model="addObject.title" placeholder="请输入内容" class="flew-input"></el-input>
                 </div>
                 <div class="cell">
                     <span class="name">缩略图：</span>
@@ -84,18 +83,19 @@
                             :show-file-list="false"
                             :on-success="handleAvatarSuccess"
                             :before-upload="beforeAvatarUpload">
-                        <img v-if="imageUrl" :src="imageUrl" class="avatar">
+                        <img v-if="addObject.url" :src="addObject.url" class="avatar">
                         <i v-else class="el-icon-plus avatar-uploader-icon"></i>
                     </el-upload>
                 </div>
                 <div class="cell">
                     <span class="name">内容：</span>
                     <quill-editor ref="myTextEditor"
-                                  v-model="content"
+                                  v-model="addObject.content"
                                   :config="editorOption"
-                                  @blur="onEditorBlur($event)"
-                                  @focus="onEditorFocus($event)"
-                                  @ready="onEditorReady($event)">
+                                  @change="onAddChange($event)"
+                                  @blur="onAddBlur($event)"
+                                  @focus="onAddFocus($event)"
+                                  @ready="onAddReady($event)">
                     </quill-editor>
                 </div>
             </div>
@@ -109,7 +109,7 @@
             <div class="content">
                 <div class="cell">
                     <span class="name">标题：</span>
-                    <el-input v-model="inputUser" placeholder="请输入内容" class="flew-input"></el-input>
+                    <el-input v-model="editObject.title" placeholder="请输入内容" class="flew-input"></el-input>
                 </div>
                 <div class="cell">
                     <span class="name">缩略图：</span>
@@ -119,15 +119,16 @@
                             :show-file-list="false"
                             :on-success="handleAvatarSuccess"
                             :before-upload="beforeAvatarUpload">
-                        <img v-if="imageUrl" :src="imageUrl" class="avatar">
+                        <img v-if="editObject.url" :src="editObject.url" class="avatar">
                         <i v-else class="el-icon-plus avatar-uploader-icon"></i>
                     </el-upload>
                 </div>
                 <div class="cell">
                     <span class="name">内容：</span>
                     <quill-editor ref="myTextEditor"
-                                  v-model="editContent"
+                                  v-model="editObject.editContent"
                                   :config="editorOption"
+                                  @change="onEditorChange($event)"
                                   @blur="onEditorBlur($event)"
                                   @focus="onEditorFocus($event)"
                                   @ready="onEditorReady($event)">
@@ -156,44 +157,60 @@
         loading:false,
         editPop:false,
         addPop:false,
-        imageUrl: '',
-        editContent:'',
-        content: '<h2>I am Example</h2>',
         editorOption: {
           // something config
         },
+        addObject:{
+          title:'',
+          content:'',
+          url:''
+        },
+        editObject:{
+          title:'上海市普陀区金沙江路 1518',
+          content:'<h2>I am Example</h2>',
+          url:''
+        },
         currentPage4: 4,
         input:'',
+        activeTableDataId:[],
         tableData: [{
+          title:'宁夏空管分局飞行服务室开展安康杯“真情服务”主题辩论赛活动',
           date: '2016-05-03',
           id:'22',
           name: '王小虎',
           address: '上海市普陀区金沙江路 1518 弄'
         }, {
+          title:'宁夏空管分局飞行服务室开展安康杯“真情服务”主题辩论赛活动',
           date: '2016-05-02',
           name: '王小虎',
           id:'33',
           address: '上海市普陀区金沙江路 1518 弄'
         }, {
+          title:'宁夏空管分局飞行服务室开展安康杯“真情服务”主题辩论赛活动',
           date: '2016-05-04',
           name: '王小虎',
           id:'23',
           address: '上海市普陀区金沙江路 1518 弄'
         }, {
+          title:'宁夏空管分局飞行服务室开展安康杯“真情服务”主题辩论赛活动',
           date: '2016-05-01',
           name: '王小虎',
           id:'56',
           address: '上海市普陀区金沙江路 1518 弄'
         }, {
+          title:'宁夏空管分局飞行服务室开展安康杯“真情服务”主题辩论赛活动',
           date: '2016-05-08',
           name: '王小虎',
           id:'89',
           address: '上海市普陀区金沙江路 1518 弄'
         }, {
+          title:'宁夏空管分局飞行服务室开展安康杯“真情服务”主题辩论赛活动',
           date: '2016-05-06',
           name: '王小虎',
+          id:'334',
           address: '上海市普陀区金沙江路 1518 弄'
         }, {
+          title:'宁夏空管分局飞行服务室开展安康杯“真情服务”主题辩论赛活动',
           date: '2016-05-07',
           name: '王小虎',
           id:'98',
@@ -227,6 +244,38 @@
       // 选择
       handleSelectionChange(val) {
         this.multipleSelection = val;
+      },
+      // 搜索
+      search() {
+
+      },
+      // 选择删除
+      selectDel() {
+        if (this.multipleSelection.length == 0) {
+          this.$message({
+            type: 'info',
+            message: '请选择需要删除的数据'
+          });
+          return
+        }
+        this.multipleSelection.forEach(ele => {
+          this.activeTableDataId.push({'id': ele.id})
+        })
+        this.$confirm('您确定要删除这' + this.multipleSelection.length +'条数据吗?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          Array.from(this.activeTableDataId).forEach(element => {
+            this.tableData = this.tableData.filter(ele => {
+              return ele.id != element.id;
+            })
+          })
+          this.$message({
+            type: 'success',
+            message: '删除成功!'
+          });
+        })
       },
       // 删除
       del(id) {
@@ -283,8 +332,21 @@
         console.log('editor ready!', editor)
       },
       onEditorChange({ editor, html, text }) {
-        // console.log('editor change!', editor, html, text)
-        this.content = html
+        console.log('editor change!', editor, html, text)
+//        this.content = html
+      },
+      // 添加弹框
+      onAddBlur(editor) {
+        console.log('editor blur!', editor)
+      },
+      onAddFocus(editor) {
+        console.log('editor focus!', editor)
+      },
+      onAddReady(editor) {
+        console.log('editor ready!', editor)
+      },
+      onAddChange({ editor, html, text }) {
+        console.log('editor change!', editor, html, text)
       }
     },
     created() {
