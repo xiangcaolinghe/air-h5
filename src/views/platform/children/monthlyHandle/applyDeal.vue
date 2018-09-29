@@ -1,16 +1,19 @@
 <template>
   <div class="container">
     <div class="title">
-      月度申请
+      月度申请处理
     </div>
     <div class="find_body">
       <div class="find_condition">
         <ul>
-          <li style="width: 35%">
+          <li style="width: 30%">
             时间计划：<el-input v-model="type" class="i_input" placeholder="请输入内容"/>
           </li>
-          <li style="width: 35%">
-            航班号：<el-input v-model="type" style="width: 73%" placeholder="请输入内容"/>
+          <li style="width: 20%">
+            航空公司：<el-input v-model="type" style="width: 60%" placeholder="请输入内容"/>
+          </li>
+          <li style="width: 20%">
+            航班号：<el-input v-model="type" style="width: 60%" placeholder="请输入内容"/>
           </li>
           <li style="width: 30%">
             <div class="select_page">
@@ -46,15 +49,24 @@
       </div>
     </div>
     <div class="table_body">
+      <div class="i_rule">
+        <ul>
+          <li :class="{active:isActive == 1}"><a href="javascript:;" @click="switcher(1)">添加</a></li>
+          <li :class="{active:isActive == 2}"><a href="javascript:;" @click="switcher(2)">按航空公司排序</a></li>
+          <li :class="{active:isActive == 3}"><a href="javascript:;" @click="switcher(3)">按出入城市排序</a></li>
+          <li :class="{active:isActive == 4}"><a href="javascript:;" @click="switcher(4)">按核对状态排序</a></li>
+          <li :class="{active:isActive == 5}" style="width: 180px"><a href="javascript:;" @click="switcher(5)">导出Word（按航空）</a></li>
+          <li :class="{active:isActive == 6}" style="width: 200px"><a href="javascript:;" @click="switcher(6)">导出Word（按城市对）</a></li>
+        </ul>
+      </div>
       <div class="info_lists">
         <div class="lists" >
           <el-table
             :data="tableData"
             border>
             <el-table-column
-              prop="gocity"
-              width="200"
-              label="时间计划">
+              type="selection"
+              width="55">
             </el-table-column>
             <el-table-column
               prop="arrivecity"
@@ -67,16 +79,13 @@
               label="航班号">
             </el-table-column>
             <el-table-column
-              prop="hxreturn"
-              width="100"
-              label="机型">
-            </el-table-column>
-            <el-table-column
               prop="syjx"
+              width="100"
               label="出发城市">
             </el-table-column>
             <el-table-column
               prop="tocity"
+              width="100"
               label="到达城市">
             </el-table-column>
             <el-table-column
@@ -84,14 +93,21 @@
               label="航线走向">
             </el-table-column>
             <el-table-column
-              prop="bz"
-              label="备注">
+              prop="status"
+              width="100"
+              label="状态">
+            </el-table-column>
+            <el-table-column
+              prop="hdstatus"
+              width="100"
+              label="核对状态">
             </el-table-column>
             <el-table-column
               label="操作"
-              width="200">
+              width="150">
               <template slot-scope="scope">
-                <el-button type="text" size="small" class="detail-cl" @click="detailClick(scope.row,scope.$index)">详情</el-button>
+                <el-button type="text" size="small" class="detail-cl" @click="detailClick(scope.row,scope.$index)">修改</el-button>
+                <el-button type="text" size="small" class="detele-cl" @click="detailClick(scope.row,scope.$index)">删除</el-button>
               </template>
             </el-table-column>
           </el-table>
@@ -155,76 +171,67 @@
         pageSize: 10,        //每页显示的数据条数
         isActive: 1,
         replyDetail: false,
+        templateRadio: '',
         tableData:[
           {
-            gocity: '2018/08/31 17:06',
             arrivecity: '北京航空',
             hxgo: '北京航空',
             hxreturn: '北京航空',
             syjx: '上海',
             tocity: '北京',
-            hxfx: '',
-            bz: ''
+            hxfx: '北京北京北京北京不加班北京北京北京北京不加班北京北京北京北京不加班',
+            status: '已导出',
+            hdstatus: '已核对',
           },
           {
-            gocity: '2018/08/31 17:06',
             arrivecity: '北京航空',
             hxgo: '北京航空',
             hxreturn: '北京航空',
             syjx: '上海',
             tocity: '北京',
-            hxfx: '',
-            bz: ''
+            hxfx: '北京北京北京北京不加班北京北京北京北京不加班北京北京北京北京不加班',
+            status: '已导出',
+            hdstatus: '已核对',
           },
           {
-            gocity: '2018/08/31 17:06',
             arrivecity: '北京航空',
             hxgo: '北京航空',
             hxreturn: '北京航空',
             syjx: '上海',
             tocity: '北京',
-            hxfx: '',
-            bz: ''
+            hxfx: '北京北京北京北京不加班北京北京北京北京不加班北京北京北京北京不加班',
+            status: '已导出',
+            hdstatus: '已核对',
           },
           {
-            gocity: '2018/08/31 17:06',
             arrivecity: '北京航空',
             hxgo: '北京航空',
             hxreturn: '北京航空',
             syjx: '上海',
             tocity: '北京',
-            hxfx: '',
-            bz: ''
+            hxfx: '北京北京北京北京不加班北京北京北京北京不加班北京北京北京北京不加班',
+            status: '已导出',
+            hdstatus: '已核对',
           },
           {
-            gocity: '2018/08/31 17:06',
             arrivecity: '北京航空',
             hxgo: '北京航空',
             hxreturn: '北京航空',
             syjx: '上海',
             tocity: '北京',
-            hxfx: '',
-            bz: ''
+            hxfx: '北京北京北京北京不加班北京北京北京北京不加班北京北京北京北京不加班',
+            status: '已导出',
+            hdstatus: '已核对',
           },
           {
-            gocity: '2018/08/31 17:06',
             arrivecity: '北京航空',
             hxgo: '北京航空',
             hxreturn: '北京航空',
             syjx: '上海',
             tocity: '北京',
-            hxfx: '',
-            bz: ''
-          },
-          {
-            gocity: '2018/08/31 17:06',
-            arrivecity: '北京航空',
-            hxgo: '北京航空',
-            hxreturn: '北京航空',
-            syjx: '上海',
-            tocity: '北京',
-            hxfx: '',
-            bz: ''
+            hxfx: '北京北京北京北京不加班北京北京北京北京不加班北京北京北京北京不加班',
+            status: '已导出',
+            hdstatus: '已核对',
           }
         ],
         analyzeType:[],
@@ -288,6 +295,9 @@
       font-size: 14px;
       color: #666666;
       font-weight: normal;
+      .detele-cl{
+        color: #ff0000;
+      }
     }
   }
   .container{
@@ -390,6 +400,31 @@
     .table_body{
       width: 100%;
       height: 100%;
+      .i_rule{
+        font-weight: normal;
+        width: 100%;
+        height: 0.1px;
+        ul{
+          li{
+            list-style: none;
+            float: left;
+            width: 140px;
+            border: 1px #d6d6d6 solid;
+            text-align: center;
+            a,a:hover{
+              text-decoration:none;//去掉下划线
+              color: #026ab3;
+              font-weight: bold;
+            }
+            &.active{
+              background-color: #026ab3;
+              a{
+                color: white;
+              }
+            }
+          }
+        }
+      }
       .table_nav{
         font-weight: normal;
         width: 100%;

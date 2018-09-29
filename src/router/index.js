@@ -14,6 +14,10 @@ import FlowReplyImport from '@/views/platform/children/monthlyManager/replyImpor
 import FlowReplyExport from '@/views/platform/children/monthlyManager/replyExport'
 import monthApplyRegular from '@/views/platform/children/monthlyApply/regular'
 import monthApplySpecial from '@/views/platform/children/monthlyApply/special'
+import monthHandleDeal from '@/views/platform/children/monthlyHandle/applyDeal'
+import monthHandleHistory from '@/views/platform/children/monthlyHandle/applyHistory'
+import monthHandleDownload from '@/views/platform/children/monthlyHandle/download'
+import monthHandleSpecial from '@/views/platform/children/monthlyHandle/special'
 Vue.use(Router)
 
 export default new Router({
@@ -134,6 +138,42 @@ export default new Router({
           meta:{
             auth: true,
             monthApply:true
+          }
+        },
+        {
+          path: 'month/handle/deal',
+          name: 'month.handle.deal',
+          component: monthHandleDeal,
+          meta:{
+            auth: true,
+            monthHandle:true
+          }
+        },
+        {
+          path: 'month/handle/history',
+          name: 'month.handle.history',
+          component: monthHandleHistory,
+          meta:{
+            auth: true,
+            monthHandle:true
+          }
+        },
+        {
+          path: 'month/handle/download',
+          name: 'month.handle.download',
+          component: monthHandleDownload,
+          meta:{
+            auth: true,
+            monthHandle:true
+          }
+        },
+        {
+          path: 'month/handle/special',
+          name: 'month.handle.special',
+          component: monthHandleSpecial,
+          meta:{
+            auth: true,
+            monthHandle:true
           }
         }
       ]

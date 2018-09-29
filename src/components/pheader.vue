@@ -17,7 +17,9 @@
             <ul>
               <li><router-link :to="{name: 'platform'}"><i class="iconfont icon-home"></i>&nbsp;&nbsp;首页</router-link></li>
               <li><router-link :to="{name: 'platform.flowpath'}" :class="{active:$route.meta.manager == true}"><i class="iconfont icon-tongji1"></i>&nbsp;&nbsp;月度管理</router-link></li>
-              <li><a href="javascript:;" @click="switcher(2)" :class="{active:isActive == 2}"><i class="iconfont icon-shenqing"></i>&nbsp;&nbsp;月度申请</a></li>
+              <li><router-link :to="{name: 'month.apply.regular'}" :class="{active:$route.meta.monthApply == true}"><i class="iconfont icon-tongji1"></i>&nbsp;&nbsp;月度申请</router-link></li>
+              <li><router-link :to="{name: 'month.handle.deal'}" :class="{active:$route.meta.monthHandle == true}"><i class="iconfont icon-tongji1"></i>&nbsp;&nbsp;月度处理</router-link></li>
+
               <li><a href="javascript:;" @click="switcher(3)" :class="{active:isActive == 3}"><i class="iconfont icon-chulizhong"></i>&nbsp;&nbsp;月度处理</a></li>
               <li><a href="javascript:;" @click="switcher(4)" :class="{active:isActive == 4}"><i class="iconfont icon-ji"></i>&nbsp;&nbsp;季度管理</a></li>
               <li><router-link :to="{name:'platform.local'}" :class="{active:isActive == 5}"><i class="iconfont icon-tongji"></i>&nbsp;&nbsp;区内管理</router-link></li>
@@ -40,25 +42,22 @@
                 </ul>
               </div>
             </div>
-            <div class="nav_left"  :class="{active:isActive == 2}">
+            <div class="nav_left" :class="{active:$route.meta.monthApply == true}">
               <div class="">
                 <ul>
-                  <li><a href="javascript:;"><div><div>月度上报流程2</div></div></a></li>
-                  <li><a href="javascript:;"><div><div>上报数据导入2</div></div></a></li>
-                  <li><a href="javascript:;"><div><div>上报数据管理2</div></div></a></li>
-                  <li><a href="javascript:;"><div><div>上报数据统计2</div></div></a></li>
-                  <li><a href="javascript:;"><div><div>批复数据导入2</div></div></a></li>
+                  <li><router-link :to="{name:'month.apply.regular'}" :class="{active:$route.name == 'month.apply.regular'}" class="left-cell">月度申请</router-link></li>
+                  <li><router-link :to="{name:'month.apply.special'}" :class="{active:$route.name == 'month.apply.special'}" class="left-cell">特殊申请</router-link></li>
                 </ul>
               </div>
             </div>
-            <div class="nav_left"  :class="{active:isActive == 3}">
+            <div class="nav_left"  :class="{active:$route.meta.monthHandle == true}">
               <div class="">
                 <ul>
-                  <li><a href="javascript:;"><div><div>月度上报流程3</div></div></a></li>
-                  <li><a href="javascript:;"><div><div>上报数据导入3</div></div></a></li>
-                  <li><a href="javascript:;"><div><div>上报数据管理3</div></div></a></li>
-                  <li><a href="javascript:;"><div><div>上报数据统计3</div></div></a></li>
-                  <li><a href="javascript:;"><div><div>批复数据导入3</div></div></a></li>
+                  <li><router-link :to="{name:'month.handle.deal'}" :class="{active:$route.name == 'month.handle.deal'}" class="left-cell">当月申请处理</router-link></li>
+                  <li><router-link :to="{name:'month.handle.history'}" :class="{active:$route.name == 'month.handle.history'}" class="left-cell">月度申请历史</router-link></li>
+                  <li><router-link :to="{name:'month.handle.special'}" :class="{active:$route.name == 'month.handle.special'}" class="left-cell">特殊申请</router-link></li>
+                  <li><router-link :to="{name:'month.handle.special'}" :class="{active:$route.name == 'month.handle.special'}" class="left-cell">运行附件上传</router-link></li>
+                  <li><router-link :to="{name:'month.handle.download'}" :class="{active:$route.name == 'month.handle.download'}" class="left-cell">军方批复下载</router-link></li>
                 </ul>
               </div>
             </div>

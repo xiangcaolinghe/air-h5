@@ -1,16 +1,26 @@
 <template>
   <div class="container">
     <div class="title">
-      月度申请
+      军民交互操作
     </div>
     <div class="find_body">
       <div class="find_condition">
         <ul>
           <li style="width: 35%">
-            时间计划：<el-input v-model="type" class="i_input" placeholder="请输入内容"/>
+            标题：<el-input v-model="type" class="i_input" placeholder="请输入内容"/>
           </li>
           <li style="width: 35%">
-            航班号：<el-input v-model="type" style="width: 73%" placeholder="请输入内容"/>
+            发布时间：
+            <el-date-picker
+              v-model="value7"
+              type="daterange"
+              align="right"
+              unlink-panels
+              range-separator="至"
+              start-placeholder="开始日期"
+              end-placeholder="结束日期"
+              :picker-options="pickerOptions2">
+            </el-date-picker>
           </li>
           <li style="width: 30%">
             <div class="select_page">
@@ -30,11 +40,18 @@
         <br/>
         <br/>
         <ul>
-          <li style="width: 35%">
-            出发城市：<el-input v-model="type" class="i_input" placeholder="请输入内容"/>
-          </li>
-          <li style="width: 35%">
-            到达城市：<el-input v-model="type" class="i_input" placeholder="请输入内容"/>
+          <li style="width: 70%">
+            <div class="file_type">
+              文件类型：
+              <el-select v-model="files" placeholder="请选择">
+                <el-option
+                  v-for="item in fileType"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value">
+                </el-option>
+              </el-select>
+            </div>
           </li>
           <li style="width: 30%">
             <div class="find_bnt">
@@ -54,44 +71,32 @@
             <el-table-column
               prop="gocity"
               width="200"
-              label="时间计划">
+              label="上传类别">
             </el-table-column>
             <el-table-column
               prop="arrivecity"
-              width="100"
-              label="航空公司">
+              width="200"
+              label="上传时间">
             </el-table-column>
             <el-table-column
               prop="hxgo"
               width="100"
-              label="航班号">
+              label="上传人">
             </el-table-column>
             <el-table-column
               prop="hxreturn"
-              width="100"
-              label="机型">
+              width="200"
+              label="联系电话">
             </el-table-column>
             <el-table-column
               prop="syjx"
-              label="出发城市">
-            </el-table-column>
-            <el-table-column
-              prop="tocity"
-              label="到达城市">
-            </el-table-column>
-            <el-table-column
-              prop="hxfx"
-              label="航线走向">
-            </el-table-column>
-            <el-table-column
-              prop="bz"
-              label="备注">
+              label="上传标题">
             </el-table-column>
             <el-table-column
               label="操作"
               width="200">
               <template slot-scope="scope">
-                <el-button type="text" size="small" class="detail-cl" @click="detailClick(scope.row,scope.$index)">详情</el-button>
+                <el-button type="text" size="small" class="detail-cl" @click="detailClick(scope.row,scope.$index)">查看</el-button>
               </template>
             </el-table-column>
           </el-table>
@@ -157,74 +162,46 @@
         replyDetail: false,
         tableData:[
           {
-            gocity: '2018/08/31 17:06',
-            arrivecity: '北京航空',
-            hxgo: '北京航空',
-            hxreturn: '北京航空',
-            syjx: '上海',
-            tocity: '北京',
-            hxfx: '',
-            bz: ''
+            gocity: '班级航线申请回复',
+            arrivecity: '2018/08/31 17:06',
+            hxgo: '崔永元',
+            hxreturn: '12567891718',
+            syjx: '0187'
           },
           {
-            gocity: '2018/08/31 17:06',
-            arrivecity: '北京航空',
-            hxgo: '北京航空',
-            hxreturn: '北京航空',
-            syjx: '上海',
-            tocity: '北京',
-            hxfx: '',
-            bz: ''
+            gocity: '班级航线申请回复',
+            arrivecity: '2018/08/31 17:06',
+            hxgo: '崔永元',
+            hxreturn: '12567891718',
+            syjx: '0187'
           },
           {
-            gocity: '2018/08/31 17:06',
-            arrivecity: '北京航空',
-            hxgo: '北京航空',
-            hxreturn: '北京航空',
-            syjx: '上海',
-            tocity: '北京',
-            hxfx: '',
-            bz: ''
+            gocity: '班级航线申请回复',
+            arrivecity: '2018/08/31 17:06',
+            hxgo: '崔永元',
+            hxreturn: '12567891718',
+            syjx: '0187'
           },
           {
-            gocity: '2018/08/31 17:06',
-            arrivecity: '北京航空',
-            hxgo: '北京航空',
-            hxreturn: '北京航空',
-            syjx: '上海',
-            tocity: '北京',
-            hxfx: '',
-            bz: ''
+            gocity: '班级航线申请回复',
+            arrivecity: '2018/08/31 17:06',
+            hxgo: '崔永元',
+            hxreturn: '12567891718',
+            syjx: '0187'
           },
           {
-            gocity: '2018/08/31 17:06',
-            arrivecity: '北京航空',
-            hxgo: '北京航空',
-            hxreturn: '北京航空',
-            syjx: '上海',
-            tocity: '北京',
-            hxfx: '',
-            bz: ''
+            gocity: '班级航线申请回复',
+            arrivecity: '2018/08/31 17:06',
+            hxgo: '崔永元',
+            hxreturn: '12567891718',
+            syjx: '0187'
           },
           {
-            gocity: '2018/08/31 17:06',
-            arrivecity: '北京航空',
-            hxgo: '北京航空',
-            hxreturn: '北京航空',
-            syjx: '上海',
-            tocity: '北京',
-            hxfx: '',
-            bz: ''
-          },
-          {
-            gocity: '2018/08/31 17:06',
-            arrivecity: '北京航空',
-            hxgo: '北京航空',
-            hxreturn: '北京航空',
-            syjx: '上海',
-            tocity: '北京',
-            hxfx: '',
-            bz: ''
+            gocity: '班级航线申请回复',
+            arrivecity: '2018/08/31 17:06',
+            hxgo: '崔永元',
+            hxreturn: '12567891718',
+            syjx: '0187'
           }
         ],
         analyzeType:[],
@@ -249,7 +226,22 @@
             value: '5',
             label: '50'
           }
-        ]
+        ],
+        fileType: [
+          {
+            value: '1',
+            label: '全部'
+          },
+          {
+            value: '2',
+            label: 'word'
+          },
+          {
+            value: '3',
+            label: 'excel'
+          }
+        ],
+        files: '',
       }
     },
     methods:{
@@ -298,6 +290,11 @@
       .select_page{
         .el-select{
           width: 170px;
+        }
+      }
+      .file_type{
+        .el-select{
+          width: 85%;
         }
       }
     }
