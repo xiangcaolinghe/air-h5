@@ -25,24 +25,24 @@
           </li>
         </ul>
         <br/><br/><br/>
+        <div class="analyze_type">
+          分析类型：
+          <el-checkbox-group v-model="analyzeType">
+            <el-checkbox label="未批复（红色）"/>
+            <el-checkbox label="已批复有改动（黄色）"/>
+            <el-checkbox label="已批复无改动（绿色）"/>
+            <el-checkbox label="已批复新添加（蓝色）"/>
+          </el-checkbox-group>
+        </div>
         <div class="find_bnt">
-          <div class="bnt search">检查数据</div>
-          <div class="bnt search">导入数据</div>
-          <div class="bnt search">重新导入</div>
-          <div class="bnt search">追加导入</div>
-          <div class="bnt search">更新</div>
+          <div class="bnt search">模糊查询</div>
+          <div class="bnt search">导出Excel</div>
         </div>
       </div>
     </div>
     <div class="table_body">
-      <div class="table_nav">
-        <ul>
-          <li :class="{active:isActive == 1}"><a href="javascript:;" @click="switcher(1)">规则数据</a></li>
-          <li :class="{active:isActive == 2}"><a href="javascript:;" @click="switcher(2)">不规则数据</a></li>
-        </ul>
-      </div>
       <div class="info_lists">
-        <div class="lists" :class="{active:isActive == this.isActive}">
+        <div class="lists" >
           <el-table
             :data="tableData"
             border>
@@ -54,35 +54,32 @@
             <el-table-column
               prop="gocity"
               width="100"
-              label="出发城市">
+              label="数据源">
             </el-table-column>
             <el-table-column
               prop="arrivecity"
               width="100"
-              label="到达城市">
+              label="分析结果">
             </el-table-column>
             <el-table-column
               prop="hxgo"
-              label="航线去程">
+              width="200"
+              label="城市对">
             </el-table-column>
             <el-table-column
               prop="hxreturn"
-              label="航信回程">
+              width="220"
+              label="航空公司">
             </el-table-column>
             <el-table-column
               prop="syjx"
-              width="100"
-              label="使用机型">
-            </el-table-column>
-            <el-table-column
-              prop="fxheight"
-              width="100"
-              label="飞行高度">
+              label="航线去程">
             </el-table-column>
             <el-table-column
               label="操作"
-              width="80">
+              width="200">
               <template slot-scope="scope">
+                <el-button type="text" size="small" class="detail-cl" @click="airwayClick(scope.row,scope.$index)">地图展示</el-button>
                 <el-button type="text" size="small" class="detail-cl" @click="detailClick(scope.row,scope.$index)">详情</el-button>
               </template>
             </el-table-column>
@@ -101,39 +98,41 @@
         </div>
       </div>
     </div>
+    <!--查看地图弹层-->
+    <el-dialog title="航线图" :visible.sync="airwayPic" class="airway-pic-dialog">
+      <div class="map-box">
+        <img src="./../../../../assets/images/map.png" class="img">
+      </div>
+    </el-dialog>
     <!--详情弹层-->
     <el-dialog :visible.sync="replyDetail" class="airway-detail-dialog">
       <div class="content">
         <div class="d-title">详情</div>
         <div class="d_title_hr"></div>
         <div class="d-cell">
-          <span class="name">出发城市：</span>
-          <div class="info">北京</div>
+          <span class="name">数据源：</span>
+          <div class="info">上报数据</div>
         </div>
         <div class="d-cell">
-          <span class="name">到达城市：</span>
-          <div class="info">深圳</div>
+          <span class="name">分析结果：</span>
+          <div class="info">未批复</div>
+        </div>
+        <div class="d-cell">
+          <span class="name">城市对：</span>
+          <div class="info">
+            重庆汉城-汉中古城
+          </div>
+        </div>
+        <div class="d-cell">
+          <span class="name">航空公司：</span>
+          <div class="info">
+            华夏航空公司
+          </div>
         </div>
         <div class="d-cell">
           <span class="name">航线去程：</span>
           <div class="content">
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean euismod bibendum laoreet. Proin gravida dolor sit amet lacus accumsan et viverra justo commodo. Proin sodales pulvinar tempor. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Nam fermentum, nulla luctus pharetra vulputate, felis tellus mollis orci, sed rhoncus sapien nunc eget.
-          </div>
-        </div>
-        <div class="d-cell">
-          <span class="name">航线回程：</span>
-          <div class="content">
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean euismod bibendum laoreet. Proin gravida dolor sit amet lacus accumsan et viverra justo commodo. Proin sodales pulvinar tempor. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Nam fermentum, nulla luctus pharetra vulputate, felis tellus mollis orci, sed rhoncus sapien nunc eget.
-          </div>
-        </div>
-        <div class="d-cell">
-          <span class="name">使用机型：</span>
-          <div class="info"></div>
-        </div>
-        <div class="d-cell">
-          <div class="cell">
-            <span class="name">飞翔高度：</span>
-            <div class="info"></div>
+            重庆江北经SOSLI、W550P204、H39达州VOR、H93AGULU、H144城固VOR至汉中城固重庆江北经SOSLI、W550P204、H39达州VOR、H93AGULU、H144城固VOR至汉中城固重庆江北经SOSLI、W550P204、H39达州VOR、H93AGULU、H144城固VOR至汉中城固重庆江北经SOSLI、W550P204、H39达州VOR、H93AGULU、H144城固VOR至汉中城固
           </div>
         </div>
       </div>
@@ -153,78 +152,58 @@
         replyDetail: false,
         tableData:[
           {
-            gocity: '北京',
-            arrivecity: '深圳',
-            hxgo: '鄂尔多斯伊金霍洛经鄂尔多斯VOR、H57P284、B214...',
-            hxreturn: '鄂尔多斯伊金霍洛经鄂尔多斯VOR、H57P284、B214...',
-            syjx: '',
-            fxheight: ''
+            gocity: '上报数据',
+            arrivecity: '未批复',
+            hxgo: '重庆江北-汉城古城',
+            hxreturn: '华夏航空公司（贵州）',
+            syjx: '鄂尔多斯伊金霍洛经鄂尔多斯VOR、H57P284、B214...'
           },
           {
-            gocity: '北京',
-            arrivecity: '深圳',
-            hxgo: '鄂尔多斯伊金霍洛经鄂尔多斯VOR、H57P284、B214...',
-            hxreturn: '鄂尔多斯伊金霍洛经鄂尔多斯VOR、H57P284、B214...',
-            syjx: '',
-            fxheight: ''
+            gocity: '上报数据',
+            arrivecity: '未批复',
+            hxgo: '重庆江北-汉城古城',
+            hxreturn: '华夏航空公司（贵州）',
+            syjx: '鄂尔多斯伊金霍洛经鄂尔多斯VOR、H57P284、B214...'
           },
           {
-            gocity: '北京',
-            arrivecity: '深圳',
-            hxgo: '鄂尔多斯伊金霍洛经鄂尔多斯VOR、H57P284、B214...',
-            hxreturn: '鄂尔多斯伊金霍洛经鄂尔多斯VOR、H57P284、B214...',
-            syjx: '',
-            fxheight: ''
+            gocity: '上报数据',
+            arrivecity: '未批复',
+            hxgo: '重庆江北-汉城古城',
+            hxreturn: '华夏航空公司（贵州）',
+            syjx: '鄂尔多斯伊金霍洛经鄂尔多斯VOR、H57P284、B214...'
           },
           {
-            gocity: '北京',
-            arrivecity: '深圳',
-            hxgo: '鄂尔多斯伊金霍洛经鄂尔多斯VOR、H57P284、B214...',
-            hxreturn: '鄂尔多斯伊金霍洛经鄂尔多斯VOR、H57P284、B214...',
-            syjx: '',
-            fxheight: ''
+            gocity: '上报数据',
+            arrivecity: '未批复',
+            hxgo: '重庆江北-汉城古城',
+            hxreturn: '华夏航空公司（贵州）',
+            syjx: '鄂尔多斯伊金霍洛经鄂尔多斯VOR、H57P284、B214...'
+          },{
+            gocity: '上报数据',
+            arrivecity: '未批复',
+            hxgo: '重庆江北-汉城古城',
+            hxreturn: '华夏航空公司（贵州）',
+            syjx: '鄂尔多斯伊金霍洛经鄂尔多斯VOR、H57P284、B214...'
+          },{
+            gocity: '上报数据',
+            arrivecity: '未批复',
+            hxgo: '重庆江北-汉城古城',
+            hxreturn: '华夏航空公司（贵州）',
+            syjx: '鄂尔多斯伊金霍洛经鄂尔多斯VOR、H57P284、B214...'
+          },{
+            gocity: '上报数据',
+            arrivecity: '未批复',
+            hxgo: '重庆江北-汉城古城',
+            hxreturn: '华夏航空公司（贵州）',
+            syjx: '鄂尔多斯伊金霍洛经鄂尔多斯VOR、H57P284、B214...'
           },
-          {
-            gocity: '北京',
-            arrivecity: '深圳',
-            hxgo: '鄂尔多斯伊金霍洛经鄂尔多斯VOR、H57P284、B214...',
-            hxreturn: '鄂尔多斯伊金霍洛经鄂尔多斯VOR、H57P284、B214...',
-            syjx: '',
-            fxheight: ''
-          },
-          {
-            gocity: '北京',
-            arrivecity: '深圳',
-            hxgo: '鄂尔多斯伊金霍洛经鄂尔多斯VOR、H57P284、B214...',
-            hxreturn: '鄂尔多斯伊金霍洛经鄂尔多斯VOR、H57P284、B214...',
-            syjx: '',
-            fxheight: ''
-          },
-          {
-            gocity: '北京',
-            arrivecity: '深圳',
-            hxgo: '鄂尔多斯伊金霍洛经鄂尔多斯VOR、H57P284、B214...',
-            hxreturn: '鄂尔多斯伊金霍洛经鄂尔多斯VOR、H57P284、B214...',
-            syjx: '',
-            fxheight: ''
-          },
-          {
-            gocity: '北京',
-            arrivecity: '深圳',
-            hxgo: '鄂尔多斯伊金霍洛经鄂尔多斯VOR、H57P284、B214...',
-            hxreturn: '鄂尔多斯伊金霍洛经鄂尔多斯VOR、H57P284、B214...',
-            syjx: '',
-            fxheight: ''
-          },
-          {
-            gocity: '北京',
-            arrivecity: '深圳',
-            hxgo: '鄂尔多斯伊金霍洛经鄂尔多斯VOR、H57P284、B214...',
-            hxreturn: '鄂尔多斯伊金霍洛经鄂尔多斯VOR、H57P284、B214...',
-            syjx: '',
-            fxheight: ''
-          },
-        ]
+
+
+
+        ],
+        analyzeType:[],
+        airwayPic: false,
+        replyDetail: false,
       }
     },
     methods:{
@@ -239,6 +218,9 @@
       },
       detailClick(row,idx) {
         this.replyDetail = true;
+      },
+      airwayClick(row,idx) {
+        this.airwayPic=true;
       },
     }
   }
@@ -285,8 +267,7 @@
     }
     .find_body{
       width: 100%;
-      height: 200px;
-      /*border: 1px #999999 solid;*/
+      height: 250px;
       font-size: 18px;
       color: #333333;
       .find_condition{
@@ -298,7 +279,6 @@
           list-style: none;
           li{
             float:left;
-            /*width: 25%;*/
             div{
               .block{
                 margin-left: -5%;
@@ -326,9 +306,16 @@
             }
           }
         }
+        .analyze_type{
+          .el-checkbox-group{
+            margin-top: -25px;
+            margin-left: 100px;
+          }
+        }
         .find_bnt{
           width: 100%;
           height: 130px;
+          margin-top: 30px;
           .bnt {
             width: 130px;
             float: left;
