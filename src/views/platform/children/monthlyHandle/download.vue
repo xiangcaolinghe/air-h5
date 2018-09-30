@@ -6,12 +6,13 @@
     <div class="find_body">
       <div class="find_condition">
         <ul>
-          <li style="width: 35%">
+          <li style="width: 27%">
             标题：<el-input v-model="type" class="i_input" placeholder="请输入内容"/>
           </li>
-          <li style="width: 35%">
+          <li style="width: 43%">
             发布时间：
             <el-date-picker
+              width=""
               v-model="value7"
               type="daterange"
               align="right"
@@ -242,6 +243,9 @@
           }
         ],
         files: '',
+        type: '',
+        pickerOptions2: '',
+        value7: '',
       }
     },
     methods:{
@@ -296,6 +300,9 @@
         .el-select{
           width: 85%;
         }
+      }
+      .el-date-editor--daterange.el-input, .el-date-editor--daterange.el-input__inner, .el-date-editor--timerange.el-input, .el-date-editor--timerange.el-input__inner {
+        width: 70%;
       }
     }
   }

@@ -154,6 +154,9 @@
             pageSize: 10,        //每页显示的数据条数
             isActive: 1,
             replyDetail: false,
+            type: '',
+            month: '',
+            name: '',
             tableData:[
               {
                 gocity: '北京',

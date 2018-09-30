@@ -18,6 +18,12 @@ import monthHandleDeal from '@/views/platform/children/monthlyHandle/applyDeal'
 import monthHandleHistory from '@/views/platform/children/monthlyHandle/applyHistory'
 import monthHandleDownload from '@/views/platform/children/monthlyHandle/download'
 import monthHandleSpecial from '@/views/platform/children/monthlyHandle/special'
+import quarterlyManagerDeal from '@/views/platform/children/quarterlyManager/applyDeal'
+import quarterlyManagerHistory from '@/views/platform/children/quarterlyManager/applyHistory'
+import quarterlyManagerDownload from '@/views/platform/children/quarterlyManager/download'
+import quarterlyManagerSpecial from '@/views/platform/children/quarterlyManager/special'
+import quarterlyManagerRecycleBin from '@/views/platform/children/quarterlyManager/recycleBin'
+
 Vue.use(Router)
 
 export default new Router({
@@ -35,6 +41,7 @@ export default new Router({
       children:[
         {
           path: 'index',
+          name: 'platform.index',
           component: platformIndex,
           meta: {
             auth: true,
@@ -174,6 +181,53 @@ export default new Router({
           meta:{
             auth: true,
             monthHandle:true
+          }
+        },
+
+
+        {
+          path: 'quarterly/manager/deal',
+          name: 'quarterly.manager.deal',
+          component: quarterlyManagerDeal,
+          meta:{
+            auth: true,
+            quarterlyManager:true
+          }
+        },
+        {
+          path: 'quarterly/manager/history',
+          name: 'quarterly.manager.history',
+          component: quarterlyManagerHistory,
+          meta:{
+            auth: true,
+            quarterlyManager:true
+          }
+        },
+        {
+          path: 'quarterly/manager/download',
+          name: 'quarterly.manager.download',
+          component: quarterlyManagerDownload,
+          meta:{
+            auth: true,
+            quarterlyManager:true
+          }
+        },
+        {
+          path: 'quarterly/manager/special',
+          name: 'quarterly.manager.special',
+          component: quarterlyManagerSpecial,
+          meta:{
+            auth: true,
+            quarterlyManager:true
+          }
+        },
+        {
+          path: 'quarterly/manager/recyclebin',
+          name: 'quarterly.manager.recyclebin',
+          component: quarterlyManagerRecycleBin,
+          meta:{
+            auth: true,
+            quarterlyManager:true
           }
         }
       ]

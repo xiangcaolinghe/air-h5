@@ -1,28 +1,32 @@
 <template>
   <div class="container">
     <div class="title">
-      特殊申请
+      回收站
     </div>
     <div class="find_body">
       <div class="find_condition">
         <ul>
-          <li style="width: 35%">
-            时间计划：<el-input v-model="type" class="i_input" placeholder="请输入内容"/>
+          <li style="width: 20%">
+            航空公司：<el-input v-model="type" style="width: 60%" placeholder="请输入内容"/>
           </li>
-          <li style="width: 35%">
-            航班号：<el-input v-model="type" style="width: 73%" placeholder="请输入内容"/>
+          <li style="width: 20%">
+            航班号：<el-input v-model="type" style="width: 60%" placeholder="请输入内容"/>
           </li>
           <li style="width: 30%">
-            <div class="select_page">
-              每页显示：
-              <el-select v-model="pageSize" placeholder="请选择">
-                <el-option
-                  v-for="item in options"
-                  :key="item.value"
-                  :label="item.label"
-                  :value="item.value">
-                </el-option>
-              </el-select>条
+            航线类型：
+            <el-select v-model="hxType" placeholder="请选择">
+              <el-option
+                v-for="item in options"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value">
+              </el-option>
+            </el-select>
+          </li>
+          <li style="width: 30%">
+            <div class="find_bnt">
+              <div class="bnt search">查询</div>
+              <div class="bnt search">重置</div>
             </div>
           </li>
         </ul>
@@ -37,10 +41,6 @@
             到达城市：<el-input v-model="type" class="i_input" placeholder="请输入内容"/>
           </li>
           <li style="width: 30%">
-            <div class="find_bnt">
-              <div class="bnt search">查询</div>
-              <div class="bnt search">重置</div>
-            </div>
           </li>
         </ul>
       </div>
@@ -62,21 +62,13 @@
               label="航空公司">
             </el-table-column>
             <el-table-column
-              prop="hxgo"
-              width="100"
-              label="航班号">
-            </el-table-column>
-            <el-table-column
-              prop="hxreturn"
-              width="100"
-              label="机型">
-            </el-table-column>
-            <el-table-column
               prop="syjx"
+              width="100"
               label="出发城市">
             </el-table-column>
             <el-table-column
               prop="tocity"
+              width="100"
               label="到达城市">
             </el-table-column>
             <el-table-column
@@ -84,8 +76,14 @@
               label="航线走向">
             </el-table-column>
             <el-table-column
-              prop="bz"
-              label="备注">
+              prop="hxgo"
+              width="100"
+              label="飞行高度">
+            </el-table-column>
+            <el-table-column
+              prop="hxreturn"
+              width="100"
+              label="删除原因">
             </el-table-column>
             <el-table-column
               label="操作"
@@ -160,95 +158,66 @@
           {
             gocity: '2018/08/31 17:06',
             arrivecity: '北京航空',
-            hxgo: '北京航空',
-            hxreturn: '北京航空',
+            hxgo: '1899km',
+            hxreturn: '个人原因',
             syjx: '上海',
-            tocity: '北京',
-            hxfx: '',
-            bz: ''
+            tocity: '北京'
           },
           {
             gocity: '2018/08/31 17:06',
             arrivecity: '北京航空',
-            hxgo: '北京航空',
-            hxreturn: '北京航空',
+            hxgo: '1899km',
+            hxreturn: '个人原因',
             syjx: '上海',
-            tocity: '北京',
-            hxfx: '',
-            bz: ''
+            tocity: '北京'
           },
           {
             gocity: '2018/08/31 17:06',
             arrivecity: '北京航空',
-            hxgo: '北京航空',
-            hxreturn: '北京航空',
+            hxgo: '1899km',
+            hxreturn: '个人原因',
             syjx: '上海',
-            tocity: '北京',
-            hxfx: '',
-            bz: ''
+            tocity: '北京'
           },
           {
             gocity: '2018/08/31 17:06',
             arrivecity: '北京航空',
-            hxgo: '北京航空',
-            hxreturn: '北京航空',
+            hxgo: '1899km',
+            hxreturn: '个人原因',
             syjx: '上海',
-            tocity: '北京',
-            hxfx: '',
-            bz: ''
+            tocity: '北京'
           },
           {
             gocity: '2018/08/31 17:06',
             arrivecity: '北京航空',
-            hxgo: '北京航空',
-            hxreturn: '北京航空',
+            hxgo: '1899km',
+            hxreturn: '个人原因',
             syjx: '上海',
-            tocity: '北京',
-            hxfx: '',
-            bz: ''
+            tocity: '北京'
           },
           {
             gocity: '2018/08/31 17:06',
             arrivecity: '北京航空',
-            hxgo: '北京航空',
-            hxreturn: '北京航空',
+            hxgo: '1899km',
+            hxreturn: '个人原因',
             syjx: '上海',
-            tocity: '北京',
-            hxfx: '',
-            bz: ''
-          },
-          {
-            gocity: '2018/08/31 17:06',
-            arrivecity: '北京航空',
-            hxgo: '北京航空',
-            hxreturn: '北京航空',
-            syjx: '上海',
-            tocity: '北京',
-            hxfx: '',
-            bz: ''
+            tocity: '北京'
           }
         ],
         analyzeType:[],
+        hxType: [],
         options: [
           {
             value: '1',
-            label: '10'
+            label: '类型1'
           },
           {
             value: '2',
-            label: '20'
+            label: '类型2'
           },
           {
             value: '3',
-            label: '30'
-          },
-          {
-            value: '4',
-            label: '40'
-          },
-          {
-            value: '5',
-            label: '50'
+            label: '类型3'
           }
         ]
       }
@@ -369,8 +338,7 @@
         }
         .find_bnt{
           width: 100%;
-          height: 130px;
-          /*margin-top: 30px;*/
+          height: 30px;
           .bnt {
             width: 110px;
             float: left;
@@ -391,6 +359,7 @@
     .table_body{
       width: 100%;
       height: 100%;
+      padding-top: 30px;
       .table_nav{
         font-weight: normal;
         width: 100%;

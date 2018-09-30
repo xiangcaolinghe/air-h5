@@ -150,6 +150,7 @@
         pageSize: 10,        //每页显示的数据条数
         isActive: 1,
         replyDetail: false,
+        type: '',
         tableData:[
           {
             gocity: '上报数据',

@@ -1,16 +1,19 @@
 <template>
   <div class="container">
     <div class="title">
-      特殊申请
+      历史记录查询
     </div>
     <div class="find_body">
       <div class="find_condition">
         <ul>
-          <li style="width: 35%">
+          <li style="width: 30%">
             时间计划：<el-input v-model="type" class="i_input" placeholder="请输入内容"/>
           </li>
-          <li style="width: 35%">
-            航班号：<el-input v-model="type" style="width: 73%" placeholder="请输入内容"/>
+          <li style="width: 20%">
+            航空公司：<el-input v-model="type" style="width: 60%" placeholder="请输入内容"/>
+          </li>
+          <li style="width: 20%">
+            航班号：<el-input v-model="type" style="width: 60%" placeholder="请输入内容"/>
           </li>
           <li style="width: 30%">
             <div class="select_page">

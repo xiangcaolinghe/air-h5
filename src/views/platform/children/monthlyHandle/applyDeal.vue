@@ -172,6 +172,7 @@
         isActive: 1,
         replyDetail: false,
         templateRadio: '',
+        type: '',
         tableData:[
           {
             arrivecity: '北京航空',

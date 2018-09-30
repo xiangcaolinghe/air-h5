@@ -6,11 +6,11 @@
     <div class="find_body">
       <div class="find_condition">
         <ul>
-          <li style="width: 30%">
-            时间计划：<el-input v-model="type" class="i_input" placeholder="请输入内容"/>
+          <li style="width: 28%">
+            时间计划：<el-input v-model="type" style="width: 60%" placeholder="请输入内容"/>
           </li>
-          <li style="width: 20%">
-            航空公司：<el-input v-model="type" style="width: 60%" placeholder="请输入内容"/>
+          <li style="width: 22%">
+            航空公司：<el-input v-model="type" style="width: 50%" placeholder="请输入内容"/>
           </li>
           <li style="width: 20%">
             航班号：<el-input v-model="type" style="width: 60%" placeholder="请输入内容"/>
@@ -158,6 +158,7 @@
         pageSize: 10,        //每页显示的数据条数
         isActive: 1,
         replyDetail: false,
+        type: '',
         tableData:[
           {
             gocity: '2018/08/31 17:06',
