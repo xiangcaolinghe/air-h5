@@ -20,7 +20,7 @@
               <li><router-link class="nav-cell" :to="{name: 'month.apply.regular'}" :class="{active:$route.meta.monthApply == true}"><i class="iconfont icon-tongji1"></i>&nbsp;&nbsp;月度申请</router-link></li>
               <li><router-link class="nav-cell" :to="{name: 'month.handle.deal'}" :class="{active:$route.meta.monthHandle == true}"><i class="iconfont icon-tongji1"></i>&nbsp;&nbsp;月度处理</router-link></li>
               <li><router-link class="nav-cell" :to="{name: 'quarterly.manager.deal'}" :class="{active:$route.meta.quarterlyManager == true}"><i class="iconfont icon-tongji1"></i>&nbsp;&nbsp;季度管理</router-link></li>
-              <li><router-link class="nav-cell" :to="{name:'platform.local'}" :class="{active:isActive == 5}"><i class="iconfont icon-tongji"></i>&nbsp;&nbsp;区内管理</router-link></li>
+              <li><router-link class="nav-cell" :to="{name:'platform.local'}" :class="{active:$route.meta.local == true}"><i class="iconfont icon-tongji"></i>&nbsp;&nbsp;区内管理</router-link></li>
               <li><router-link class="nav-cell" :to="{name:'platform.airway'}" :class="{active:isActive == 6}"><i class="iconfont icon-flightSchedule"></i>&nbsp;&nbsp;班机航线</router-link></li>
             </ul>
           </div>
@@ -77,31 +77,21 @@
                 </ul>
               </div>
             </div>
-            <div class="nav_left"  :class="{active:isActive == 4}">
+            <div class="nav_left" :class="{active:$route.meta.local == true}">
               <div class="">
                 <ul>
-                  <li><a href="javascript:;"><div><div>月度上报流程4</div></div></a></li>
-                  <li><a href="javascript:;"><div><div>上报数据导入4</div></div></a></li>
-                  <li><a href="javascript:;"><div><div>上报数据管理4</div></div></a></li>
-                  <li><a href="javascript:;"><div><div>上报数据统计4</div></div></a></li>
-                  <li><a href="javascript:;"><div><div>批复数据导入4</div></div></a></li>
-                </ul>
-              </div>
-            </div>
-            <div class="nav_left"  :class="{active:isActive == 5}">
-              <div class="">
-                <ul>
-                  <li><a href="javascript:;"><div><div>月度上报流程5</div></div></a></li>
-                  <li><a href="javascript:;"><div><div>上报数据导入5</div></div></a></li>
-                  <li><a href="javascript:;"><div><div>上报数据管理5</div></div></a></li>
-                  <li><a href="javascript:;"><div><div>上报数据统计5</div></div></a></li>
-                  <li><a href="javascript:;"><div><div>批复数据导入5</div></div></a></li>
+                  <li><router-link :to="{name:'platform.local'}" :class="{active:$route.name == 'platform.local'}" class="left-cell">区内上报流程</router-link></li>
+                  <li><router-link :to="{name:'platform.local.import'}" :class="{active:$route.name == 'platform.local.import'}" class="left-cell">上报数据导入</router-link></li>
+                  <li><router-link :to="{name:'platform.local.manager'}" :class="{active:$route.name == 'platform.local.manager'}" class="left-cell">上报数据管理</router-link></li>
+                  <li><router-link :to="{name:'platform.local.statistics'}" :class="{active:$route.name == 'platform.local.statistics'}" class="left-cell">上报数据统计</router-link></li>
+                  <li><router-link :to="{name:'platform.local.reply.import'}" :class="{active:$route.name == 'platform.local.reply.import'}" class="left-cell">批复数据导入</router-link></li>
+                  <li><router-link :to="{name:'platform.local.reply.export'}" :class="{active:$route.name == 'platform.local.reply.export'}" class="left-cell">批复数据导出</router-link></li>
                 </ul>
               </div>
             </div>
           </div>
         </div>
-        <div class="view" :class="{views : $route.meta.hideLeft,manager_statistics:$route.name == 'platform.flowstatistics'}">
+        <div class="view" :class="{views : $route.meta.hideLeft,manager_statistics:$route.meta.noPadding== true}">
           <slot name="right-view"></slot>
         </div>
       </div>

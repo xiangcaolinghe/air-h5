@@ -1,0 +1,490 @@
+<template>
+  <div class="container">
+    <div class="find_body">
+      <div class="find_condition">
+        <ul>
+          <li style="width: 45%">
+            选择批复数据：<el-input v-model="type" class="i_input" placeholder="请输入内容"/>
+          </li>
+          <li style="width: 45%">
+            选择上报数据：<el-input v-model="type" class="i_input" placeholder="请输入内容"/>
+          </li>
+          <li style="width: 10%">
+            <div class="bnt search">开始对比</div>
+          </li>
+        </ul>
+        <br/>
+        <br/>
+        <br/>
+        <ul>
+          <li style="width: 90%">
+            航空公司：<el-input v-model="type" class="i_input_file" placeholder="请输入内容"/>
+          </li>
+          <li style="width: 10%">
+            <div class="bnt search">选择</div>
+          </li>
+        </ul>
+        <br/><br/><br/>
+        <div class="analyze_type">
+          分析类型：
+          <el-checkbox-group v-model="analyzeType">
+            <el-checkbox label="未批复（红色）"/>
+            <el-checkbox label="已批复有改动（黄色）"/>
+            <el-checkbox label="已批复无改动（绿色）"/>
+            <el-checkbox label="已批复新添加（蓝色）"/>
+          </el-checkbox-group>
+        </div>
+        <div class="find_bnt">
+          <div class="bnt search">模糊查询</div>
+          <div class="bnt search">导出Excel</div>
+        </div>
+      </div>
+    </div>
+    <div class="table_body">
+      <div class="info_lists">
+        <div class="lists" >
+          <el-table
+            :data="tableData"
+            border>
+            <el-table-column
+              type="index"
+              label="序号"
+              width="60"
+              class="column"/>
+            <el-table-column
+              prop="gocity"
+              width="100"
+              label="数据源">
+            </el-table-column>
+            <el-table-column
+              prop="arrivecity"
+              width="100"
+              label="分析结果">
+            </el-table-column>
+            <el-table-column
+              prop="hxgo"
+              width="200"
+              label="城市对">
+            </el-table-column>
+            <el-table-column
+              prop="hxreturn"
+              width="220"
+              label="航空公司">
+            </el-table-column>
+            <el-table-column
+              prop="syjx"
+              label="航线去程">
+            </el-table-column>
+            <el-table-column
+              label="操作"
+              width="200">
+              <template slot-scope="scope">
+                <el-button type="text" size="small" class="detail-cl" @click="airwayClick(scope.row,scope.$index)">地图展示</el-button>
+                <el-button type="text" size="small" class="detail-cl" @click="detailClick(scope.row,scope.$index)">详情</el-button>
+              </template>
+            </el-table-column>
+          </el-table>
+          <br/><br/>
+          <!--分页-->
+          <el-pagination
+            @size-change="handleSizeChange"
+            @current-change="handleCurrentChange"
+            :current-page="currentPage"
+            :page-sizes="[10, 20, 30, 40]"
+            :page-size="pageSize"
+            layout="total, sizes, prev, pager, next, jumper"
+            :total=parseInt(total)>
+          </el-pagination>
+        </div>
+      </div>
+    </div>
+    <!--查看地图弹层-->
+    <el-dialog title="航线图" :visible.sync="airwayPic" class="airway-pic-dialog">
+      <div class="map-box">
+        <img src="./../../../../assets/images/map.png" class="img">
+      </div>
+    </el-dialog>
+    <!--详情弹层-->
+    <el-dialog :visible.sync="replyDetail" class="airway-detail-dialog">
+      <div class="content">
+        <div class="d-title">详情</div>
+        <div class="d_title_hr"></div>
+        <div class="d-cell">
+          <span class="name">数据源：</span>
+          <div class="info">上报数据</div>
+        </div>
+        <div class="d-cell">
+          <span class="name">分析结果：</span>
+          <div class="info">未批复</div>
+        </div>
+        <div class="d-cell">
+          <span class="name">城市对：</span>
+          <div class="info">
+            重庆汉城-汉中古城
+          </div>
+        </div>
+        <div class="d-cell">
+          <span class="name">航空公司：</span>
+          <div class="info">
+            华夏航空公司
+          </div>
+        </div>
+        <div class="d-cell">
+          <span class="name">航线去程：</span>
+          <div class="content">
+            重庆江北经SOSLI、W550P204、H39达州VOR、H93AGULU、H144城固VOR至汉中城固重庆江北经SOSLI、W550P204、H39达州VOR、H93AGULU、H144城固VOR至汉中城固重庆江北经SOSLI、W550P204、H39达州VOR、H93AGULU、H144城固VOR至汉中城固重庆江北经SOSLI、W550P204、H39达州VOR、H93AGULU、H144城固VOR至汉中城固
+          </div>
+        </div>
+      </div>
+    </el-dialog>
+  </div>
+</template>
+
+<script>
+  export default {
+    /*name: "reply-import.vue"*/
+    data(){
+      return{
+        currentPage: 1,      //当前页
+        total: 20,          //数据总条数
+        pageSize: 10,        //每页显示的数据条数
+        isActive: 1,
+        replyDetail: false,
+        type: '',
+        tableData:[
+          {
+            gocity: '上报数据',
+            arrivecity: '未批复',
+            hxgo: '重庆江北-汉城古城',
+            hxreturn: '华夏航空公司（贵州）',
+            syjx: '鄂尔多斯伊金霍洛经鄂尔多斯VOR、H57P284、B214...'
+          },
+          {
+            gocity: '上报数据',
+            arrivecity: '未批复',
+            hxgo: '重庆江北-汉城古城',
+            hxreturn: '华夏航空公司（贵州）',
+            syjx: '鄂尔多斯伊金霍洛经鄂尔多斯VOR、H57P284、B214...'
+          },
+          {
+            gocity: '上报数据',
+            arrivecity: '未批复',
+            hxgo: '重庆江北-汉城古城',
+            hxreturn: '华夏航空公司（贵州）',
+            syjx: '鄂尔多斯伊金霍洛经鄂尔多斯VOR、H57P284、B214...'
+          },
+          {
+            gocity: '上报数据',
+            arrivecity: '未批复',
+            hxgo: '重庆江北-汉城古城',
+            hxreturn: '华夏航空公司（贵州）',
+            syjx: '鄂尔多斯伊金霍洛经鄂尔多斯VOR、H57P284、B214...'
+          },{
+            gocity: '上报数据',
+            arrivecity: '未批复',
+            hxgo: '重庆江北-汉城古城',
+            hxreturn: '华夏航空公司（贵州）',
+            syjx: '鄂尔多斯伊金霍洛经鄂尔多斯VOR、H57P284、B214...'
+          },{
+            gocity: '上报数据',
+            arrivecity: '未批复',
+            hxgo: '重庆江北-汉城古城',
+            hxreturn: '华夏航空公司（贵州）',
+            syjx: '鄂尔多斯伊金霍洛经鄂尔多斯VOR、H57P284、B214...'
+          },{
+            gocity: '上报数据',
+            arrivecity: '未批复',
+            hxgo: '重庆江北-汉城古城',
+            hxreturn: '华夏航空公司（贵州）',
+            syjx: '鄂尔多斯伊金霍洛经鄂尔多斯VOR、H57P284、B214...'
+          },
+
+
+
+        ],
+        analyzeType:[],
+        airwayPic: false,
+        replyDetail: false,
+      }
+    },
+    methods:{
+      handleSizeChange(val) {
+        this.pageSize = val;
+      },
+      handleCurrentChange(val) {
+        this.currentPage = val;
+      },
+      switcher(number){
+        this.isActive=number;
+      },
+      detailClick(row,idx) {
+        this.replyDetail = true;
+      },
+      airwayClick(row,idx) {
+        this.airwayPic=true;
+      },
+    }
+  }
+</script>
+<style lang="less">
+  .info_lists {
+    /*padding-top: 40px;*/
+    .el-table__header-wrapper {
+      th {
+        background: #026ab3;
+      }
+      .cell {
+        text-align: center;
+        color:#fff;
+        font-weight: 600;
+      }
+    }
+    .el-table{
+      font-size: 14px;
+      color: #666666;
+      font-weight: normal;
+    }
+  }
+  .container{
+    .el-dialog{
+      width: 80%;
+    }
+  }
+</style>
+<style lang="less" scoped>
+  .container{
+    width: 100%;
+    height: 100%;
+    padding-top: 55px;
+    padding-bottom: 25px;
+    &.active{
+      display: block;
+    }
+    .title{
+      color: #026ab3;
+      font-size: 24px;
+      text-align: left;
+      padding-bottom: 55px;
+    }
+    .find_body{
+      width: 100%;
+      height: 250px;
+      font-size: 18px;
+      color: #333333;
+      .find_condition{
+        padding-top: 20px;
+        padding-left: 10px;
+        text-align: left;
+        width: 100%;
+        ul{
+          list-style: none;
+          li{
+            float:left;
+            div{
+              .block{
+                margin-left: -5%;
+              }
+            }
+            .i_input{
+              width: 70%;
+            }
+            .i_input_file{
+              width: 88%;
+            }
+            .bnt{
+              width: 130px;
+              float: left;
+              text-align: center;
+              height: 35px;
+              cursor: pointer;
+              line-height: 35px;
+              font-weight: 400;
+              color: #fff;
+              &.search {
+                margin-right: 30px;
+                background: #026ab3;
+              }
+            }
+          }
+        }
+        .analyze_type{
+          .el-checkbox-group{
+            margin-top: -25px;
+            margin-left: 100px;
+          }
+        }
+        .find_bnt{
+          width: 100%;
+          height: 130px;
+          margin-top: 30px;
+          .bnt {
+            width: 130px;
+            float: left;
+            text-align: center;
+            height: 35px;
+            cursor: pointer;
+            line-height: 35px;
+            font-weight: 400;
+            color: #fff;
+            &.search {
+              margin-right: 30px;
+              background: #026ab3;
+            }
+          }
+        }
+      }
+    }
+    .table_body{
+      width: 100%;
+      height: 100%;
+      padding-top: 30px;
+      .table_nav{
+        font-weight: normal;
+        width: 100%;
+        height: 0.1px;
+        ul{
+          li{
+            list-style: none;
+            float: left;
+            width: 140px;
+            border: 1px #d6d6d6 solid;
+            text-align: center;
+            &.active{
+              background-color: #026ab3;
+              a{
+                color: white;
+              }
+            }
+            a{
+              list-style: none;
+              text-decoration: none;
+              color: #333333;
+            }
+          }
+        }
+      }
+    }
+    .airway-detail-dialog {
+      .el-dialog {
+        margin-top: 0px !important;
+        max-width: 1200px;
+        width: 100%;
+        .el-dialog__header {
+          text-align: left;
+          border-bottom: 1px solid #ccc;
+        }
+        .el-dialog__body {
+          .content {
+            width:100%;
+            padding-left: 15px;
+            .d-title{
+              width: 100%;
+              text-align: left;
+              font-size: 24px;
+              color: #000;
+            }
+            .d_title_hr{
+              margin-top: 20px;
+              width: 100%;
+              height:1px;
+              background-color: #999999;
+            }
+            .d-cell {
+              padding-top:15px;
+              display: flex;
+              box-sizing: border-box;
+              color: #333333;
+              font-size: 18px;
+              font-weight: 500;
+              .name {
+                width:120px;
+                line-height: 40px;
+                text-align: left;
+              }
+              .info {
+                text-align: left;
+                flex: 1;
+                height:40px;
+                padding-left: 30px;
+                line-height: 38px;
+                border:1px solid #ccc;
+                border-radius: 5px;
+                box-sizing: border-box;
+                margin-right: 5%;
+              }
+              .content{
+                text-align: left;
+                flex: 1;
+                height:80%;
+                padding-left: 30px;
+                line-height: 38px;
+                border:1px solid #ccc;
+                border-radius: 5px;
+                box-sizing: border-box;
+                margin-right: 5%;
+              }
+              .info-body {
+                flex: 1;
+                .hb {
+                  display: flex;
+                  background: #026ab3;
+                  border-top: 1px solid #ccc;
+                  box-sizing: border-box;
+                  width:100%;
+                  .c {
+                    flex: 1;
+                    height:40px;
+                    line-height: 40px;
+                    color:#fff;
+                    text-align: center;
+                    box-sizing: border-box;
+                    border-right:1px solid #ccc;
+                    &:last-child {
+                      border-right:none;
+                    }
+                  }
+                }
+                .bd-table {
+                  width:100%;
+                  display: flex;
+                  .bd {
+                    display: flex;
+                    border: 1px solid #ccc;
+                    box-sizing: border-box;
+                    border-top: none;
+                    width:100%;
+                    .c {
+                      flex: 1;
+                      height:40px;
+                      line-height: 40px;
+                      text-align: center;
+                      box-sizing: border-box;
+                      border-right:1px solid #ccc;
+                      &:last-child {
+                        border-right:none;
+                      }
+                    }
+                  }
+                }
+              }
+              .cell {
+                flex: 1;
+                display: flex;
+                .info {
+                  flex: 1;
+                }
+                .unit {
+                  width:60px;
+                  font-size: 18px;
+                  color:#026ab3;
+                  text-align: center;
+                  line-height: 40px;
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+</style>

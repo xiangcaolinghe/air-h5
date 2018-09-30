@@ -7,6 +7,12 @@ import platformAirway from '@/views/platform/children/airway/list'
 import FlowPath from '@/views/platform/children/monthlyManager/flowPath'
 import FlowImport from '@/views/platform/children/monthlyManager/import'
 import platformLocal from '@/views/platform/children/localManager/index'
+import platformLocalImport from '@/views/platform/children/localManager/import'
+import platformLocalManager from '@/views/platform/children/localManager/manager'
+import platformLocalManagerAdd from '@/views/platform/children/localManager/manager_add'
+import platformLocalReplyExport from '@/views/platform/children/localManager/replyExport'
+import platformLocalReplyImport from '@/views/platform/children/localManager/replyImport'
+import platformLocalStatistics from '@/views/platform/children/localManager/statistics'
 import FlowManager from '@/views/platform/children/monthlyManager/manager'
 import FlowManagerAdd from '@/views/platform/children/monthlyManager/manager_add'
 import FlowStatistics from '@/views/platform/children/monthlyManager/statistics'
@@ -62,7 +68,63 @@ export default new Router({
           name: 'platform.local',
           component: platformLocal,
           meta: {
-            auth: true
+            auth: true,
+            local:true
+          }
+        },
+        {
+          path: 'local/import',
+          name: 'platform.local.import',
+          component: platformLocalImport,
+          meta: {
+            auth: true,
+            local:true
+          }
+        },
+        {
+          path: 'local/manager',
+          name: 'platform.local.manager',
+          component: platformLocalManager,
+          meta: {
+            auth: true,
+            local:true
+          }
+        },
+        {
+          path: 'local/manager/add',
+          name: 'platform.local.manager.add',
+          component: platformLocalManagerAdd,
+          meta: {
+            auth: true,
+            local:true
+          }
+        },
+        {
+          path: 'local/reply/export',
+          name: 'platform.local.reply.export',
+          component: platformLocalReplyExport,
+          meta: {
+            auth: true,
+            local:true
+          }
+        },
+        {
+          path: 'local/reply/import',
+          name: 'platform.local.reply.import',
+          component: platformLocalReplyImport,
+          meta: {
+            auth: true,
+            local:true
+          }
+        },
+        {
+          path: 'local/statistics',
+          name: 'platform.local.statistics',
+          component: platformLocalStatistics,
+          meta: {
+            auth: true,
+            local:true,
+            noPadding:true
           }
         },
         {
@@ -108,7 +170,8 @@ export default new Router({
           component: FlowStatistics,
           meta:{
             auth: true,
-            manager: true
+            manager: true,
+            noPadding:true
           }
         },
         {
