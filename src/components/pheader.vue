@@ -21,7 +21,7 @@
               <li><router-link class="nav-cell" :to="{name: 'month.handle.deal'}" :class="{active:$route.meta.monthHandle == true}"><i class="iconfont icon-tongji1"></i>&nbsp;&nbsp;月度处理</router-link></li>
               <li><router-link class="nav-cell" :to="{name: 'quarterly.manager.deal'}" :class="{active:$route.meta.quarterlyManager == true}"><i class="iconfont icon-tongji1"></i>&nbsp;&nbsp;季度管理</router-link></li>
               <li><router-link class="nav-cell" :to="{name:'platform.local'}" :class="{active:$route.meta.local == true}"><i class="iconfont icon-tongji"></i>&nbsp;&nbsp;区内管理</router-link></li>
-              <li><router-link class="nav-cell" :to="{name:'platform.airway'}" :class="{active:isActive == 6}"><i class="iconfont icon-flightSchedule"></i>&nbsp;&nbsp;班机航线</router-link></li>
+              <li><router-link class="nav-cell" :to="{name:'platform.airway'}" :class="{active:$route.name == 'platform.airway'}"><i class="iconfont icon-flightSchedule"></i>&nbsp;&nbsp;班机航线</router-link></li>
             </ul>
           </div>
       </div>
