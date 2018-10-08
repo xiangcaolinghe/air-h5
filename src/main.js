@@ -15,9 +15,9 @@ window.API = API;
 Vue.config.productionTip = false
 const storage = new LocalStorageUtils();
 window.storage = storage;
-let loadingInstance
+// let loadingInstance
 router.beforeEach(function (to, from, next) {
-  loadingInstance = Loading.service({ fullscreen: true,background:'rgba(0,0,0,.5)' });
+  // loadingInstance = Loading.service({ fullscreen: true,background:'rgba(0,0,0,.5)' });
   let meta = to.meta.auth;
   let name = to.name;
   let token = storage.get('token');
@@ -36,7 +36,7 @@ router.beforeEach(function (to, from, next) {
   }
 })
 router.afterEach(function (to) {
-  loadingInstance.close();
+  // loadingInstance.close();
   // store.commit('updateLoadingStatus', {isLoading: false})
 })
 
