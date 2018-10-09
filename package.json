@@ -11,12 +11,8 @@
   },
   "dependencies": {
     "axios": "^0.18.0",
-<<<<<<< HEAD
-    "element-ui": "^2.4.8",
-=======
     "element-ui": "^2.4.7",
     "quill": "^1.3.6",
->>>>>>> 6b413a4c23d206ff1aa961dd8dd1f854d8572384
     "vue": "^2.5.2",
     "vue-quill-editor": "^3.0.6",
     "vue-resource": "^1.5.1",
