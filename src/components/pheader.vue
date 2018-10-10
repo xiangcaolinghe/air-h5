@@ -54,8 +54,7 @@
                 <li><router-link :to="{name:'month.handle.deal'}" :class="{active:$route.name == 'month.handle.deal'}" class="left-cell">当月申请处理</router-link></li>
                 <li><router-link :to="{name:'month.handle.history'}" :class="{active:$route.name == 'month.handle.history'}" class="left-cell">月度申请历史</router-link></li>
                 <li><router-link :to="{name:'month.handle.special'}" :class="{active:$route.name == 'month.handle.special'}" class="left-cell">特殊申请</router-link></li>
-                <li><div class="left-cell">运行附件上传</div></li>
-                <!--<li><router-link :to="{name:'month.handle.special'}" :class="{active:$route.name == 'month.handle.special'}" class="left-cell">运行附件上传</router-link></li>-->
+                <li><router-link :to="{name:'month.handle.upload'}" :class="{active:$route.name == 'month.handle.upload'}" class="left-cell">运行附件上传</router-link></li>
                 <li><router-link :to="{name:'month.handle.download'}" :class="{active:$route.name == 'month.handle.download'}" class="left-cell">军方批复下载</router-link></li>
               </ul>
             </div>
@@ -64,15 +63,12 @@
               <div class="">
                 <ul>
                   <li><router-link :to="{name:'quarterly.manager.deal'}" :class="{active:$route.name == 'quarterly.manager.deal'}" class="left-cell">当季申请处理</router-link></li>
-                  <li><div class="left-cell">换季处理合并项</div></li>
-                  <!--<li><router-link :to="{name:'quarterly.manager'}" :class="{active:$route.name == 'quarterly.manager'}" class="left-cell">换季处理合并项</router-link></li>-->
-                  <li><div class="left-cell">换季处理设置</div></li>
-                  <!--<li><router-link :to="{name:'quarterly.manager'}" :class="{active:$route.name == 'quarterly.manager'}" class="left-cell">换季处理设置</router-link></li>-->
+                  <li><router-link :to="{name:'quarterly.manager.vereinignen'}" :class="{active:$route.name == 'quarterly.manager.vereinignen'}" class="left-cell">换季处理合并项</router-link></li>
+                  <li><router-link :to="{name:'quarterly.manager.aufstellen'}" :class="{active:$route.name == 'quarterly.manager.aufstellen'}" class="left-cell">换季处理设置</router-link></li>
                   <li><router-link :to="{name:'quarterly.manager.recyclebin'}" :class="{active:$route.name == 'quarterly.manager.recyclebin'}" class="left-cell">回收站</router-link></li>
                   <li><router-link :to="{name:'quarterly.manager.history'}" :class="{active:$route.name == 'quarterly.manager.history'}" class="left-cell">换季申请历史</router-link></li>
                   <li><router-link :to="{name:'quarterly.manager.special'}" :class="{active:$route.name == 'quarterly.manager.special'}" class="left-cell">特殊申请</router-link></li>
-                  <li><div class="left-cell">班级航线附件上传</div></li>
-                  <!--<li><router-link :to="{name:'quarterly.manager.special'}" :class="{active:$route.name == 'quarterly.manager.special'}" class="left-cell">班级航线附件上传</router-link></li>-->
+                  <li><router-link :to="{name:'quarterly.manager.upload'}" :class="{active:$route.name == 'quarterly.manager.upload'}" class="left-cell">班级航线附件上传</router-link></li>
                   <li><router-link :to="{name:'quarterly.manager.download'}" :class="{active:$route.name == 'quarterly.manager.download'}" class="left-cell">军方批复下载</router-link></li>
                 </ul>
               </div>

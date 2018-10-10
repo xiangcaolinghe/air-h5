@@ -22,6 +22,7 @@ import monthApplyRegular from '@/views/platform/children/monthlyApply/regular'
 import monthApplySpecial from '@/views/platform/children/monthlyApply/special'
 import monthHandleDeal from '@/views/platform/children/monthlyHandle/applyDeal'
 import monthHandleHistory from '@/views/platform/children/monthlyHandle/applyHistory'
+import monthHandleUpload from '@/views/platform/children/monthlyHandle/upload'
 import monthHandleDownload from '@/views/platform/children/monthlyHandle/download'
 import monthHandleSpecial from '@/views/platform/children/monthlyHandle/special'
 import quarterlyManagerDeal from '@/views/platform/children/quarterlyManager/applyDeal'
@@ -29,6 +30,9 @@ import quarterlyManagerHistory from '@/views/platform/children/quarterlyManager/
 import quarterlyManagerDownload from '@/views/platform/children/quarterlyManager/download'
 import quarterlyManagerSpecial from '@/views/platform/children/quarterlyManager/special'
 import quarterlyManagerRecycleBin from '@/views/platform/children/quarterlyManager/recycleBin'
+import quarterlyManagerUpload from '@/views/platform/children/quarterlyManager/upload'
+import quarterlyManagerVereinignen from '@/views/platform/children/quarterlyManager/vereinignen'
+import quarterlyManagerAufstellen from '@/views/platform/children/quarterlyManager/aufstellen'
 
 Vue.use(Router)
 
@@ -229,6 +233,15 @@ export default new Router({
           }
         },
         {
+          path: 'month/handle/upload',
+          name: 'month.handle.upload',
+          component: monthHandleUpload,
+          meta:{
+            auth: true,
+            monthHandle:true
+          }
+        },
+        {
           path: 'month/handle/download',
           name: 'month.handle.download',
           component: monthHandleDownload,
@@ -288,6 +301,33 @@ export default new Router({
           path: 'quarterly/manager/recyclebin',
           name: 'quarterly.manager.recyclebin',
           component: quarterlyManagerRecycleBin,
+          meta:{
+            auth: true,
+            quarterlyManager:true
+          }
+        },
+        {
+          path: 'quarterly/manager/upload',
+          name: 'quarterly.manager.upload',
+          component: quarterlyManagerUpload,
+          meta:{
+            auth: true,
+            quarterlyManager:true
+          }
+        },
+        {
+          path: 'quarterly/manager/vereinignen',
+          name: 'quarterly.manager.vereinignen',
+          component: quarterlyManagerVereinignen,
+          meta:{
+            auth: true,
+            quarterlyManager:true
+          }
+        },
+        {
+          path: 'quarterly/manager/aufstellen',
+          name: 'quarterly.manager.aufstellen',
+          component: quarterlyManagerAufstellen,
           meta:{
             auth: true,
             quarterlyManager:true
