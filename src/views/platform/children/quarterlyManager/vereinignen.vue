@@ -19,22 +19,18 @@
               class="column"/>
             <el-table-column
               prop="gocity"
-              width="200"
               label="航线类型">
             </el-table-column>
             <el-table-column
               prop="arrivecity"
-              width="200"
               label="航空公司">
             </el-table-column>
             <el-table-column
               prop="hxgo"
-              width="100"
               label="出发城市">
             </el-table-column>
             <el-table-column
               prop="hxreturn"
-              width="200"
               label="到达城市">
             </el-table-column>
             <el-table-column
@@ -59,11 +55,12 @@
             </el-table-column>
             <el-table-column
               prop="bz"
+              width="60"
               label="备注">
             </el-table-column>
             <el-table-column
               label="操作"
-              width="200">
+              width="100">
               <template slot-scope="scope">
                 <el-button type="text" size="small" class="detail-cl" @click="detailClick(scope.row,scope.$index)">查看</el-button>
                 <el-button type="text" size="small" class="detail-cl" @click="deteleClick(scope.row,scope.$index)">删除</el-button>
