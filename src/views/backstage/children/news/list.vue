@@ -2,11 +2,11 @@
   <div class="backstage-news-page">
     <div class="search-nav">
       <div class="input-table">
-        <el-input v-model="input" placeholder="请输入关键词汇" class="input-search"></el-input>
+        <el-input v-model="SearchInp" placeholder="请输入关键词汇" class="input-search"></el-input>
         <i class="el-icon-search icon"></i>
       </div>
       <div class="btn-cell" @click="search">搜索</div>
-      <div class="btn-cell" @click="addPop = true">添加</div>
+      <div class="btn-cell" @click="addOpen">添加</div>
       <div class="btn-cell" @click="selectDel">删除</div>
     </div>
     <div class="result-table">
@@ -46,7 +46,7 @@
           width="200">
           <template slot-scope="scope">
             <el-button type="text" size="small" class="look" @click="linkDetail(scope.row.id)">查看</el-button>
-            <el-button type="text" size="small" class="edit" @click="edit(scope.row.id)">编辑</el-button>
+            <el-button type="text" size="small" class="edit" @click="editOpen(scope.row.id)">编辑</el-button>
             <el-button type="text" size="small" class="del" @click="del(scope.row.id)">删除</el-button>
           </template>
         </el-table-column>
@@ -56,11 +56,11 @@
       <el-pagination
         @size-change="handleSizeChange"
         @current-change="handleCurrentChange"
-        :current-page="currentPage4"
-        :page-sizes="[100, 200, 300, 400]"
-        :page-size="100"
+        :current-page="currentPage"
+        :page-sizes="[10, 50, 100]"
+        :page-size="pageSize"
         layout="total, sizes, prev, pager, next, jumper"
-        :total="400">
+        :total="total">
       </el-pagination>
     </div>
     <!--添加弹框-->
@@ -112,9 +112,6 @@
             </div>
           </el-col>
         </el-row>
-
-
-
         <div class="cell">
           <span class="name">内容：</span>
           <quill-editor ref="myTextEditor"
@@ -128,7 +125,7 @@
         </div>
       </div>
       <div slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="tipPop = false" class="confirmAdd">确 定</el-button>
+        <el-button type="primary" @click="addSave" class="confirmAdd">确 定</el-button>
         <el-button @click="addPop = false" class="cancelAdd">取 消</el-button>
       </div>
     </el-dialog>
@@ -181,9 +178,6 @@
             </div>
           </el-col>
         </el-row>
-
-
-
         <div class="cell">
           <span class="name">内容：</span>
           <quill-editor ref="myTextEditor"
@@ -197,7 +191,7 @@
         </div>
       </div>
       <div slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="tipPop = false" class="confirmTip">确 定</el-button>
+        <el-button type="primary" @click="editSave" class="confirmTip">确 定</el-button>
         <el-button @click="editPop = false" class="cancelTip">取 消</el-button>
       </div>
     </el-dialog>
@@ -218,27 +212,233 @@
         loading:false,
         editPop:false,
         addPop:false,
-        fileList: [],
-        editorOption: {
-          // something config
-        },
+        // 搜索初始化
+        SearchInp:'',
+        // 删除选择初始化
+        multipleSelection:[],
+        activeTableDataId:[],
         addObject:{
           title:'',
           content:'',
-          url:''
+          url:'',
+          author : '',
+          source : ''
         },
-        editObject:{},
-        currentPage4: 4,
-        input:'',
-        activeTableDataId:[],
-        tableData: [{
-          tableData: [],
-          multipleSelection: []
-        }]
+        editObject:{
+          title:'',
+          content:'',
+          url:'',
+          author : '',
+          source : ''
+        },
+        fileList: [],
+        currentPage: 1,
+        pageSize : 10,
+        total:100,
+        editorOption: {
+          // something config
+        },
+        tableData: []
       }},
         computed: {
       },
       methods: {
+      // 页面初始化
+        getPage(){
+          let params={};
+          API.get('static/list.json',params).then((res)=>{
+            if(res.status == 200) {
+              console.log(res.data)
+              this.tableData = res.data;
+              this.currentPage = 4
+            }else {
+              console.log(res.data)
+            }
+          })
+        },
+        // 搜索
+        search() {
+          console.log(this.SearchInp)
+          let params={};
+          params['search'] = this.SearchInp;
+          API.get('static/list.json',params).then((res)=>{
+            if(res.status == 200) {
+              console.log(res.data)
+              this.tableData = res.data;
+            }else {
+              console.log(res.data)
+            }
+          })
+        },
+        // 选择删除
+        selectDel() {
+          if (this.multipleSelection.length == 0) {
+            this.$message({
+              type: 'info',
+              message: '请选择需要删除的数据'
+            });
+            return
+          }
+          this.multipleSelection.forEach(ele => {
+            this.activeTableDataId.push({'id': ele.id})
+          })
+          this.$confirm('您确定要删除这' + this.multipleSelection.length +'条数据吗?', '提示', {
+            confirmButtonText: '确定',
+            cancelButtonText: '取消',
+            type: 'warning'
+          }).then(() => {
+            /*Array.from(this.activeTableDataId).forEach(element => {
+              this.tableData = this.tableData.filter(ele => {
+                console.log(ele.id != element.id)
+                return ele.id != element.id;
+              })
+            })*/
+            let params={};
+            params['idlist'] = this.activeTableDataId;
+            API.get('static/edit.json',params).then((res)=>{
+              console.log(res)
+              if(res.status == 200) {
+                this.$message({
+                  type: 'success',
+                  message: '删除成功!'
+                });
+                this.getPage();
+              }else {
+                this.$message({
+                  type: 'error',
+                  message: '删除失败!'
+                });
+              }
+            })
+          })
+        },
+        // 新增
+        addOpen(){
+          this.addPop = true;
+          this.addObject = {
+            title:'',
+            content:'',
+            url:'',
+            author : '',
+            source : ''
+          }
+        },
+        // 新增保存
+        addSave(){
+          console.log(this.addObject)
+          let params={};
+          params['title'] = this.addObject.title;
+          params['content'] = this.addObject.content;
+          params['url'] = this.addObject.url;
+          params['author'] = this.addObject.author;
+          params['source'] = this.addObject.source;
+          API.get('static/list.json',params).then((res)=>{
+            if(res.status == 200) {
+              this.addPop = false;
+              this.getPage();
+              this.$message({
+                type: 'success',
+                message: '新增成功!'
+              });
+            }else {
+              this.$message({
+                type: 'error',
+                message: '新增失败!'
+              });
+            }
+          })
+        },
+        // 查看
+        linkDetail(id) {
+          alert(id)
+          this.$router.push({name:'backstage.news.detail',query:{id:id}})
+        },
+        // 编辑
+        editOpen(id) {
+          this.editPop = true
+          let params={};
+          params['id'] = id;
+          API.get('static/edit.json',params).then((res)=>{
+            console.log(res.data)
+            if(res.status == 200) {
+              console.log(res.data[0])
+              // this.editObject.title = '12345'
+              this.editObject = res.data[0];
+              this.fileList =  res.data[0].fileList;
+            }else {
+              console.log(res.data)
+            }
+          })
+        },
+        // 编辑保存
+        editSave(){
+          console.log(this.editObject)
+          let params={};
+          params['id'] = this.editObject.id;
+          params['title'] = this.editObject.title;
+          params['content'] = this.editObject.content;
+          params['url'] = this.editObject.url;
+          params['author'] = this.editObject.author;
+          params['source'] = this.editObject.source;
+          API.get('static/list.json',params).then((res)=>{
+            if(res.status == 200) {
+              this.editPop = false;
+              this.getPage();
+              this.$message({
+                type: 'success',
+                message: '编辑成功!'
+              });
+            }else {
+              this.$message({
+                type: 'error',
+                message: '编辑失败!'
+              });
+            }
+          })
+        },
+        // 单个删除
+        del(id) {
+          this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
+            confirmButtonText: '确定',
+            cancelButtonText: '取消',
+            type: 'warning'
+          }).then(() => {
+            let params={};
+            params['id'] = id;
+            /*this.tableData = this.tableData.filter(ele => {
+              return ele.id != id;
+            })*/
+            API.get('static/list.json',params).then((res)=>{
+              if(res.status == 200) {
+                this.getPage();
+                this.$message({
+                  type: 'success',
+                  message: '删除成功!'
+                });
+              }else {
+                this.$message({
+                  type: 'error',
+                  message: '删除失败!'
+                });
+              }
+            })
+          }).catch(() => {
+            this.$message({
+              type: 'info',
+              message: '已取消删除'
+            });
+          });
+        },
+        // 当前页，同时上一页下一页也能获取当前页
+        handleCurrentChange(val) {
+          console.log(val);
+        },
+        // 选择10条还是20条、
+        handleSizeChange(val) {
+          console.log(val);
+        },
+
+
         handleRemove(file, fileList) {
           console.log(file, fileList);
         },
@@ -266,108 +466,15 @@
           }
           return isJPG && isLt2M;
         },
-        handleSizeChange(val) {
-          console.log(val);
-        },
-        handleCurrentChange(val) {
-          console.log(val);
-        },
+
+
         // 选择
         handleSelectionChange(val) {
           this.multipleSelection = val;
           console.log(this.multipleSelection)
         },
-        // 搜索
-        search() {
 
-        },
-        // 选择删除
-        selectDel() {
-          if (this.multipleSelection.length == 0) {
-            this.$message({
-              type: 'info',
-              message: '请选择需要删除的数据'
-            });
-            return
-          }
-          this.multipleSelection.forEach(ele => {
-            this.activeTableDataId.push({'id': ele.id})
-          })
-          this.$confirm('您确定要删除这' + this.multipleSelection.length +'条数据吗?', '提示', {
-            confirmButtonText: '确定',
-            cancelButtonText: '取消',
-            type: 'warning'
-          }).then(() => {
-            Array.from(this.activeTableDataId).forEach(element => {
-              this.tableData = this.tableData.filter(ele => {
-                return ele.id != element.id;
-              })
-            })
-            this.$message({
-              type: 'success',
-              message: '删除成功!'
-            });
-          })
-        },
-        // 删除
-        del(id) {
-          this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
-            confirmButtonText: '确定',
-            cancelButtonText: '取消',
-            type: 'warning'
-          }).then(() => {
-            this.tableData = this.tableData.filter(ele => {
-              return ele.id != id;
-            })
-            this.$message({
-              type: 'success',
-              message: '删除成功!'
-            });
-          }).catch(() => {
-            this.$message({
-              type: 'info',
-              message: '已取消删除'
-            });
-          });
-        },
-        // 进入详情
-        linkDetail(id) {
-          alert(id)
-          this.$router.push({name:'backstage.news.detail',query:{id:id}})
-        },
-        // 编辑
-        edit(id) {
-          this.editPop = true
-          let params={};
-          params['id'] = id;
-          API.get('static/edit.json',params).then((res)=>{
-            console.log(res.data)
-            if(res.status == 200) {
-              console.log(res.data[0])
-              // this.editObject.title = '12345'
-              this.editObject = res.data[0];
-              this.fileList =  res.data[0].fileList;
-            }else {
-              console.log(res.data)
-            }
-          })
-        },
-        //确定添加
-        confirmAdd() {
 
-        },
-        // 取消添加
-        cancelAdd() {
-
-        },
-        //确定编辑
-        confirmEdit() {
-
-        },
-        // 取消编辑
-        cancelEdit() {
-
-        },
         onEditorBlur(editor) {
           console.log('editor blur!', editor)
         },
@@ -394,19 +501,8 @@
         onAddChange({ editor, html, text }) {
           console.log('editor change!', editor, html, text)
         },
-        getPage(){
-          let params={};
-          API.get('static/list.json',params).then((res)=>{
-            if(res.status == 200) {
-              console.log(res.data)
-              this.tableData = res.data;
-            }else {
-              console.log(res.data)
-            }
-          })
-        },
+
         getEdit(){
-          //this.addPop = true;
           let params={};
           API.get('static/edit.json',params).then((res)=>{
             if(res.status == 200) {
