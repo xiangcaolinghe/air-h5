@@ -48,6 +48,7 @@ export default new Router({
           component:BackstageNewsDetai,
           meta: {
             auth: true,
+            title:"详情"
           }
         },
         {

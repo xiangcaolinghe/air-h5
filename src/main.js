@@ -34,6 +34,10 @@ router.beforeEach(function (to, from, next) {
   }else {
     next()
   }
+  if (to.meta.title) {
+    document.title = to.meta.title
+  }
+  next()
 })
 router.afterEach(function (to) {
   // loadingInstance.close();
