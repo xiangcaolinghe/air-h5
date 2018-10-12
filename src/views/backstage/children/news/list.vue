@@ -92,8 +92,8 @@
                 class="avatar-uploader"
                 action="https://jsonplaceholder.typicode.com/posts/"
                 :show-file-list="false"
-                :on-success="handleAvatarSuccess"
-                :before-upload="beforeAvatarUpload">
+                :on-change="AddImgChange"
+                :auto-upload="false">
                 <img v-if="addObject.url" :src="addObject.url" class="avatar">
                 <i v-else class="el-icon-plus avatar-uploader-icon"></i>
               </el-upload>
@@ -103,10 +103,11 @@
             <div class="cell">
               <span class="name">上传附件：</span>
               <el-upload
+                ref="Addupload"
                 class="upload-demo"
                 action="https://jsonplaceholder.typicode.com/posts/"
-                :on-preview="handlePreview" :on-remove="handleRemove" :before-remove="beforeRemove" multiple :limit="5" :on-exceed="handleExceed" :file-list="fileList">
-                <el-button size="small" type="primary">点击上传</el-button>
+                :file-list="AddfileList" :auto-upload="false" :multiple="true" :limit="5" :on-exceed="handleExceed" >
+                <el-button size="small" type="primary" slot="trigger">选择文件</el-button>
                 <!--<div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>-->
               </el-upload>
             </div>
@@ -117,10 +118,7 @@
           <quill-editor ref="myTextEditor"
                         v-model="addObject.content"
                         :config="editorOption"
-                        @change="onAddChange($event)"
-                        @blur="onAddBlur($event)"
-                        @focus="onAddFocus($event)"
-                        @ready="onAddReady($event)">
+                        @change="onAddChange($event)">
           </quill-editor>
         </div>
       </div>
@@ -158,8 +156,8 @@
                 class="avatar-uploader"
                 action="https://jsonplaceholder.typicode.com/posts/"
                 :show-file-list="false"
-                :on-success="handleAvatarSuccess"
-                :before-upload="beforeAvatarUpload">
+                :on-change="EditImgChange"
+                :auto-upload="false">
                 <img v-if="editObject.url" :src="editObject.url" class="avatar">
                 <i v-else class="el-icon-plus avatar-uploader-icon"></i>
               </el-upload>
@@ -169,10 +167,11 @@
             <div class="cell">
               <span class="name">上传附件：</span>
               <el-upload
+                ref="Editupload"
                 class="upload-demo"
                 action="https://jsonplaceholder.typicode.com/posts/"
-                :on-preview="handlePreview" :on-remove="handleRemove" :before-remove="beforeRemove" multiple :limit="5" :on-exceed="handleExceed" :file-list="fileList">
-                <el-button size="small" type="primary">点击上传</el-button>
+                :file-list="EditfileList" :auto-upload="false" :multiple="true" :limit="5" :on-exceed="handleExceed" >
+                <el-button size="small" type="primary" slot="trigger">选择文件</el-button>
                 <!--<div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>-->
               </el-upload>
             </div>
@@ -231,7 +230,8 @@
           author : '',
           source : ''
         },
-        fileList: [],
+        AddfileList: [],
+        EditfileList: [],
         currentPage: 1,
         pageSize : 10,
         total:100,
@@ -240,8 +240,7 @@
         },
         tableData: []
       }},
-        computed: {
-      },
+      computed: {},
       methods: {
       // 页面初始化
         getPage(){
@@ -269,6 +268,11 @@
               console.log(res.data)
             }
           })
+        },
+        // 选择
+        handleSelectionChange(val) {
+          this.multipleSelection = val;
+          console.log(this.multipleSelection)
         },
         // 选择删除
         selectDel() {
@@ -325,6 +329,7 @@
         },
         // 新增保存
         addSave(){
+          this.$refs.Addupload.submit();
           console.log(this.addObject)
           let params={};
           params['title'] = this.addObject.title;
@@ -364,7 +369,7 @@
               console.log(res.data[0])
               // this.editObject.title = '12345'
               this.editObject = res.data[0];
-              this.fileList =  res.data[0].fileList;
+              this.EditfileList =  res.data[0].fileList;
             }else {
               console.log(res.data)
             }
@@ -372,6 +377,7 @@
         },
         // 编辑保存
         editSave(){
+          this.$refs.Editupload.submit();
           console.log(this.editObject)
           let params={};
           params['id'] = this.editObject.id;
@@ -429,53 +435,50 @@
             });
           });
         },
-        // 当前页，同时上一页下一页也能获取当前页
+        // 翻页器：当前页，同时上一页下一页也能获取当前页
         handleCurrentChange(val) {
           console.log(val);
         },
-        // 选择10条还是20条、
+        // 翻页器：选择10条还是20条、
         handleSizeChange(val) {
           console.log(val);
         },
-
-
-        handleRemove(file, fileList) {
-          console.log(file, fileList);
-        },
-        handlePreview(file) {
-          console.log(file);
-        },
+        // 文件上传部分
         handleExceed(files, fileList) {
-          this.$message.warning(`当前限制选择 ${fileList.length} 个文件，本次选择了 ${files.length} 个文件`);
+          this.$message.warning(`当前已有${fileList.length} 个文件，限制选择5个文件，本次选择了 ${files.length} 个文件`);
         },
-        beforeRemove(file, fileList) {
-          return this.$confirm(`确定移除 ${ file.name }？`);
-        },
-        handleAvatarSuccess(res, file) {
-          this.imageUrl = URL.createObjectURL(file.raw);
-        },
-        beforeAvatarUpload(file) {
-          const isJPG = file.type === 'image/jpeg';
-          const isLt2M = file.size / 1024 / 1024 < 2;
-
-          if (!isJPG) {
-            this.$message.error('上传头像图片只能是 JPG 格式!');
+        // 缩略图上传部分
+        AddImgChange(file, fileList){
+          let fileName = file.name;
+          let regex = /(.jpg|.jpeg|.gif|.png|.bmp)$/;
+          if (regex.test(fileName.toLowerCase())) {
+            this.addObject.url = URL.createObjectURL(file.raw);
+          } else {
+            this.$message.error('请选择图片文件');
           }
-          if (!isLt2M) {
-            this.$message.error('上传头像图片大小不能超过 2MB!');
+        },
+        EditImgChange(file, fileList){
+          let fileName = file.name;
+          let regex = /(.jpg|.jpeg|.gif|.png|.bmp)$/;
+          if (regex.test(fileName.toLowerCase())) {
+            this.editObject.url = URL.createObjectURL(file.raw);
+          } else {
+            this.$message.error('请选择图片文件');
           }
-          return isJPG && isLt2M;
         },
-
-
-        // 选择
-        handleSelectionChange(val) {
-          this.multipleSelection = val;
-          console.log(this.multipleSelection)
+        // 编辑器
+        onEditorChange({ editor, html, text }) {
+          console.log('editor change!', editor, html, text)
+          this.addObject.content = html
         },
+        onAddChange({ editor, html, text }) {
+          console.log('editor change!', editor, html, text)
+          this.editObject.content = html
+        }
 
 
-        onEditorBlur(editor) {
+
+        /*onEditorBlur(editor) {
           console.log('editor blur!', editor)
         },
         onEditorFocus(editor) {
@@ -484,10 +487,7 @@
         onEditorReady(editor) {
           console.log('editor ready!', editor)
         },
-        onEditorChange({ editor, html, text }) {
-          console.log('editor change!', editor, html, text)
-//        this.content = html
-        },
+
         // 添加弹框
         onAddBlur(editor) {
           console.log('editor blur!', editor)
@@ -498,22 +498,7 @@
         onAddReady(editor) {
           console.log('editor ready!', editor)
         },
-        onAddChange({ editor, html, text }) {
-          console.log('editor change!', editor, html, text)
-        },
-
-        getEdit(){
-          let params={};
-          API.get('static/edit.json',params).then((res)=>{
-            if(res.status == 200) {
-              console.log(res.data)
-              this.tableData = res.data;
-            }else {
-              console.log(res.data)
-            }
-          })
-        }
-
+      */
       },
       created() {
         this.getPage();
