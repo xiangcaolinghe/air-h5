@@ -182,10 +182,7 @@
           <quill-editor ref="myTextEditor"
                         v-model="editObject.content"
                         :config="editorOption"
-                        @change="onEditorChange($event)"
-                        @blur="onEditorBlur($event)"
-                        @focus="onEditorFocus($event)"
-                        @ready="onEditorReady($event)">
+                        @change="onEditorChange($event)">
           </quill-editor>
         </div>
       </div>
