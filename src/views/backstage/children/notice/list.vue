@@ -2,21 +2,21 @@
     <div class="backstage-notice-page">
         <div class="search-nav">
             <div class="input-table">
-                <el-input v-model="input" placeholder="请输入关键词汇" class="input-search"></el-input>
+                <el-input v-model="SearchInp" placeholder="请输入关键词汇" class="input-search"></el-input>
                 <i class="el-icon-search icon"></i>
             </div>
             <div class="select-table">
-                <el-select v-model="value" placeholder="请选择">
+                <el-select v-model="SearchValue" placeholder="请选择">
                     <el-option
                             v-for="item in options"
-                            :key="item.value"
+                            :key="item.id"
                             :label="item.label"
-                            :value="item.value">
+                            :value="item.id">
                     </el-option>
                 </el-select>
             </div>
             <div class="btn-cell" @click="search">搜索</div>
-            <div class="btn-cell" @click="addPop = true">添加</div>
+            <div class="btn-cell" @click="addOpen">添加</div>
             <div class="btn-cell" @click="selectDel">删除</div>
         </div>
         <div class="result-table">
@@ -42,12 +42,12 @@
                         label="标题">
                 </el-table-column>
                 <el-table-column
-                        prop="type"
+                        prop="classify"
                         label="分类"
                         width="100">
-                    <template slot-scope="scope">
-                        <el-button type="text" size="small" class="edit">{{scope.row.typeName}}</el-button>
-                    </template>
+                    <!--<template slot-scope="scope">
+                        <el-button type="text" size="small" class="edit">{{scope.row.classify}}</el-button>
+                    </template>-->
                 </el-table-column>
                 <el-table-column
                         prop="date"
@@ -64,7 +64,7 @@
                         label="置顶"
                         width="120">
                     <template slot-scope="scope">
-                        <el-button type="text" size="small" class="look"  @click="toggleTop(scope.row.id,scope.row.top)">{{scope.row.topName}}</el-button>
+                        <el-button type="text" size="small" class="look"  @click="toggleTop(scope.row.id,scope.row.status)">{{scope.row.status == 0 ? "取消置顶" : "置顶"}}</el-button>
                     </template>
                 </el-table-column>
                 <el-table-column
@@ -72,7 +72,7 @@
                         width="250">
                     <template slot-scope="scope">
                         <el-button type="text" size="small" class="look" @click="linkDetail(scope.row.id)">查看</el-button>
-                        <el-button type="text" size="small" class="edit" @click="edit(scope.row.id)">编辑</el-button>
+                        <el-button type="text" size="small" class="edit" @click="editOpen(scope.row.id)">编辑</el-button>
                         <el-button type="text" size="small" class="del" @click="del(scope.row.id)">删除</el-button>
                         <el-button type="text" size="small" class="tip" @click="tip(scope.row.id)">短信提醒</el-button>
                     </template>
@@ -80,18 +80,33 @@
             </el-table>
         </div>
         <div class="pagination-table">
-            <el-pagination
-                    @size-change="handleSizeChange"
-                    @current-change="handleCurrentChange"
-                    :current-page="currentPage4"
-                    :page-sizes="[100, 200, 300, 400]"
-                    :page-size="100"
-                    layout="total, sizes, prev, pager, next, jumper"
-                    :total="400">
-            </el-pagination>
-        </div>
+        <el-pagination
+          @size-change="handleSizeChange"
+          @current-change="handleCurrentChange"
+          :current-page="currentPage"
+          :page-sizes="[10, 50, 100]"
+          :page-size="pageSize"
+          layout="total, sizes, prev, pager, next, jumper"
+          :total="total">
+        </el-pagination>
+      </div>
         <!--短信提醒弹框-->
         <el-dialog title="短信提醒" :visible.sync="tipPop" class="tip-dialog">
+         <el-dialog
+           width="540px"
+           title="选择用户"
+           :visible.sync="innerTipPop"
+           append-to-body>
+           <el-transfer
+             filterable
+             filter-placeholder="请输入用户姓名"
+             v-model="userList"
+             :data="userData">
+           </el-transfer>
+           <div slot="footer" class="dialog-footer">
+             <el-button type="primary" @click="userBox()" class="confirm">确 定</el-button>
+           </div>
+         </el-dialog>
             <div class="content">
                 <div class="cell">
                     <span class="name">短信内容：</span>
@@ -100,92 +115,168 @@
                             :rows="5"
                             class="flew-input"
                             placeholder="请输入内容"
-                            v-model="textarea">
+                            v-model="Msg.MsgText">
                     </el-input>
                 </div>
                 <div class="cell">
                     <span class="name">相关用户：</span>
-                    <el-input v-model="inputUser" placeholder="请输入内容" class="flew-input input-user"></el-input>
-                    <span class="btn">选择</span>
+                    <el-input v-model="Msg.MsgUserInp" placeholder="请输入内容" class="flew-input input-user" disabled></el-input>
+                    <span class="btn" @click="innerTipPop = true">选择</span>
                 </div>
             </div>
             <div slot="footer" class="dialog-footer">
-                <el-button type="primary" @click="tipPop = false" class="confirm">确 定</el-button>
+                <el-button type="primary" @click="MesSave" class="confirm">确 定</el-button>
                 <el-button @click="tipPop = false" class="cancel">取 消</el-button>
             </div>
         </el-dialog>
         <!--添加弹框-->
-        <el-dialog title="添加新闻" :visible.sync="addPop" class="tip-dialog">
-            <div class="content">
-                <div class="cell">
-                    <span class="name">标题：</span>
-                    <el-input v-model="addObject.title" placeholder="请输入内容" class="flew-input"></el-input>
-                </div>
-                <div class="cell">
-                    <span class="name">缩略图：</span>
-                    <el-upload
-                            class="avatar-uploader"
-                            action="https://jsonplaceholder.typicode.com/posts/"
-                            :show-file-list="false"
-                            :on-success="handleAvatarSuccess"
-                            :before-upload="beforeAvatarUpload">
-                        <img v-if="addObject.url" :src="addObject.url" class="avatar">
-                        <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-                    </el-upload>
-                </div>
-                <div class="cell">
-                    <span class="name">内容：</span>
-                    <quill-editor ref="myTextEditor"
-                                  v-model="addObject.content"
-                                  :config="editorOption"
-                                  @change="onAddChange($event)"
-                                  @blur="onAddBlur($event)"
-                                  @focus="onAddFocus($event)"
-                                  @ready="onAddReady($event)">
-                    </quill-editor>
-                </div>
-            </div>
-            <div slot="footer" class="dialog-footer">
-                <el-button type="primary" @click="tipPop = false" class="confirmAdd">确 定</el-button>
-                <el-button @click="tipPop = false" class="cancelAdd">取 消</el-button>
-            </div>
-        </el-dialog>
+        <el-dialog title="添加公告" :visible.sync="addPop" class="tip-dialog">
+        <div class="content">
+          <div class="cell">
+            <span class="name">标题：</span>
+            <el-input v-model="addObject.title" placeholder="请输入内容" class="flew-input"></el-input>
+          </div>
+          <div class="cell">
+            <span class="name">分类：</span>
+            <el-select v-model="addObject.classify" placeholder="请选择活动区域" class="flew-input">
+              <el-option
+                v-for="item in options"
+                :key="item.id"
+                :label="item.label"
+                :value="item.id"></el-option>
+            </el-select>
+          </div>
+          <el-row>
+            <el-col :span="11">
+              <div class="cell">
+                <span class="name">作者：</span>
+                <el-input v-model="addObject.author" placeholder="请输入内容" class="flew-input"></el-input>
+              </div>
+            </el-col>
+            <el-col :span="11" :offset="2">
+              <div class="cell">
+                <span class="name">来源：</span>
+                <el-input v-model="addObject.source" placeholder="请输入内容" class="flew-input"></el-input>
+              </div>
+            </el-col>
+          </el-row>
+          <el-row>
+            <el-col :span="11">
+              <div class="cell">
+                <span class="name">缩略图：</span>
+                <el-upload
+                  class="avatar-uploader"
+                  action="https://jsonplaceholder.typicode.com/posts/"
+                  :show-file-list="false"
+                  :on-change="AddImgChange"
+                  :auto-upload="false">
+                  <img v-if="addObject.url" :src="addObject.url" class="avatar">
+                  <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+                </el-upload>
+              </div>
+            </el-col>
+            <el-col :span="11" :offset="2">
+              <div class="cell">
+                <span class="name">上传附件：</span>
+                <el-upload
+                  ref="Addupload"
+                  class="upload-demo"
+                  action="https://jsonplaceholder.typicode.com/posts/"
+                  :file-list="AddfileList" :auto-upload="false" :multiple="true" :limit="5" :on-exceed="handleExceed" >
+                  <el-button size="small" type="primary" slot="trigger">选择文件</el-button>
+                  <!--<div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>-->
+                </el-upload>
+              </div>
+            </el-col>
+          </el-row>
+          <div class="cell">
+            <span class="name">内容：</span>
+            <quill-editor ref="myTextEditor"
+                          v-model="addObject.content"
+                          :config="editorOption"
+                          @change="onAddChange($event)">
+            </quill-editor>
+          </div>
+        </div>
+        <div slot="footer" class="dialog-footer">
+          <el-button type="primary" @click="addSave" class="confirmAdd">确 定</el-button>
+          <el-button @click="addPop = false" class="cancelAdd">取 消</el-button>
+        </div>
+      </el-dialog>
         <!--编辑弹框-->
         <el-dialog title="编辑" :visible.sync="editPop" class="tip-dialog">
-            <div class="content">
-                <div class="cell">
-                    <span class="name">标题：</span>
-                    <el-input v-model="editObject.title" placeholder="请输入内容" class="flew-input"></el-input>
-                </div>
-                <div class="cell">
-                    <span class="name">缩略图：</span>
-                    <el-upload
-                            class="avatar-uploader"
-                            action="https://jsonplaceholder.typicode.com/posts/"
-                            :show-file-list="false"
-                            :on-success="handleAvatarSuccess"
-                            :before-upload="beforeAvatarUpload">
-                        <img v-if="editObject.url" :src="editObject.url" class="avatar">
-                        <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-                    </el-upload>
-                </div>
-                <div class="cell">
-                    <span class="name">内容：</span>
-                    <quill-editor ref="myTextEditor"
-                                  v-model="editObject.editContent"
-                                  :config="editorOption"
-                                  @change="onEditorChange($event)"
-                                  @blur="onEditorBlur($event)"
-                                  @focus="onEditorFocus($event)"
-                                  @ready="onEditorReady($event)">
-                    </quill-editor>
-                </div>
-            </div>
-            <div slot="footer" class="dialog-footer">
-                <el-button type="primary" @click="tipPop = false" class="confirmTip">确 定</el-button>
-                <el-button @click="tipPop = false" class="cancelTip">取 消</el-button>
-            </div>
-        </el-dialog>
+        <div class="content">
+          <div class="cell">
+            <span class="name">标题：</span>
+            <el-input v-model="editObject.title" placeholder="请输入内容" class="flew-input"></el-input>
+          </div>
+          <div class="cell">
+            <span class="name">分类：</span>
+            <el-select v-model="editObject.classify" placeholder="请选择活动区域" class="flew-input">
+              <el-option
+                v-for="item in options"
+                :key="item.id"
+                :label="item.label"
+                :value="item.id"></el-option>
+            </el-select>
+          </div>
+          <el-row>
+            <el-col :span="11">
+              <div class="cell">
+                <span class="name">作者：</span>
+                <el-input v-model="editObject.author" placeholder="请输入内容" class="flew-input"></el-input>
+              </div>
+            </el-col>
+            <el-col :span="11" :offset="2">
+              <div class="cell">
+                <span class="name">来源：</span>
+                <el-input v-model="editObject.source" placeholder="请输入内容" class="flew-input"></el-input>
+              </div>
+            </el-col>
+          </el-row>
+          <el-row>
+            <el-col :span="11">
+              <div class="cell">
+                <span class="name">缩略图：</span>
+                <el-upload
+                  class="avatar-uploader"
+                  action="https://jsonplaceholder.typicode.com/posts/"
+                  :show-file-list="false"
+                  :on-change="EditImgChange"
+                  :auto-upload="false">
+                  <img v-if="editObject.url" :src="editObject.url" class="avatar">
+                  <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+                </el-upload>
+              </div>
+            </el-col>
+            <el-col :span="11" :offset="2">
+              <div class="cell">
+                <span class="name">上传附件：</span>
+                <el-upload
+                  ref="Editupload"
+                  class="upload-demo"
+                  action="https://jsonplaceholder.typicode.com/posts/"
+                  :file-list="EditfileList" :auto-upload="false" :multiple="true" :limit="5" :on-exceed="handleExceed" >
+                  <el-button size="small" type="primary" slot="trigger">选择文件</el-button>
+                  <!--<div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>-->
+                </el-upload>
+              </div>
+            </el-col>
+          </el-row>
+          <div class="cell">
+            <span class="name">内容：</span>
+            <quill-editor ref="myTextEditor"
+                          v-model="editObject.content"
+                          :config="editorOption"
+                          @change="onEditorChange($event)">
+            </quill-editor>
+          </div>
+        </div>
+        <div slot="footer" class="dialog-footer">
+          <el-button type="primary" @click="editSave" class="confirmTip">确 定</el-button>
+          <el-button @click="editPop = false" class="cancelTip">取 消</el-button>
+        </div>
+      </el-dialog>
     </div>
 </template>
 
@@ -201,110 +292,63 @@
     data() {
       return {
         loading:false,
-        editorOption: {
-          // something config
+        editPop:false,
+        addPop:false,
+        tipPop:false,
+        innerTipPop:false,
+        // 搜索部分初始化
+        SearchInp:'',
+        SearchValue: '',
+        options: [],
+        tableData : [],
+        // 删除选择初始化
+        multipleSelection:[],
+        activeTableDataId:[],
+        AddfileList: [],
+        Msg:{
+          MsgText:'',
+          MsgUserInp:''
         },
+        userData : [{
+          key:'1',
+          label:'张三',
+          disabled : false
+        },{
+          key:'2',
+          label:'李四',
+          disabled : false
+        },{
+          key:'3',
+          label:'王麻子',
+          disabled : true
+        }],
+        userList:[],
         addObject:{
           title:'',
           content:'',
-          url:''
+          url:'',
+          author : '',
+          source : '',
+          classify : ''
         },
         editObject:{
-          title:'上海市普陀区金沙江路 1518',
-          content:'<h2>I am Example</h2>',
-          url:''
+          title:'',
+          content:'',
+          url:'',
+          author : '',
+          source : '',
+          classify : ''
         },
-        currentPage4: 4,
-        tipPop:false,
-        editPop:false,
-        addPop:false,
-        input:'',
-        textarea:'',
-        inputUser:'',
-        options: [{
-          value: '1',
-          label: '换季通知'
-        }, {
-          value: '2',
-          label: '临时航线'
-        }, {
-          value: '3',
-          label: '会议通知'
-        }],
-        value: '',
-        activeTableDataId:[],
-        tableData: [{
-          title:'宁夏空管分局飞行服务室开展安康杯“真情服务”主题辩论赛活动',
-          date: '2016-05-03',
-          id:'234',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1518 弄',
-          top:true,
-          topName:'取消置顶',
-          type:'1',
-          typeName:'换季通知'
-        }, {
-          title:'宁夏空管分局飞行服务室开展安康杯“真情服务”主题辩论赛活动',
-          date: '2016-05-02',
-          name: '王小虎',
-          id:'456',
-          top:false,
-          topName:'置顶',
-          address: '上海市普陀区金沙江路 1518 弄',
-          type:'2',
-          typeName:'临时航线'
-        }, {
-          title:'宁夏空管分局飞行服务室开展安康杯“真情服务”主题辩论赛活动',
-          date: '2016-05-04',
-          name: '王小虎',
-          id:'56',
-          top:true,
-          topName:'取消置顶',
-          address: '上海市普陀区金沙江路 1518 弄',
-          type:'3',
-          typeName:'会议通知'
-        }, {
-          title:'宁夏空管分局飞行服务室开展安康杯“真情服务”主题辩论赛活动',
-          date: '2016-05-01',
-          name: '王小虎',
-          id:'78',
-          top:true,
-          topName:'取消置顶',
-          address: '上海市普陀区金沙江路 1518 弄',
-          type:'3',
-          typeName:'会议通知'
-        }, {
-          title:'宁夏空管分局飞行服务室开展安康杯“真情服务”主题辩论赛活动',
-          date: '2016-05-08',
-          name: '王小虎',
-          id:'78',
-          top:true,
-          topName:'取消置顶',
-          address: '上海市普陀区金沙江路 1518 弄',
-          type:'3',
-          typeName:'会议通知'
-        }, {
-          title:'宁夏空管分局飞行服务室开展安康杯“真情服务”主题辩论赛活动',
-          date: '2016-05-06',
-          name: '王小虎',
-          id:'09',
-          top:false,
-          topName:'置顶',
-          address: '上海市普陀区金沙江路 1518 弄',
-          type:'3',
-          typeName:'会议通知'
-        }, {
-          title:'宁夏空管分局飞行服务室开展安康杯“真情服务”主题辩论赛活动',
-          date: '2016-05-07',
-          name: '王小虎',
-          id:'786',
-          top:true,
-          topName:'取消置顶',
-          address: '上海市普陀区金沙江路 1518 弄',
-          type:'3',
-          typeName:'会议通知'
-        }],
-        multipleSelection: []
+        AddfileList: [],
+        EditfileList: [],
+        currentPage: 1,
+        pageSize : 10,
+        total:100,
+        editorOption: {
+          // something config
+        },
+
+
       }
     },
     computed: {
@@ -313,34 +357,167 @@
 //      }
     },
     methods: {
-      handleAvatarSuccess(res, file) {
-        this.imageUrl = URL.createObjectURL(file.raw);
-      },
-      beforeAvatarUpload(file) {
-        const isJPG = file.type === 'image/jpeg';
-        const isLt2M = file.size / 1024 / 1024 < 2;
-
-        if (!isJPG) {
-          this.$message.error('上传头像图片只能是 JPG 格式!');
-        }
-        if (!isLt2M) {
-          this.$message.error('上传头像图片大小不能超过 2MB!');
-        }
-        return isJPG && isLt2M;
-      },
-      handleSizeChange(val) {
-        console.log(val);
-      },
-      handleCurrentChange(val) {
-        console.log(val);
-      },
-      // 选择
-      handleSelectionChange(val) {
-        this.multipleSelection = val;
-      },
       // 搜索
       search() {
-
+        console.log(this.SearchInp)
+        console.log(this.SearchValue)
+      },
+      //分类
+      classify(){
+        let params={};
+        API.get('static/notListSelect.json',params).then((res)=>{
+          if(res.status == 200) {
+            console.log(res.data)
+            this.options = res.data;
+          }else {
+            console.log(res.data)
+          }
+        })
+      },
+      // 页面初始化
+      getPage(){
+        let params={};
+        API.get('static/notList.json',params).then((res)=>{
+          if(res.status == 200) {
+            console.log(res.data)
+            this.tableData = res.data;
+            this.currentPage = 4
+          }else {
+            console.log(res.data)
+          }
+        })
+      },
+      // 置顶
+      toggleTop(id,status) {
+        console.log(id)
+        console.log(status)
+        let params={};
+        params['id'] = id;
+        params['status'] = status;
+        API.get('static/notList.json',params).then((res)=>{
+          if(res.status == 200) {
+            this.getPage()
+          }else {
+            console.log(res.data)
+          }
+        })
+      },
+      //新增
+      addOpen(){
+        this.addPop = true;
+        this.addObject = {
+          title:'',
+          content:'',
+          url:'',
+          author : '',
+          source : '',
+          classify : ''
+        }
+      },
+      // 新增保存
+      addSave(){
+        this.$refs.Addupload.submit();
+        console.log(this.addObject)
+        let params={};
+        params['title'] = this.addObject.title;
+        params['content'] = this.addObject.content;
+        params['url'] = this.addObject.url;
+        params['author'] = this.addObject.author;
+        params['source'] = this.addObject.source;
+        params['classify'] = this.addObject.classify;
+        API.get('static/list.json',params).then((res)=>{
+          if(res.status == 200) {
+            this.addPop = false;
+            this.getPage();
+            this.$message({
+              type: 'success',
+              message: '新增成功!'
+            });
+          }else {
+            this.$message({
+              type: 'error',
+              message: '新增失败!'
+            });
+          }
+        })
+      },
+      // 编辑
+      editOpen(id) {
+        this.editPop = true
+        let params={};
+        params['id'] = id;
+        API.get('static/edit.json',params).then((res)=>{
+          console.log(res.data)
+          if(res.status == 200) {
+            console.log(res.data[0])
+            // this.editObject.title = '12345'
+            this.editObject = res.data[0];
+            this.EditfileList =  res.data[0].fileList;
+          }else {
+            console.log(res.data)
+          }
+        })
+      },
+      // 编辑保存
+      editSave(){
+        this.$refs.Editupload.submit();
+        console.log(this.editObject)
+        let params={};
+        params['id'] = this.editObject.id;
+        params['title'] = this.editObject.title;
+        params['content'] = this.editObject.content;
+        params['url'] = this.editObject.url;
+        params['author'] = this.editObject.author;
+        params['source'] = this.editObject.source;
+        params['classify'] = this.editObject.classify;
+        API.get('static/list.json',params).then((res)=>{
+          if(res.status == 200) {
+            this.editPop = false;
+            this.getPage();
+            this.$message({
+              type: 'success',
+              message: '编辑成功!'
+            });
+          }else {
+            this.$message({
+              type: 'error',
+              message: '编辑失败!'
+            });
+          }
+        })
+      },
+      // 单个删除
+      del(id) {
+        this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          let params={};
+          params['id'] = id;
+          /*this.tableData = this.tableData.filter(ele => {
+            return ele.id != id;
+          })*/
+          API.get('static/list.json',params).then((res)=>{
+            if(res.status == 200) {
+              this.getPage();
+              this.$message({
+                type: 'success',
+                message: '删除成功!'
+              });
+            }else {
+              this.$message({
+                type: 'error',
+                message: '删除失败!'
+              });
+            }
+          })
+        }).catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消删除'
+          });
+        });
       },
       // 选择删除
       selectDel() {
@@ -359,111 +536,106 @@
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
-          Array.from(this.activeTableDataId).forEach(element => {
+          /*Array.from(this.activeTableDataId).forEach(element => {
             this.tableData = this.tableData.filter(ele => {
+              console.log(ele.id != element.id)
               return ele.id != element.id;
             })
+          })*/
+          let params={};
+          params['idlist'] = this.activeTableDataId;
+          API.get('static/edit.json',params).then((res)=>{
+            console.log(res)
+            if(res.status == 200) {
+              this.$message({
+                type: 'success',
+                message: '删除成功!'
+              });
+              this.getPage();
+            }else {
+              this.$message({
+                type: 'error',
+                message: '删除失败!'
+              });
+            }
           })
-          this.$message({
-            type: 'success',
-            message: '删除成功!'
-          });
         })
       },
-      // 删除
-      del(id) {
-        this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning'
-        }).then(() => {
-          this.tableData = this.tableData.filter(ele => {
-              return ele.id != id;
-            })
-          this.$message({
-            type: 'success',
-            message: '删除成功!'
-          });
-        }).catch(() => {
-          this.$message({
-            type: 'info',
-            message: '已取消删除'
-          });
-        });
+      // 选择
+      handleSelectionChange(val) {
+        this.multipleSelection = val;
       },
       // 短信提醒
       tip(id) {
         this.tipPop = true
       },
+      userBox(){
+        this.innerTipPop = false;
+        var arr = [];
+        for(var i=0;i<this.userData.length;i++){
+          for(var j=0;j<this.userList.length;j++){
+            if(this.userList[j] == this.userData[i].key){
+              arr.push(this.userData[i].label)
+            }
+          }
+        }
+        this.Msg.MsgUserInp = arr.join(',');
+      },
+      MesSave(){
+        this.tipPop = false;
+        console.log(this.userList)
+        console.log(this.Msg.MsgUserInp)
+      },
       // 进入详情
       linkDetail(id) {
         this.$router.push({name:'backstage.notice.detail',query:{id:id}})
       },
-      // 置顶
-      toggleTop(id,top) {
-        this.tableData.forEach(ele => {
-          if (ele.id == id) {
-            ele.top = !ele.top
-            ele.top ? ele.topName = '取消置顶' : ele.topName = '置顶'
-          }
-        })
-      },
-      // 编辑
-      edit(id) {
-        this.editPop = true
-      },
-      //确定添加
-      confirmAdd() {
 
-      },
-      // 取消添加
-      cancelAdd() {
 
+      // 翻页器：当前页，同时上一页下一页也能获取当前页
+      handleCurrentChange(val) {
+        console.log(val);
       },
-      //确定编辑
-      confirmEdit() {
-
+      // 翻页器：选择10条还是20条、
+      handleSizeChange(val) {
+        console.log(val);
       },
-      // 取消编辑
-      cancelEdit() {
-
+      // 文件上传部分
+      handleExceed(files, fileList) {
+        this.$message.warning(`当前已有${fileList.length} 个文件，限制选择5个文件，本次选择了 ${files.length} 个文件`);
       },
-      //确定短信提醒
-      confirmEdit() {
-
+      // 缩略图上传部分
+      AddImgChange(file, fileList){
+        let fileName = file.name;
+        let regex = /(.jpg|.jpeg|.gif|.png|.bmp)$/;
+        if (regex.test(fileName.toLowerCase())) {
+          this.addObject.url = URL.createObjectURL(file.raw);
+        } else {
+          this.$message.error('请选择图片文件');
+        }
       },
-      // 取消短信提醒
-      cancelEdit() {
-
+      EditImgChange(file, fileList){
+        let fileName = file.name;
+        let regex = /(.jpg|.jpeg|.gif|.png|.bmp)$/;
+        if (regex.test(fileName.toLowerCase())) {
+          this.editObject.url = URL.createObjectURL(file.raw);
+        } else {
+          this.$message.error('请选择图片文件');
+        }
       },
-      onEditorBlur(editor) {
-        console.log('editor blur!', editor)
-      },
-      onEditorFocus(editor) {
-        console.log('editor focus!', editor)
-      },
-      onEditorReady(editor) {
-        console.log('editor ready!', editor)
-      },
+      // 编辑器
       onEditorChange({ editor, html, text }) {
         console.log('editor change!', editor, html, text)
-//        this.content = html
-      },
-      // 添加弹框
-      onAddBlur(editor) {
-        console.log('editor blur!', editor)
-      },
-      onAddFocus(editor) {
-        console.log('editor focus!', editor)
-      },
-      onAddReady(editor) {
-        console.log('editor ready!', editor)
+        this.addObject.content = html
       },
       onAddChange({ editor, html, text }) {
         console.log('editor change!', editor, html, text)
-      }
+        this.editObject.content = html
+      },
     },
     created() {
+      this.classify()
+      this.getPage()
     },
     mounted() {
       // you can use current editor object to do something(editor methods)
@@ -533,6 +705,16 @@
                     /*width:100% !important;*/
                 }
             }
+            .el-table__body-wrapper {
+              .el-table__row {
+                td {
+                  text-align: center;
+                }
+                td:nth-of-type(3) {
+                  text-align: left;
+                }
+              }
+            }
             .el-button.look.el-button--text.el-button--small {
                 color:#026ab3;
                 font-size: 14px;
@@ -553,5 +735,19 @@
         .pagination-table {
             margin-top: 40px;
         }
+    }
+    .upload-demo {
+      .el-upload--text {
+        float: left;
+        width: 100%;
+        text-align: left;
+      }
+      .el-upload-list {
+        float: left;
+        text-align: left;
+      }
+    }
+    .ql-toolbar {
+      text-align: left;
     }
 </style>

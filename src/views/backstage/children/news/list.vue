@@ -535,6 +535,12 @@
           left:5px;
         }
       }
+      .select-table {
+        float: left;
+        margin-left: 30px;
+        position: relative;
+        width:15%;
+      }
       .btn-cell {
         float: left;
         width:12%;
@@ -572,7 +578,6 @@
             text-align: left;
           }
         }
-
       }
       .el-button.look.el-button--text.el-button--small {
         color:#026ab3;
