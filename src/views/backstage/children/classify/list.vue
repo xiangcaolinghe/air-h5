@@ -1,5 +1,5 @@
 <template>
-  <div class="backstage-news-page">
+  <div class="backstage-news-page-classify">
     <div class="search-nav">
       <div class="btn-cell" @click="selectDel">删除</div>
       <div class="btn-cell" @click="addOpen">添加</div>
@@ -275,7 +275,7 @@
 
 <style lang="less">
   @import "./../../../../assets/styles/edit-pop.less";
-  .backstage-news-page {
+  .backstage-news-page-classify {
     .search-nav {
       padding:30px 30px 36px;
       margin-top: 30px;
