@@ -11,6 +11,7 @@ import BackstageNoticeDetail from '@/views/backstage/children/notice/details'
 import BackstageMeeting from '@/views/backstage/children/meeting/list'
 import BackstageMeetingDetail from '@/views/backstage/children/meeting/details'
 import BackstageUser from '@/views/backstage/children/user/list'
+import BackstageClassify from '@/views/backstage/children/classify/list'
 Vue.use(Router)
 
 export default new Router({
@@ -87,6 +88,14 @@ export default new Router({
           path: 'user',
           name: 'backstage.user',
           component: BackstageUser,
+          meta: {
+            auth: true,
+          }
+        },
+        {
+          path: 'classify',
+          name: 'backstage.classify',
+          component: BackstageClassify,
           meta: {
             auth: true,
           }
