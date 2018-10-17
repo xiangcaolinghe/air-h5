@@ -2,11 +2,11 @@
     <div class="backstage-news-page">
         <div class="search-nav">
             <div class="input-table">
-                <el-input v-model="input" placeholder="请输入关键词汇" class="input-search"></el-input>
+                <el-input v-model="SearchInp" placeholder="请输入关键词汇" class="input-search"></el-input>
                 <i class="el-icon-search icon"></i>
             </div>
             <div class="btn-cell" @click="search">搜索</div>
-            <div class="btn-cell" @click="addPop = true">添加</div>
+            <div class="btn-cell" @click="addOpen">添加</div>
             <div class="btn-cell" @click="selectDel">删除</div>
         </div>
         <div class="result-table">
@@ -28,7 +28,7 @@
                         class="column">
                 </el-table-column>
                 <el-table-column
-                        prop="name"
+                        prop="userName"
                         label="用户名">
                 </el-table-column>
                 <el-table-column
@@ -36,101 +36,64 @@
                         label="创建时间">
                 </el-table-column>
                 <el-table-column
-                        prop="address"
-                        label="所在地区">
+                        prop="name"
+                        label="创建人">
                 </el-table-column>
                 <el-table-column
                         label="操作"
                         width="200">
                     <template slot-scope="scope">
                         <el-button type="text" size="small" class="look" @click="linkDetail(scope.row.id)">查看</el-button>
-                        <el-button type="text" size="small" class="edit" @click="edit(scope.row.id)">编辑</el-button>
+                        <el-button type="text" size="small" class="edit" @click="editOpen(scope.row.id)">编辑</el-button>
                         <el-button type="text" size="small" class="del" @click="del(scope.row.id)">删除</el-button>
                     </template>
                 </el-table-column>
             </el-table>
         </div>
-        <div class="pagination-table">
-            <el-pagination
-                    @size-change="handleSizeChange"
-                    @current-change="handleCurrentChange"
-                    :current-page="currentPage4"
-                    :page-sizes="[100, 200, 300, 400]"
-                    :page-size="100"
-                    layout="total, sizes, prev, pager, next, jumper"
-                    :total="400">
-            </el-pagination>
-        </div>
         <!--添加弹框-->
-        <el-dialog title="添加新闻" :visible.sync="addPop" class="tip-dialog">
+        <el-dialog title="添加用户" :visible.sync="addPop" class="tip-dialog">
             <div class="content">
                 <div class="cell">
-                    <span class="name">标题：</span>
-                    <el-input v-model="addObject.title" placeholder="请输入内容" class="flew-input"></el-input>
+                    <span class="name">用户名：</span>
+                    <el-input v-model="addObject.userName" placeholder="请输入内容" class="flew-input"></el-input>
                 </div>
-                <div class="cell">
-                    <span class="name">缩略图：</span>
-                    <el-upload
-                            class="avatar-uploader"
-                            action="https://jsonplaceholder.typicode.com/posts/"
-                            :show-file-list="false"
-                            :on-success="handleAvatarSuccess"
-                            :before-upload="beforeAvatarUpload">
-                        <img v-if="addObject.url" :src="addObject.url" class="avatar">
-                        <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-                    </el-upload>
+              <div class="cell qx">
+                <span class="name">权限：</span>
+                <div class="qx-div">
+                  <el-checkbox :indeterminate="isIndeterminate" v-model="checkAll" @change="AddAllhandleChecked">全选</el-checkbox>
+                  <div style="margin: 15px 0;"></div>
+                  <el-checkbox-group v-model="checkedCities" @change="AddhandleChecked">
+                    <el-checkbox v-for="p in power" :label="p.value" :key="p.key">{{p.value}}</el-checkbox>
+                  </el-checkbox-group>
                 </div>
-                <div class="cell">
-                    <span class="name">内容：</span>
-                    <quill-editor ref="myTextEditor"
-                                  v-model="addObject.content"
-                                  :config="editorOption"
-                                  @change="onAddChange($event)"
-                                  @blur="onAddBlur($event)"
-                                  @focus="onAddFocus($event)"
-                                  @ready="onAddReady($event)">
-                    </quill-editor>
-                </div>
+              </div>
             </div>
             <div slot="footer" class="dialog-footer">
-                <el-button type="primary" @click="tipPop = false" class="confirmAdd">确 定</el-button>
-                <el-button @click="tipPop = false" class="cancelAdd">取 消</el-button>
+                <el-button type="primary" @click="addSave" class="confirmAdd">确 定</el-button>
+                <el-button @click="addPop = false" class="cancelAdd">取 消</el-button>
             </div>
         </el-dialog>
         <!--编辑弹框-->
         <el-dialog title="编辑" :visible.sync="editPop" class="tip-dialog">
             <div class="content">
                 <div class="cell">
-                    <span class="name">标题：</span>
-                    <el-input v-model="editObject.title" placeholder="请输入内容" class="flew-input"></el-input>
+                    <span class="name">用户名：</span>
+                    <el-input v-model="editObject.userName" placeholder="请输入内容" class="flew-input"></el-input>
                 </div>
-                <div class="cell">
-                    <span class="name">缩略图：</span>
-                    <el-upload
-                            class="avatar-uploader"
-                            action="https://jsonplaceholder.typicode.com/posts/"
-                            :show-file-list="false"
-                            :on-success="handleAvatarSuccess"
-                            :before-upload="beforeAvatarUpload">
-                        <img v-if="editObject.url" :src="editObject.url" class="avatar">
-                        <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-                    </el-upload>
-                </div>
-                <div class="cell">
-                    <span class="name">内容：</span>
-                    <quill-editor ref="myTextEditor"
-                                  v-model="editObject.editContent"
-                                  :config="editorOption"
-                                  @change="onEditorChange($event)"
-                                  @blur="onEditorBlur($event)"
-                                  @focus="onEditorFocus($event)"
-                                  @ready="onEditorReady($event)">
-                    </quill-editor>
+                <div class="cell qx">
+                  <span class="name">权限：</span>
+                  <div class="qx-div">
+                    <el-checkbox :indeterminate="EditisIndeterminate" v-model="EditcheckAll" @change="EditAllhandleChecked">全选</el-checkbox>
+                    <div style="margin: 15px 0;"></div>
+                    <el-checkbox-group v-model="EditcheckedCities" @change="EdithandleChecked">
+                      <el-checkbox v-for="p in power" :label="p.value" :key="p.key">{{p.value}}</el-checkbox>
+                    </el-checkbox-group>
+                  </div>
                 </div>
             </div>
             <div slot="footer" class="dialog-footer">
-                <el-button type="primary" @click="tipPop = false" class="confirmTip">确 定</el-button>
-                <el-button @click="tipPop = false" class="cancelTip">取 消</el-button>
+                <el-button type="primary" @click="editSave" class="confirmTip">确 定</el-button>
+                <el-button @click="editPop = false" class="cancelTip">取 消</el-button>
             </div>
         </el-dialog>
     </div>
@@ -150,97 +113,74 @@
         loading:false,
         editPop:false,
         addPop:false,
-        editorOption: {
-          // something config
-        },
+        checkAll: false,
+        // 搜索初始化
+        SearchInp:'',
+        // 删除选择初始化
+        multipleSelection:[],
+        activeTableDataId:[],
+        tableData : [],
+        // 权限项
+        power: [],
+        // 权限打开页面被选中的
+        checkedCities: [],
+        isIndeterminate: true,
+        checkAll : false,
+        // 编辑权限打开页面被选中的
+        EditcheckedCities: [],
+        EditisIndeterminate: true,
+        EditcheckAll : false,
+
         addObject:{
-          title:'',
-          content:'',
-          url:''
+          userName:'',
+          powerList:[]
         },
         editObject:{
-          title:'上海市普陀区金沙江路 1518',
-          content:'<h2>I am Example</h2>',
-          url:''
-        },
-        currentPage4: 4,
-        input:'',
-        activeTableDataId:[],
-        tableData: [{
-          title:'宁夏空管分局飞行服务室开展安康杯“真情服务”主题辩论赛活动',
-          date: '2016-05-03',
-          id:'22',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1518 弄'
-        }, {
-          title:'宁夏空管分局飞行服务室开展安康杯“真情服务”主题辩论赛活动',
-          date: '2016-05-02',
-          name: '王小虎',
-          id:'33',
-          address: '上海市普陀区金沙江路 1518 弄'
-        }, {
-          title:'宁夏空管分局飞行服务室开展安康杯“真情服务”主题辩论赛活动',
-          date: '2016-05-04',
-          name: '王小虎',
-          id:'23',
-          address: '上海市普陀区金沙江路 1518 弄'
-        }, {
-          title:'宁夏空管分局飞行服务室开展安康杯“真情服务”主题辩论赛活动',
-          date: '2016-05-01',
-          name: '王小虎',
-          id:'56',
-          address: '上海市普陀区金沙江路 1518 弄'
-        }, {
-          title:'宁夏空管分局飞行服务室开展安康杯“真情服务”主题辩论赛活动',
-          date: '2016-05-08',
-          name: '王小虎',
-          id:'89',
-          address: '上海市普陀区金沙江路 1518 弄'
-        }, {
-          title:'宁夏空管分局飞行服务室开展安康杯“真情服务”主题辩论赛活动',
-          date: '2016-05-06',
-          name: '王小虎',
-          id:'334',
-          address: '上海市普陀区金沙江路 1518 弄'
-        }, {
-          title:'宁夏空管分局飞行服务室开展安康杯“真情服务”主题辩论赛活动',
-          date: '2016-05-07',
-          name: '王小虎',
-          id:'98',
-          address: '上海市普陀区金沙江路 1518 弄'
-        }],
-        multipleSelection: []
+          userName:'',
+          powerList:[],
+          userid : ''
+        }
       }
     },
     methods: {
-      handleAvatarSuccess(res, file) {
-        this.imageUrl = URL.createObjectURL(file.raw);
+      // 页面初始化
+      getPage(){
+        let params={};
+        API.get('static/userList.json',params).then((res)=>{
+          if(res.status == 200) {
+            console.log(res.data)
+            this.tableData = res.data;
+          }else {
+            console.log(res.data)
+          }
+        })
+        API.get('static/power.json',params).then((res)=>{
+          if(res.status == 200) {
+            console.log(res.data)
+            this.power = res.data;
+          }else {
+            console.log(res.data)
+          }
+        })
       },
-      beforeAvatarUpload(file) {
-        const isJPG = file.type === 'image/jpeg';
-        const isLt2M = file.size / 1024 / 1024 < 2;
-
-        if (!isJPG) {
-          this.$message.error('上传头像图片只能是 JPG 格式!');
-        }
-        if (!isLt2M) {
-          this.$message.error('上传头像图片大小不能超过 2MB!');
-        }
-        return isJPG && isLt2M;
-      },
-      handleSizeChange(val) {
-        console.log(val);
-      },
-      handleCurrentChange(val) {
-        console.log(val);
+      // 搜索
+      search() {
+        console.log(this.SearchInp)
+        let params={};
+        params['search'] = this.SearchInp;
+        API.get('static/userList.json',params).then((res)=>{
+          if(res.status == 200) {
+            console.log(res.data)
+            this.tableData = res.data;
+          }else {
+            console.log(res.data)
+          }
+        })
       },
       // 选择
       handleSelectionChange(val) {
         this.multipleSelection = val;
-      },
-      // 搜索
-      search() {
-
+        console.log(this.multipleSelection)
       },
       // 选择删除
       selectDel() {
@@ -259,31 +199,51 @@
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
-          Array.from(this.activeTableDataId).forEach(element => {
-            this.tableData = this.tableData.filter(ele => {
-              return ele.id != element.id;
-            })
+          let params={};
+          params['idlist'] = this.activeTableDataId;
+          API.get('static/userList.json',params).then((res)=>{
+            console.log(res)
+            if(res.status == 200) {
+              this.$message({
+                type: 'success',
+                message: '删除成功!'
+              });
+              this.getPage();
+            }else {
+              this.$message({
+                type: 'error',
+                message: '删除失败!'
+              });
+            }
           })
-          this.$message({
-            type: 'success',
-            message: '删除成功!'
-          });
         })
       },
-      // 删除
+      // 单个删除
       del(id) {
         this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
-          this.tableData = this.tableData.filter(ele => {
-              return ele.id != id;
-            })
-          this.$message({
-            type: 'success',
-            message: '删除成功!'
-          });
+          let params={};
+          params['id'] = id;
+          /*this.tableData = this.tableData.filter(ele => {
+            return ele.id != id;
+          })*/
+          API.get('static/list.json',params).then((res)=>{
+            if(res.status == 200) {
+              this.getPage();
+              this.$message({
+                type: 'success',
+                message: '删除成功!'
+              });
+            }else {
+              this.$message({
+                type: 'error',
+                message: '删除失败!'
+              });
+            }
+          })
         }).catch(() => {
           this.$message({
             type: 'info',
@@ -291,59 +251,154 @@
           });
         });
       },
+      // 新增
+      addOpen(){
+        this.checkedCities = [];
+        this.addPop = true;
+        this.addObject = {
+          userName:'',
+          powerList:[]
+        }
+      },
+      // 新增保存
+      addSave(){
+        console.log(this.addObject)
+        console.log(this.addObject.powerList)
+        let params={};
+        params['userName'] = this.addObject.userName;
+        params['power'] = this.addObject.powerList;
+        API.get('static/userList.json',params).then((res)=>{
+          if(res.status == 200) {
+            this.addPop = false;
+            this.getPage();
+            this.$message({
+              type: 'success',
+              message: '新增成功!'
+            });
+          }else {
+            this.$message({
+              type: 'error',
+              message: '新增失败!'
+            });
+          }
+        })
+      },
+      // 编辑
+      editOpen(id) {
+        this.EditcheckedCities = [];
+        var arr = []
+        this.editPop = true
+        let params={};
+        params['id'] = id;
+        API.get('static/userList.json',params).then((res)=>{
+          console.log(res.data)
+          if(res.status == 200) {
+            console.log(res.data[0])
+            this.editObject = res.data[0];
+            arr = res.data[1].power
+            for(var i=0;i<arr.length;i++){
+              for(var j=0;j<this.power.length;j++){
+                if(arr[i] == this.power[j].key ){
+                  this.EditcheckedCities.push(this.power[j].value);
+                }
+              }
+            }
+          }else {
+            console.log(res.data)
+          }
+        })
+      },
+      // 编辑保存
+      editSave(){
+        console.log(this.editObject.powerList)
+        console.log(this.editObject)
+        let params={};
+        params['id'] = this.editObject.id;
+        params['userName'] = this.editObject.userName;
+        params['power'] = this.editObject.powerList;
+        API.get('static/userList.json',params).then((res)=>{
+          if(res.status == 200) {
+            this.editPop = false;
+            this.getPage();
+            this.$message({
+              type: 'success',
+              message: '编辑成功!'
+            });
+          }else {
+            this.$message({
+              type: 'error',
+              message: '编辑失败!'
+            });
+          }
+        })
+      },
+
+      // 新增权限
+      AddAllhandleChecked(val) {
+        var cityOptions = []
+        var cityOptionsKey = []
+        for(var i=0;i<this.power.length;i++){
+          cityOptions.push(this.power[i].value);
+          cityOptionsKey.push(this.power[i].key);
+        }
+        this.checkedCities = val ? cityOptions : [];
+        this.addObject.powerList = val ? cityOptionsKey : [];
+        this.isIndeterminate = false;
+      },
+      AddhandleChecked(value) {
+        console.log(value)
+        this.addObject.powerList = []
+        var ctOption = value;
+        for(var i=0;i<ctOption.length;i++){
+          for(var j=0;j<this.power.length;j++){
+            if(ctOption[i] == this.power[j].value){
+              this.addObject.powerList.push(this.power[j].key)
+            }
+          }
+        }
+        console.log(this.addObject.powerList)
+        let checkedCount = value.length;
+        this.checkAll = checkedCount === this.power.length;
+        this.isIndeterminate = checkedCount > 0 && checkedCount < this.power.length;
+      },
+
+      // 编辑权限
+      EditAllhandleChecked(val) {
+        var cityOptions = []
+        var cityOptionsKey = []
+        for(var i=0;i<this.power.length;i++){
+          cityOptions.push(this.power[i].value);
+          cityOptionsKey.push(this.power[i].key);
+        }
+        this.EditcheckedCities = val ? cityOptions : [];
+        this.editObject.powerList = val ? cityOptionsKey : [];
+        console.log(this.editObject.powerList)
+        this.EditisIndeterminate = false;
+      },
+      EdithandleChecked(value) {
+        console.log(value)
+        this.editObject.powerList = []
+        var ctOption = value;
+        for(var i=0;i<ctOption.length;i++){
+          for(var j=0;j<this.power.length;j++){
+            if(ctOption[i] == this.power[j].value){
+              this.editObject.powerList.push(this.power[j].key)
+            }
+          }
+        }
+        console.log(this.editObject.powerList)
+        let checkedCount = value.length;
+        this.EditcheckAll = checkedCount === this.power.length;
+        this.EditisIndeterminate = checkedCount > 0 && checkedCount < this.power.length;
+      },
+
       // 进入详情
       linkDetail(id) {
         this.$router.push({name:'backstage.meeting.detail',query:{id:id}})
       },
-      // 编辑
-      edit(id) {
-        this.editPop = true
-      },
-      //确定添加
-      confirmAdd() {
-
-      },
-      // 取消添加
-      cancelAdd() {
-
-      },
-      //确定编辑
-      confirmEdit() {
-
-      },
-      // 取消编辑
-      cancelEdit() {
-
-      },
-      onEditorBlur(editor) {
-        console.log('editor blur!', editor)
-      },
-      onEditorFocus(editor) {
-        console.log('editor focus!', editor)
-      },
-      onEditorReady(editor) {
-        console.log('editor ready!', editor)
-      },
-      onEditorChange({ editor, html, text }) {
-        console.log('editor change!', editor, html, text)
-//        this.content = html
-      },
-      // 添加弹框
-      onAddBlur(editor) {
-        console.log('editor blur!', editor)
-      },
-      onAddFocus(editor) {
-        console.log('editor focus!', editor)
-      },
-      onAddReady(editor) {
-        console.log('editor ready!', editor)
-      },
-      onAddChange({ editor, html, text }) {
-        console.log('editor change!', editor, html, text)
-      }
     },
     created() {
-
+      this.getPage();
     },
     mounted() {
       // you can use current editor object to do something(editor methods)
@@ -407,6 +462,13 @@
                     /*width:100% !important;*/
                 }
             }
+            .el-table__body-wrapper {
+              .el-table__row {
+                td {
+                  text-align: center;
+                }
+              }
+            }
             .el-button.look.el-button--text.el-button--small {
                 color:#026ab3;
                 font-size: 14px;
@@ -423,5 +485,17 @@
         .pagination-table {
             margin-top: 40px;
         }
+    }
+    .qx {
+      .qx-div {
+        height: 50px;
+        .el-checkbox{
+          float: left;
+        }
+        .el-checkbox-group {
+          float: left;
+          margin-top: 15px;
+        }
+      }
     }
 </style>

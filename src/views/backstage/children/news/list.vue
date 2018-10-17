@@ -42,6 +42,14 @@
           width="120">
         </el-table-column>
         <el-table-column
+          prop="top"
+          label="置顶"
+          width="120">
+          <template slot-scope="scope">
+            <el-button type="text" size="small" class="look"  @click="toggleTop(scope.row.id,scope.row.status)">{{scope.row.status == 0 ? "取消置顶" : "置顶"}}</el-button>
+          </template>
+        </el-table-column>
+        <el-table-column
           label="操作"
           width="200">
           <template slot-scope="scope">
@@ -311,6 +319,21 @@
                 });
               }
             })
+          })
+        },
+        // 置顶
+        toggleTop(id,status) {
+          console.log(id)
+          console.log(status)
+          let params={};
+          params['id'] = id;
+          params['status'] = status;
+          API.get('static/notList.json',params).then((res)=>{
+            if(res.status == 200) {
+              this.getPage()
+            }else {
+              console.log(res.data)
+            }
           })
         },
         // 新增

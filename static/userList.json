@@ -1,0 +1,19 @@
+[{
+  "userid":"001",
+  "userName":"Admin",
+  "power":["0","1","2","3","4"],
+  "date":"2018-10-1",
+  "name":"Admin"
+},{
+  "userid":"002",
+  "userName":"duonuoKJ",
+  "power":["1","2","3"],
+  "date":"2018-10-10",
+  "name":"Admin"
+},{
+  "userid":"003",
+  "userName":"news",
+  "power":["1"],
+  "date":"2018-10-17",
+  "name":"Admin"
+}]

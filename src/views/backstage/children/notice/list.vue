@@ -51,7 +51,7 @@
                 </el-table-column>
                 <el-table-column
                         prop="date"
-                        label="时间"
+                        label="发布时间"
                         width="120">
                 </el-table-column>
                 <el-table-column

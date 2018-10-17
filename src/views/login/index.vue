@@ -17,10 +17,10 @@
                             <input type="text" class="input" placeholder="请输入密码" v-model="userPassword">
                         </div>
                         <button class="login-btn" @click="login">登陆</button>
-                        <div class="tip">没有账号？ <span class="link" @click="showRegister">立即注册</span></div>
+                        <!--<div class="tip">没有账号？ <span class="link" @click="showRegister">立即注册</span></div>-->
                     </div>
                     <!--注册-->
-                    <div class="input-table register-table" v-show="!show">
+                    <!--<div class="input-table register-table" v-show="!show">
                         <div class="cell user">
                             <span class="name">用户名</span>
                             <input type="text" class="input" placeholder="请填写用户名称" v-model="name">
@@ -40,7 +40,7 @@
                         </div>
                         <button class="login-btn" @click="register">注册</button>
                         <div class="tip">已有账号！ <span class="link" @click="showRegister">立即登陆</span></div>
-                    </div>
+                    </div>-->
                     <div class="copyright">中国民用航空局空中交通管理局空域管理中心 &copy;版权所有</div>
                 </div>
             </div>
