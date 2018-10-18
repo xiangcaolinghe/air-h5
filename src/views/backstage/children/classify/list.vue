@@ -47,11 +47,11 @@
       </el-table>
     </div>
     <!--添加弹框-->
-    <el-dialog title="添加分类" :visible.sync="addPop" class="tip-dialog">
+    <el-dialog title="添加分类" :visible.sync="addPop" class="tip-dialog small-dia">
       <div class="content">
         <div class="cell">
           <span class="name">分类：</span>
-          <el-input v-model="addObject.title" placeholder="请输入内容" class="flew-input"></el-input>
+          <el-input v-model="addObject.label" placeholder="请输入内容" class="flew-input"></el-input>
         </div>
       </div>
       <div slot="footer" class="dialog-footer">
@@ -60,11 +60,11 @@
       </div>
     </el-dialog>
     <!--编辑弹框-->
-    <el-dialog title="编辑" :visible.sync="editPop" class="tip-dialog">
+    <el-dialog title="编辑" :visible.sync="editPop" class="tip-dialog small-dia">
       <div class="content">
         <div class="cell">
           <span class="name">分类：</span>
-          <el-input v-model="editObject.title" placeholder="请输入内容" class="flew-input"></el-input>
+          <el-input v-model="editObject.label" placeholder="请输入内容" class="flew-input"></el-input>
         </div>
       </div>
       <div slot="footer" class="dialog-footer">
@@ -93,10 +93,10 @@
         multipleSelection:[],
         activeTableDataId:[],
         addObject:{
-          title:'',
+          label:'',
         },
         editObject:{
-          title:'',
+          label:'',
         },
         tableData: []
       }},
@@ -194,7 +194,7 @@
         this.editPop = true
         let params={};
         params['id'] = id;
-        API.get('static/edit.json',params).then((res)=>{
+        API.get('static/classify.json',params).then((res)=>{
           console.log(res.data)
           if(res.status == 200) {
             console.log(res.data[0])
@@ -371,9 +371,9 @@
   .ql-toolbar {
     text-align: left;
   }
-  .tip-dialog {
+  .small-dia {
     .el-dialog {
-      width: 500px;
+      width: 500px !important;
     }
   }
 </style>

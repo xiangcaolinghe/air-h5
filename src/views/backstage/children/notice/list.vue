@@ -750,4 +750,7 @@
     .ql-toolbar {
       text-align: left;
     }
+  .btn {
+    cursor: pointer;
+  }
 </style>

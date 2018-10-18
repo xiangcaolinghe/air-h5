@@ -74,24 +74,24 @@
             </div>
         </el-dialog>
         <!--编辑弹框-->
-        <el-dialog title="编辑" :visible.sync="editPop" class="tip-dialog">
+        <el-dialog v-bind:title="title" :visible.sync="editPop" class="tip-dialog">
             <div class="content">
                 <div class="cell">
                     <span class="name">用户名：</span>
-                    <el-input v-model="editObject.userName" placeholder="请输入内容" class="flew-input"></el-input>
+                    <el-input v-model="editObject.userName" placeholder="请输入内容" class="flew-input" v-bind:disabled="look"></el-input>
                 </div>
                 <div class="cell qx">
                   <span class="name">权限：</span>
                   <div class="qx-div">
-                    <el-checkbox :indeterminate="EditisIndeterminate" v-model="EditcheckAll" @change="EditAllhandleChecked">全选</el-checkbox>
+                    <el-checkbox :indeterminate="EditisIndeterminate" v-model="EditcheckAll" @change="EditAllhandleChecked" v-bind:disabled="look">全选</el-checkbox>
                     <div style="margin: 15px 0;"></div>
                     <el-checkbox-group v-model="EditcheckedCities" @change="EdithandleChecked">
-                      <el-checkbox v-for="p in power" :label="p.value" :key="p.key">{{p.value}}</el-checkbox>
+                      <el-checkbox v-for="p in power" :label="p.value" :key="p.key" v-bind:disabled="look">{{p.value}}</el-checkbox>
                     </el-checkbox-group>
                   </div>
                 </div>
             </div>
-            <div slot="footer" class="dialog-footer">
+            <div slot="footer" class="dialog-footer" v-show="!look">
                 <el-button type="primary" @click="editSave" class="confirmTip">确 定</el-button>
                 <el-button @click="editPop = false" class="cancelTip">取 消</el-button>
             </div>
@@ -114,6 +114,8 @@
         editPop:false,
         addPop:false,
         checkAll: false,
+        look:false,
+        title:"编辑",
         // 搜索初始化
         SearchInp:'',
         // 删除选择初始化
@@ -285,9 +287,11 @@
       },
       // 编辑
       editOpen(id) {
+        this.look = false;
+        this.title = "编辑";
         this.EditcheckedCities = [];
-        var arr = []
-        this.editPop = true
+        var arr = [];
+        this.editPop = true;
         let params={};
         params['id'] = id;
         API.get('static/userList.json',params).then((res)=>{
@@ -394,7 +398,10 @@
 
       // 进入详情
       linkDetail(id) {
-        this.$router.push({name:'backstage.meeting.detail',query:{id:id}})
+        //this.$router.push({name:'backstage.meeting.detail',query:{id:id}})
+        this.look = true;
+        this.editPop = true;
+        this.title = "详情";
       },
     },
     created() {

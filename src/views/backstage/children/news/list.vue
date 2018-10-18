@@ -375,7 +375,6 @@
         },
         // 查看
         linkDetail(id) {
-          alert(id)
           this.$router.push({name:'backstage.news.detail',query:{id:id}})
         },
         // 编辑
