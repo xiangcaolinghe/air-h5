@@ -32,13 +32,18 @@
           label="标题">
         </el-table-column>
         <el-table-column
-          prop="date"
-          label="发布时间"
+          prop="releaseDate"
+          label="创建时间"
           width="120">
         </el-table-column>
         <el-table-column
           prop="name"
           label="创建者"
+          width="100">
+        </el-table-column>
+        <el-table-column
+          prop="releaseDate"
+          label="发布时间"
           width="120">
         </el-table-column>
         <el-table-column
@@ -53,6 +58,7 @@
           label="操作"
           width="200">
           <template slot-scope="scope">
+            <el-button type="text" size="small" class="release" @click="Release(scope.row.id)">发布</el-button>
             <el-button type="text" size="small" class="look" @click="linkDetail(scope.row.id)">查看</el-button>
             <el-button type="text" size="small" class="edit" @click="editOpen(scope.row.id)">编辑</el-button>
             <el-button type="text" size="small" class="del" @click="del(scope.row.id)">删除</el-button>
@@ -454,6 +460,8 @@
             });
           });
         },
+        //发布
+        Release(id){},
         // 翻页器：当前页，同时上一页下一页也能获取当前页
         handleCurrentChange(val) {
           console.log(val);
@@ -600,6 +608,10 @@
             text-align: left;
           }
         }
+      }
+      .el-button.release.el-button--text.el-button--small {
+        color:#7BB552;
+        font-size: 14px;
       }
       .el-button.look.el-button--text.el-button--small {
         color:#026ab3;

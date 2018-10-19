@@ -50,14 +50,19 @@
                     </template>-->
                 </el-table-column>
                 <el-table-column
-                        prop="date"
-                        label="发布时间"
-                        width="120">
+                  prop="releaseDate"
+                  label="创建时间"
+                  width="120">
                 </el-table-column>
                 <el-table-column
                         prop="name"
                         label="创建者"
                         width="120">
+                </el-table-column>
+                <el-table-column
+                  prop="releaseDate"
+                  label="发布时间"
+                  width="120">
                 </el-table-column>
                 <el-table-column
                         prop="top"
@@ -69,8 +74,9 @@
                 </el-table-column>
                 <el-table-column
                         label="操作"
-                        width="250">
+                        width="280">
                     <template slot-scope="scope">
+                        <el-button type="text" size="small" class="release" @click="Release(scope.row.id)">发布</el-button>
                         <el-button type="text" size="small" class="look" @click="linkDetail(scope.row.id)">查看</el-button>
                         <el-button type="text" size="small" class="edit" @click="editOpen(scope.row.id)">编辑</el-button>
                         <el-button type="text" size="small" class="del" @click="del(scope.row.id)">删除</el-button>
@@ -91,7 +97,24 @@
         </el-pagination>
       </div>
         <!--短信提醒弹框-->
+
         <el-dialog title="短信提醒" :visible.sync="tipPop" class="tip-dialog">
+          <el-dialog
+            title="模板"
+            :visible.sync="dialogVisible"
+            width="30%"
+            append-to-body>
+            <div>
+              <div class="mb-box" v-for="(l,index) in msgList" :key="l.key">
+                <input type="radio" v-model="messAge" :name="'radio[]'" :value="l.value">
+                <span>{{l.value}}</span>
+              </div>
+            </div>
+            <span slot="footer" class="dialog-footer">
+            <el-button @click="dialogVisible = false">取 消</el-button>
+            <el-button type="primary" @click="mbSave">确 定</el-button>
+            </span>
+          </el-dialog>
          <el-dialog
            width="540px"
            title="选择用户"
@@ -100,6 +123,7 @@
            <el-transfer
              filterable
              filter-placeholder="请输入用户姓名"
+             :titles="['用户列表', '已选用户']"
              v-model="userList"
              :data="userData">
            </el-transfer>
@@ -117,6 +141,7 @@
                             placeholder="请输入内容"
                             v-model="Msg.MsgText">
                     </el-input>
+                  <span class="btn" @click="modelbox">模板</span>
                 </div>
                 <div class="cell">
                     <span class="name">相关用户：</span>
@@ -296,6 +321,7 @@
         addPop:false,
         tipPop:false,
         innerTipPop:false,
+        dialogVisible: false,
         // 搜索部分初始化
         SearchInp:'',
         SearchValue: '',
@@ -304,6 +330,9 @@
         // 删除选择初始化
         multipleSelection:[],
         activeTableDataId:[],
+
+        messAge : '',
+        msgList : [],
         AddfileList: [],
         Msg:{
           MsgText:'',
@@ -357,6 +386,7 @@
 //      }
     },
     methods: {
+
       // 搜索
       search() {
         console.log(this.SearchInp)
@@ -519,6 +549,8 @@
           });
         });
       },
+      //发布
+      Release(id){},
       // 选择删除
       selectDel() {
         if (this.multipleSelection.length == 0) {
@@ -569,6 +601,7 @@
       tip(id) {
         this.tipPop = true
       },
+      // 短信用户选择
       userBox(){
         this.innerTipPop = false;
         var arr = [];
@@ -581,10 +614,28 @@
         }
         this.Msg.MsgUserInp = arr.join(',');
       },
+      // 短信保存
       MesSave(){
         this.tipPop = false;
-        console.log(this.userList)
-        console.log(this.Msg.MsgUserInp)
+        console.log(this.Msg)
+      },
+      // 短信模板
+      modelbox(){
+        this.dialogVisible = true;
+        let params={};
+        API.get('static/dxmb.json',params).then((res)=>{
+          if(res.status == 200) {
+            console.log(res.data)
+            this.msgList = res.data;
+          }else {
+            console.log(res.data)
+          }
+        })
+      },
+      // 短信模板保存
+      mbSave(){
+        this.Msg.MsgText = this.messAge;
+        this.dialogVisible = false;
       },
       // 进入详情
       linkDetail(id) {
@@ -647,6 +698,20 @@
 
 <style lang="less">
     @import "./../../../../assets/styles/edit-pop.less";
+    .mb-box {
+      width: 100%;
+      text-align: left;
+      margin-bottom: 10px;
+
+    }
+    /*.mb-box:nth-of-type(1) {
+      input {
+        float: left;
+        height: 56px;
+        margin-top: -17px;
+        margin-right: 5px;
+      }
+    }*/
     .backstage-notice-page {
         .search-nav {
             padding:30px 30px 36px;
@@ -714,6 +779,10 @@
                   text-align: left;
                 }
               }
+            }
+            .el-button.release.el-button--text.el-button--small {
+              color:#7BB552;
+              font-size: 14px;
             }
             .el-button.look.el-button--text.el-button--small {
                 color:#026ab3;

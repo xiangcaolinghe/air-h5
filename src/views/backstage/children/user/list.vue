@@ -398,6 +398,7 @@
 
       // 进入详情
       linkDetail(id) {
+        this.editOpen(id);
         //this.$router.push({name:'backstage.meeting.detail',query:{id:id}})
         this.look = true;
         this.editPop = true;

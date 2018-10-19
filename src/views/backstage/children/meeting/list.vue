@@ -32,14 +32,9 @@
                         label="会议名称">
                 </el-table-column>
                 <el-table-column
-                        prop="startTime"
-                        label="会议开始时间"
-                        width="180">
-                </el-table-column>
-                <el-table-column
-                        prop="meetingPlace"
-                        label="会议地点"
-                        width="200">
+                  prop="releaseDate"
+                  label="创建时间"
+                  width="120">
                 </el-table-column>
                 <el-table-column
                         prop="name"
@@ -47,9 +42,15 @@
                         width="80">
                 </el-table-column>
                 <el-table-column
+                  prop="releaseDate"
+                  label="发布时间"
+                  width="120">
+                </el-table-column>
+                <el-table-column
                         label="操作"
                         width="200">
                     <template slot-scope="scope">
+                        <el-button type="text" size="small" class="release" @click="Release(scope.row.id)">发布</el-button>
                         <el-button type="text" size="small" class="look" @click="linkDetail(scope.row.id)">查看</el-button>
                         <el-button type="text" size="small" class="edit" @click="editOpen(scope.row.id)">编辑</el-button>
                         <el-button type="text" size="small" class="del" @click="del(scope.row.id)">删除</el-button>
@@ -622,6 +623,8 @@
           });
         });
       },
+      //发布
+      Release(id){},
       // 新增主办单位标签
       AddhandleClose(tag) {
         console.log(tag)
@@ -818,6 +821,10 @@
               text-align: left;
             }
           }
+        }
+        .el-button.release.el-button--text.el-button--small {
+          color:#7BB552;
+          font-size: 14px;
         }
         .el-button.look.el-button--text.el-button--small {
           color:#026ab3;

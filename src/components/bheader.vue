@@ -10,9 +10,13 @@
             <span class="user">
               <i class="iconfont icon icon-yonghu"></i><strong>欢迎您：admin</strong>
             </span>
+            <span class="user" @click="OpenPassword">
+              <strong style="font-size: 18px;">修改密码</strong>
+            </span>
             <span class="exit" @click="exit">
               <i class="iconfont icon icon-tuichu-copy"></i><strong>退出</strong>
             </span>
+
         </span>
         </div>
       </div>
@@ -32,7 +36,20 @@
           <slot name="right-view"></slot>
         </div>
       </div>
+      <el-dialog
+        title="修改密码"
+        :visible.sync="editPassword"
+        width="30%"
+        class="tip-dialog">
+        <span>这是一段信息</span>
+        <span slot="footer" class="dialog-footer">
+          <el-button type="primary" @click="editPassword = false" class="confirm">确 定</el-button>
+          <el-button @click="editPassword = false" class="cancel">取 消</el-button>
+
+    </span>
+      </el-dialog>
     </div>
+
 </template>
 
 <script>
@@ -42,10 +59,14 @@
         return{
           isActive:1,
           isLeftActive:1,
-          isLeftNav: 1
+          isLeftNav: 1,
+          editPassword : false
         }
       },
       methods:{
+        OpenPassword(){
+          this.editPassword = true
+        },
         switcher(number){
           this.isLeftActive=number;
         },
@@ -71,12 +92,23 @@
               message: '已取消退出'
             });
           });
+        },
+        handleClose(done) {
+          this.$confirm('确认关闭？')
+            .then(_ => {
+              done();
+            })
+            .catch(_ => {});
         }
       }
     }
 </script>
 
 <style lang="less" scoped>
+  @import "../assets/styles/edit-pop.less";
+  .tip-dialog .el-dialog .dialog-footer .el-button {
+    margin-left: 0;
+  }
   .up-header{
     min-width: 1200px;
     position: inherit;
@@ -87,6 +119,7 @@
     right: 0;
     font-size: 18px;
     font-weight: bold;
+
     .nav-box {
       width: 100%;
       background-color: #026ab3;
@@ -188,4 +221,5 @@
       box-sizing: border-box;
     }
   }
+
 </style>
