@@ -41,12 +41,23 @@
         :visible.sync="editPassword"
         width="30%"
         class="tip-dialog">
-        <span>这是一段信息</span>
+        <div class="content">
+          <el-form :model="ruleForm2" status-icon :rules="rules2" ref="ruleForm2" label-width="100px" class="demo-ruleForm">
+            <el-form-item label="原始密码" prop="passOld">
+              <el-input type="password" v-model="ruleForm2.passOld" autocomplete="off"></el-input>
+            </el-form-item>
+            <el-form-item label="密码" prop="pass">
+              <el-input type="password" v-model="ruleForm2.pass" autocomplete="off"></el-input>
+            </el-form-item>
+            <el-form-item label="确认密码" prop="checkPass">
+              <el-input type="password" v-model="ruleForm2.checkPass" autocomplete="off"></el-input>
+            </el-form-item>
+          </el-form>
+        </div>
         <span slot="footer" class="dialog-footer">
-          <el-button type="primary" @click="editPassword = false" class="confirm">确 定</el-button>
-          <el-button @click="editPassword = false" class="cancel">取 消</el-button>
-
-    </span>
+          <el-button type="primary" @click="submitForm('ruleForm2')" class="confirm">提交</el-button>
+          <el-button @click="resetForm('ruleForm2')" class="cancel">重置</el-button>
+        </span>
       </el-dialog>
     </div>
 
@@ -56,16 +67,89 @@
     export default {
       name: 'PHeader',
       data(){
+        var validatePass = (rule, value, callback) => {
+          if (value === '') {
+            callback(new Error('请输入密码'));
+          } else {
+            if (this.ruleForm2.checkPass !== '') {
+              this.$refs.ruleForm2.validateField('checkPass');
+            }
+            callback();
+          }
+        };
+        var validatePass2 = (rule, value, callback) => {
+          if (value === '') {
+            callback(new Error('请再次输入密码'));
+          } else if (value !== this.ruleForm2.pass) {
+            callback(new Error('两次输入密码不一致!'));
+          } else {
+            callback();
+          }
+        };
         return{
           isActive:1,
           isLeftActive:1,
           isLeftNav: 1,
-          editPassword : false
+          editPassword : false,
+          ruleForm2: {
+            passOld : '',
+            pass: '',
+            checkPass: ''
+          },
+          rules2: {
+            passOld: [
+              { required: true, message: '请输入旧密码', trigger: 'blur' },
+              { min: 6, message: '长度至少6位', trigger: 'blur' }
+            ],
+            pass: [
+              { validator: validatePass, trigger: 'blur' },
+              { required: true, message: '请输入新密码', trigger: 'blur' },
+              { min: 6, message: '长度至少6位', trigger: 'blur' }
+            ],
+            checkPass: [
+              { validator: validatePass2, trigger: 'blur' },
+              { required: true, message: '请再次输入密码', trigger: 'blur' },
+              { min: 6, message: '长度至少6位', trigger: 'blur' }
+            ]
+          }
         }
       },
       methods:{
         OpenPassword(){
           this.editPassword = true
+        },
+        // 修改密码提交
+        submitForm(formName) {
+          this.$refs[formName].validate((valid) => {
+            console.log(this.ruleForm2)
+            if (valid) {
+              let params={};
+              params['passOld'] = this.ruleForm2.passOld;
+              params['pass'] = this.ruleForm2.pass;
+              params['checkPass'] = this.ruleForm2.checkPass;
+              API.get('static/userList.json',params).then((res)=>{
+                if(res.status == 200) {
+                  // this.editPassword  = false;
+                  this.$message({
+                    type: 'success',
+                    message: '密码修改成功!'
+                  });
+                }else {
+                  this.$message({
+                    type: 'error',
+                    message: '密码修改失败!'
+                  });
+                }
+              })
+            } else {
+              console.log('error submit!!');
+              return false;
+            }
+          });
+        },
+        // 重置
+        resetForm(formName) {
+          this.$refs[formName].resetFields();
         },
         switcher(number){
           this.isLeftActive=number;

@@ -58,7 +58,8 @@
           label="操作"
           width="200">
           <template slot-scope="scope">
-            <el-button type="text" size="small" class="release" @click="Release(scope.row.id)">发布</el-button>
+            <el-button type="text" size="small" class="release" @click="Release(scope.row.id)" v-show="!scope.row.fbStatus">发布</el-button>
+            <el-button type="text" size="small" class="release" @click="ReleaseNo(scope.row.id)" v-show="scope.row.fbStatus">取消发布</el-button>
             <el-button type="text" size="small" class="look" @click="linkDetail(scope.row.id)">查看</el-button>
             <el-button type="text" size="small" class="edit" @click="editOpen(scope.row.id)">编辑</el-button>
             <el-button type="text" size="small" class="del" @click="del(scope.row.id)">删除</el-button>
@@ -222,6 +223,7 @@
         loading:false,
         editPop:false,
         addPop:false,
+        fb:true,
         // 搜索初始化
         SearchInp:'',
         // 删除选择初始化
@@ -260,6 +262,14 @@
             if(res.status == 200) {
               console.log(res.data)
               this.tableData = res.data;
+              for(var i=0;i<this.tableData.length;i++){
+                if(this.tableData[i].fb == '1'){
+                  this.tableData[i].fbStatus = true;
+                }else {
+                  this.tableData[i].fbStatus = false;
+                }
+              }
+             console.log(this.tableData)
               this.currentPage = 4
             }else {
               console.log(res.data)
@@ -462,6 +472,8 @@
         },
         //发布
         Release(id){},
+        // 取消发布
+        ReleaseNo(id){},
         // 翻页器：当前页，同时上一页下一页也能获取当前页
         handleCurrentChange(val) {
           console.log(val);

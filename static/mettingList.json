@@ -6,6 +6,7 @@
   "endTime":"2018-04-26 16:00:00",
   "meetingPlace":"国宾大酒店",
   "name":"王小虎",
+  "fb":1,
   "id":"001"
 },{
   "meetingName":"第二次会议",
@@ -15,6 +16,7 @@
   "endTime":"2018-04-26 16:00:00",
   "meetingPlace":"国宾大酒店",
   "name":"王小虎",
+  "fb":0,
   "id":"001"
 },{
   "meetingName":"第三次会议",
@@ -24,6 +26,7 @@
   "endTime":"2018-04-26 16:00:00",
   "meetingPlace":"国宾大酒店",
   "name":"王小虎",
+  "fb":1,
   "id":"001"
 },{
   "meetingName":"第四次会议",
@@ -33,6 +36,7 @@
   "endTime":"2018-04-26 16:00:00",
   "meetingPlace":"国宾大酒店",
   "name":"王小虎",
+  "fb":0,
   "id":"001"
 },{
   "meetingName":"第五次会议",
@@ -42,5 +46,6 @@
   "endTime":"2018-04-26 16:00:00",
   "meetingPlace":"国宾大酒店",
   "name":"王小虎",
+  "fb":1,
   "id":"001"
 }]
