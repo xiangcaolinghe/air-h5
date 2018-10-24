@@ -1,0 +1,121 @@
+.backstage-news-page {
+  .search-nav {
+    padding: 15px 15px 10px;
+    margin-top: 15px;
+    overflow: hidden;
+    box-sizing: border-box;
+    background: #fff;
+    .input-table {
+      float: left;
+      position: relative;
+      width: 50%;
+      .input-search {
+        .el-input__inner {
+          padding-left: 30px;
+          height: 35px;
+          line-height: 35px;
+          font-size: 13px;
+        }
+      }
+      .icon {
+        position: absolute;
+        top: 8px;
+        color: #999;
+        font-size: 18px;
+        left: 5px;
+      }
+    }
+    .select-table {
+      float: left;
+      margin-left: 30px;
+      position: relative;
+      width: 15%;
+    }
+    .btn-cell {
+      float: left;
+      width: 10%;
+      cursor: pointer;
+      height: 35px;
+      background: #026ab3;
+      color: #fff;
+      line-height: 35px;
+      font-size: 15px;
+      text-align: center;
+      margin-left: 30px;
+    }
+  }
+  .result-table {
+    margin-top: 10px;
+    .el-table__header-wrapper {
+      th {
+        background: #026ab3;
+      }
+      .cell {
+        text-align: center;
+        color: #fff;
+        font-weight: 600;
+      }
+      .el-table__header {
+        /*width:100% !important;*/
+      }
+    }
+    .el-table__body-wrapper {
+      .el-table__row {
+        td {
+          text-align: center;
+        }
+        td:nth-of-type(3) {
+          text-align: left;
+        }
+      }
+    }
+    .el-button.release.el-button--text.el-button--small {
+      color: #7BB552;
+      font-size: 13px;
+    }
+    .el-button.look.el-button--text.el-button--small {
+      color: #026ab3;
+      font-size: 13px;
+    }
+    .el-button.edit.el-button--text.el-button--small {
+      color: #333;
+      font-size: 13px;
+    }
+    .el-button.del.el-button--text.el-button--small {
+      color: #ff3333;
+      font-size: 13px;
+    }
+    .el-button.tip.el-button--text.el-button--small {
+      color: #df9718;
+      font-size: 13px;
+    }
+  }
+  .pagination-table {
+    margin-top: 15px;
+    margin-bottom: 15px;
+  }
+  .upload-demo {
+    .el-upload--text {
+      float: left;
+      width: 100%;
+      text-align: left;
+    }
+    .el-upload-list {
+      float: left;
+      text-align: left;
+    }
+  }
+  .ql-toolbar {
+    text-align: left;
+  }
+  .el-table__row td {
+    line-height: 30px;
+  }
+  .el-table th > .cell {
+    padding: 0;
+    font-size: 12px;
+  }
+  .el-table td, .el-table th {
+    padding: 5px 0;
+  }
+}

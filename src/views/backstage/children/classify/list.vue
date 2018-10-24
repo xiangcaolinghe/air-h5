@@ -1,5 +1,5 @@
 <template>
-  <div class="backstage-news-page-classify">
+  <div class="backstage-news-page backstage-classify-page-classify">
     <div class="search-nav">
       <div class="btn-cell" @click="selectDel">删除</div>
       <div class="btn-cell" @click="addOpen">添加</div>
@@ -20,6 +20,7 @@
         <el-table-column
           type="index"
           label="序号"
+          width="55"
           class="column">
         </el-table-column>
         <el-table-column
@@ -47,7 +48,7 @@
       </el-table>
     </div>
     <!--添加弹框-->
-    <el-dialog title="添加分类" :visible.sync="addPop" class="tip-dialog small-dia">
+    <el-dialog title="添加分类" :visible.sync="addPop" class="tip-dialog small-dia" :close-on-click-modal="false">
       <div class="content">
         <div class="cell">
           <span class="name">分类：</span>
@@ -60,7 +61,7 @@
       </div>
     </el-dialog>
     <!--编辑弹框-->
-    <el-dialog title="编辑" :visible.sync="editPop" class="tip-dialog small-dia">
+    <el-dialog title="编辑" :visible.sync="editPop" class="tip-dialog small-dia" :close-on-click-modal="false">
       <div class="content">
         <div class="cell">
           <span class="name">分类：</span>
@@ -80,36 +81,38 @@
   import 'quill/dist/quill.snow.css'
   import 'quill/dist/quill.bubble.css'
 
-  import { quillEditor } from 'vue-quill-editor'
+  import {quillEditor} from 'vue-quill-editor'
+
   export default {
     name: '',
-    components:{ quillEditor },
+    components: {quillEditor},
     data() {
       return {
-        loading:false,
-        editPop:false,
-        addPop:false,
+        loading: false,
+        editPop: false,
+        addPop: false,
         // 删除选择初始化
-        multipleSelection:[],
-        activeTableDataId:[],
-        addObject:{
-          label:'',
+        multipleSelection: [],
+        activeTableDataId: [],
+        addObject: {
+          label: '',
         },
-        editObject:{
-          label:'',
+        editObject: {
+          label: '',
         },
         tableData: []
-      }},
+      }
+    },
     computed: {},
     methods: {
       // 页面初始化
-      getPage(){
-        let params={};
-        API.get('static/classify.json',params).then((res)=>{
-          if(res.status == 200) {
+      getPage() {
+        let params = {};
+        API.get('static/classify.json', params).then((res) => {
+          if (res.status == 200) {
             console.log(res.data)
             this.tableData = res.data;
-          }else {
+          } else {
             console.log(res.data)
           }
         })
@@ -131,7 +134,7 @@
         this.multipleSelection.forEach(ele => {
           this.activeTableDataId.push({'id': ele.id})
         })
-        this.$confirm('您确定要删除这' + this.multipleSelection.length +'条数据吗?', '提示', {
+        this.$confirm('您确定要删除这' + this.multipleSelection.length + '条数据吗?', '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning'
@@ -142,17 +145,17 @@
               return ele.id != element.id;
             })
           })*/
-          let params={};
+          let params = {};
           params['idlist'] = this.activeTableDataId;
-          API.get('static/edit.json',params).then((res)=>{
+          API.get('static/edit.json', params).then((res) => {
             console.log(res)
-            if(res.status == 200) {
+            if (res.status == 200) {
               this.$message({
                 type: 'success',
                 message: '删除成功!'
               });
               this.getPage();
-            }else {
+            } else {
               this.$message({
                 type: 'error',
                 message: '删除失败!'
@@ -162,26 +165,26 @@
         })
       },
       // 新增
-      addOpen(){
+      addOpen() {
         this.addPop = true;
         this.addObject = {
-          title:'',
+          title: '',
         }
       },
       // 新增保存
-      addSave(){
+      addSave() {
         console.log(this.addObject)
-        let params={};
+        let params = {};
         params['title'] = this.addObject.title;
-        API.get('static/list.json',params).then((res)=>{
-          if(res.status == 200) {
+        API.get('static/list.json', params).then((res) => {
+          if (res.status == 200) {
             this.addPop = false;
             this.getPage();
             this.$message({
               type: 'success',
               message: '新增成功!'
             });
-          }else {
+          } else {
             this.$message({
               type: 'error',
               message: '新增失败!'
@@ -192,34 +195,34 @@
       // 编辑
       editOpen(id) {
         this.editPop = true
-        let params={};
+        let params = {};
         params['id'] = id;
-        API.get('static/classify.json',params).then((res)=>{
+        API.get('static/classify.json', params).then((res) => {
           console.log(res.data)
-          if(res.status == 200) {
+          if (res.status == 200) {
             console.log(res.data[0])
             // this.editObject.title = '12345'
             this.editObject = res.data[0];
-          }else {
+          } else {
             console.log(res.data)
           }
         })
       },
       // 编辑保存
-      editSave(){
+      editSave() {
         console.log(this.editObject)
-        let params={};
+        let params = {};
         params['id'] = this.editObject.id;
         params['title'] = this.editObject.title;
-        API.get('static/list.json',params).then((res)=>{
-          if(res.status == 200) {
+        API.get('static/list.json', params).then((res) => {
+          if (res.status == 200) {
             this.editPop = false;
             this.getPage();
             this.$message({
               type: 'success',
               message: '编辑成功!'
             });
-          }else {
+          } else {
             this.$message({
               type: 'error',
               message: '编辑失败!'
@@ -234,19 +237,19 @@
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
-          let params={};
+          let params = {};
           params['id'] = id;
           /*this.tableData = this.tableData.filter(ele => {
             return ele.id != id;
           })*/
-          API.get('static/list.json',params).then((res)=>{
-            if(res.status == 200) {
+          API.get('static/list.json', params).then((res) => {
+            if (res.status == 200) {
               this.getPage();
               this.$message({
                 type: 'success',
                 message: '删除成功!'
               });
-            }else {
+            } else {
               this.$message({
                 type: 'error',
                 message: '删除失败!'
@@ -275,106 +278,44 @@
 
 <style lang="less">
   @import "./../../../../assets/styles/edit-pop.less";
-  .backstage-news-page-classify {
-    .search-nav {
-      padding:30px 30px 36px;
-      margin-top: 30px;
-      overflow: hidden;
-      box-sizing: border-box;
-      background: #fff;
-      .input-table {
-        float: left;
-        position: relative;
-        width:50%;
-        .input-search {
-          .el-input__inner {
-            padding-left:30px;
-          }
+  @import "./../../../../assets/styles/base2";
+
+  .backstage-classify-page-classify {
+    .tip-dialog {
+      .el-dialog {
+        .el-dialog__footer {
+          padding: 0px 20px 20px;
         }
-        .icon {
-          position: absolute;
-          top:10px;
-          color:#999;
-          font-size: 20px;
-          left:5px;
-        }
-      }
-      .select-table {
-        float: left;
-        margin-left: 30px;
-        position: relative;
-        width:15%;
-      }
-      .btn-cell {
-        float: right;
-        width:12%;
-        cursor: pointer;
-        height:40px;
-        background: #026ab3;
-        color:#fff;
-        line-height: 40px;
-        font-size: 18px;
-        text-align: center;
-        margin-left: 30px;
       }
     }
-    .result-table {
-      margin-top: 30px;
-      .el-table__header-wrapper {
-        th {
-          background: #026ab3;
-        }
-        .cell {
-          text-align: center;
-          color:#fff;
-          font-weight: 600;
-        }
-        .el-table__header {
-          /*width:100% !important;*/
-        }
+    .search-nav {
+      .btn-cell {
+        float: right;
       }
+    }
+
+    .result-table {
       .el-table__body-wrapper {
         .el-table__row {
           td {
             text-align: center;
           }
+          td:nth-of-type(3) {
+            text-align: center;
+          }
         }
-      }
-      .el-button.look.el-button--text.el-button--small {
-        color:#026ab3;
-        font-size: 14px;
-      }
-      .el-button.edit.el-button--text.el-button--small {
-        color:#333;
-        font-size: 14px;
-      }
-      .el-button.del.el-button--text.el-button--small {
-        color:#ff3333;
-        font-size: 14px;
       }
     }
     .pagination-table {
       margin-top: 40px;
     }
-  }
-  .upload-demo {
-    .el-upload--text {
-      float: left;
-      width: 100%;
-      text-align: left;
-    }
-    .el-upload-list {
-      float: left;
-      text-align: left;
+    .small-dia {
+      .el-dialog {
+        width: 400px !important;
+      }
     }
   }
-  .ql-toolbar {
-    text-align: left;
-  }
-  .small-dia {
-    .el-dialog {
-      width: 500px !important;
-    }
-  }
+
+
 </style>
 

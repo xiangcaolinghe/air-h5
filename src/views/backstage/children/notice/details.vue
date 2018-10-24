@@ -27,7 +27,8 @@
         <span>来源：{{datail.origin}}</span>
       </div>
       <br/><br/>
-      <div class="detail_content" v-html="datail.content">
+      <div class="detail_content ql-snow" >
+        <div class="ql-editor" v-html="datail.content"></div>
       </div>
       <br/><br/>
       <div class="down_res">

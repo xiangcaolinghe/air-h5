@@ -11,7 +11,7 @@
               <i class="iconfont icon icon-yonghu"></i><strong>欢迎您：admin</strong>
             </span>
             <span class="user" @click="OpenPassword">
-              <strong style="font-size: 18px;">修改密码</strong>
+              <strong style="font-size: 13px;">修改密码</strong>
             </span>
             <span class="exit" @click="exit">
               <i class="iconfont icon icon-tuichu-copy"></i><strong>退出</strong>
@@ -21,7 +21,8 @@
         </div>
       </div>
       <div class="p-content">
-        <div class="p-left">
+        <div class="p-left" v-bind:style="{ minHeight: offHeight + 'px' }">
+
           <div class="nav-left active">
             <ul>
               <li><router-link :to="{name:'home'}" class="left-c" :class="{active: $route.name == 'backstage.news'}"><i class="icon iconfont icon-xinwen"></i>新闻管理</router-link></li>
@@ -39,10 +40,10 @@
       <el-dialog
         title="修改密码"
         :visible.sync="editPassword"
-        width="30%"
-        class="tip-dialog">
+        width="20%"
+        class="tip-dialog pass-top">
         <div class="content">
-          <el-form :model="ruleForm2" status-icon :rules="rules2" ref="ruleForm2" label-width="100px" class="demo-ruleForm">
+          <el-form :model="ruleForm2" status-icon :rules="rules2" ref="ruleForm2" label-width="80px" class="demo-ruleForm">
             <el-form-item label="原始密码" prop="passOld">
               <el-input type="password" v-model="ruleForm2.passOld" autocomplete="off"></el-input>
             </el-form-item>
@@ -90,6 +91,7 @@
           isActive:1,
           isLeftActive:1,
           isLeftNav: 1,
+          offHeight : 0,
           editPassword : false,
           ruleForm2: {
             passOld : '',
@@ -184,6 +186,12 @@
             })
             .catch(_ => {});
         }
+      },
+      mounted(){
+        let hei = document.documentElement.clientHeight-110;
+        console.log(hei)
+        this.offHeight = hei;
+        console.log(this.offHeight)
       }
     }
 </script>
@@ -202,12 +210,32 @@
     left: 0;
     right: 0;
     font-size: 18px;
-    font-weight: bold;
+    /*font-weight: bold;*/
+    .pass-top{
+      .el-dialog {
+        .el-dialog__body {
+          .content {
+            padding: 10px 0;
+          }
+        }
+      }
+    }
+
+    .demo-ruleForm {
+      .el-form-item {
+        .el-form-item__label {
+          width: 80px;
+        }
+        .el-form-item__content {
+          margin-left: 85px;
+        }
+      }
+    }
 
     .nav-box {
       width: 100%;
       background-color: #026ab3;
-      height: 100px;
+      height: 75px;
       .up-nav{
         width: 90%;
         height: 100%;
@@ -216,9 +244,9 @@
           .name {
             float: left;
             padding-left: 20px;
-            font-size: 22px;
+            font-size: 18px;
             color:#fff;
-            line-height: 100px;
+            line-height: 75px;
           }
         }
       }
@@ -227,19 +255,20 @@
   .up-nav img{
     float: left;
     margin-top: 0.8%;
+    width: 50px;
   }
   .welcome{
     float: right;
-    height:100px;
+    height:75px;
     overflow: hidden;
-    line-height: 100px;
-    font-size: 20px;
+    line-height: 75px;
+    font-size: 13px;
     color: #d5e0ee;
     .user {
       cursor: pointer;
-      margin-right: 30px;
+      margin-right: 20px;
       .iconfont {
-        font-size: 27px;
+        font-size: 18px;
         margin-right: 10px;
       }
     }
@@ -247,7 +276,7 @@
       cursor: pointer;
       margin-right: 5px;
       .iconfont {
-        font-size: 25px;
+        font-size: 18px;
         margin-right: 10px;
       }
     }
@@ -265,11 +294,11 @@
     width:16%;
     height:100%;
     font-weight: bolder;
-    font-size: 18px;
+    font-size: 15px;
     li{
       list-style: none;
-      height: 85px;
-      line-height: 85px;
+      height: 65px;
+      line-height: 65px;
       .left-c{
         display: block;
         text-decoration:none;
@@ -284,8 +313,8 @@
           }
       }
       .iconfont{
-        font-size: 22px;
-        margin-right: 25px;
+        font-size: 15px;
+        margin-right: 10px;
       }
     }
   }
@@ -295,7 +324,8 @@
     overflow:hidden;
     .p-left {
       float: left;
-      min-height: 880px;
+      /*min-height: 880px;*/
+      min-height: 1px;
       width: 16%;
     }
     .view {

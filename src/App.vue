@@ -10,7 +10,9 @@ export default {
   components:{  },
   created() {
 
-  }
+
+  },
+
 }
 </script>
 
@@ -19,6 +21,7 @@ export default {
   @import './assets/iconfonts/iconfont.css';
   @import './assets/styles/header.less';
   @import './assets/styles/footer.less';
+
 #app {
   font-family: "Microsoft YaHei","Arial","黑体","宋体",sans-serif;
   -webkit-font-smoothing: antialiased;
