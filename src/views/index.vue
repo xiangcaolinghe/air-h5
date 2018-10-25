@@ -15,57 +15,25 @@
                     <div class="more" @click="newsList()">查看更多</div>
                     <div class="tab-content">
                         <div class="item" :class="{active:isActive == 1}">
-                            <div class="list">
-                                <img src="./../assets/images/news-1.png" alt="" class="img">
-                                <div class="title">西北空管局召开2018年“两优一先”表彰会。</div>
-                                <div class="article">近日，华东空管局空管工程建设指挥部工会组织带领全体员工与上海同济工程项目管理咨询有限公司开展工程业务交流活动。</div>
-                                <div class="time">发布时间：2018.07.10</div>
-                            </div>
-                            <div class="list">
-                                <img src="./../assets/images/news-1.png" alt="" class="img">
-                                <div class="title">西北空管局召开2018年“两优一先”表彰会。</div>
-                                <div class="article">近日，华东空管局空管工程建设指挥部工会组织带领全体员工与上海同济工程项目管理咨询有限公司开展工程业务交流活动。</div>
-                                <div class="time">发布时间：2018.07.10</div>
-                            </div>
-                            <div class="list">
-                                <img src="./../assets/images/news-1.png" alt="" class="img">
-                                <div class="title">西北空管局召开2018年“两优一先”表彰会。</div>
-                                <div class="article">近日，华东空管局空管工程建设指挥部工会组织带领全体员工与上海同济工程项目管理咨询有限公司开展工程业务交流活动。</div>
-                                <div class="time">发布时间：2018.07.10</div>
+                            <div class="list" v-for="i in newsShow" :key="i.id" @click="newsGo(i.id)">
+                                <img :src="i.url" alt="" class="img">
+                                <div class="title">{{i.title}}</div>
+                                <div class="article">{{i.content}}</div>
+                                <div class="time">发布时间：{{i.date}}</div>
                             </div>
                         </div>
                         <div class="item common" :class="{active:isActive == 2}">
-                            <div class="list">
-                                <div class="title">西北空管局召开2018年“两优一先”表彰会。</div>
-                                <div class="article">近日，华东空管局空管工程建设指挥部工会组织带领全体员工与上海同济工程项目管理咨询有限公司开展工程业务交流活动。</div>
-                                <div class="time">发布时间：2018.07.10</div>
-                            </div>
-                            <div class="list">
-                                <div class="title">西北空管局召开2018年“两优一先”表彰会。</div>
-                                <div class="article">近日，华东空管局空管工程建设指挥部工会组织带领全体员工与上海同济工程项目管理咨询有限公司开展工程业务交流活动。</div>
-                                <div class="time">发布时间：2018.07.10</div>
-                            </div>
-                            <div class="list">
-                                <div class="title">西北空管局召开2018年“两优一先”表彰会。</div>
-                                <div class="article">近日，华东空管局空管工程建设指挥部工会组织带领全体员工与上海同济工程项目管理咨询有限公司开展工程业务交流活动。</div>
-                                <div class="time">发布时间：2018.07.10</div>
-                            </div>
-                            <div class="list">
-                                <div class="title">西北空管局召开2018年“两优一先”表彰会。</div>
-                                <div class="article">近日，华东空管局空管工程建设指挥部工会组织带领全体员工与上海同济工程项目管理咨询有限公司开展工程业务交流活动。</div>
-                                <div class="time">发布时间：2018.07.10</div>
+                            <div class="list" v-for="i in trendsShow" :key="i.id" @click="dynamicGo(i.id)">
+                                <div class="title">{{i.title}}</div>
+                                <div class="article">{{i.content}}</div>
+                                <div class="time">发布时间：{{i.date}}</div>
                             </div>
                         </div>
-                        <div class="item common" :class="{active:isActive == 3}">
-                            <div class="list">
-                                <div class="title">西北空管局召开2018年“两优一先”表彰会。</div>
-                                <div class="article">近日，华东空管局空管工程建设指挥部工会组织带领全体员工与上海同济工程项目管理咨询有限公司开展工程业务交流活动。</div>
-                                <div class="time">发布时间：2018.07.10</div>
-                            </div>
-                            <div class="list">
-                                <div class="title">西北空管局召开2018年“两优一先”表彰会。</div>
-                                <div class="article">近日，华东空管局空管工程建设指挥部工会组织带领全体员工与上海同济工程项目管理咨询有限公司开展工程业务交流活动。</div>
-                                <div class="time">发布时间：2018.07.10</div>
+                        <div class="item common" :class="{active:isActive == 3}" >
+                            <div class="list" v-for="i in noticeShow" :key="i.id" @click="noticeGo(i.id)">
+                                <div class="title">{{i.title}}</div>
+                                <div class="article">{{i.content}}</div>
+                                <div class="time">发布时间：{{i.date}}</div>
                             </div>
                         </div>
                     </div>
@@ -118,7 +86,10 @@
 //    name: 'HelloWorld',
     data () {
       return {
-        isActive:1
+        isActive:1,
+        newsShow : [],
+        trendsShow : [],
+        noticeShow : []
       }
     },
     methods:{
@@ -135,10 +106,69 @@
           this.$router.push({path: '/notice/list'});
         }
 
+      },
+      getShowList(){
+        // 新闻
+        let params1 = {};
+        params1['id'] = 123;
+        API.get('static/news.json', params1).then((res) => {
+          console.log(res.data)
+          if (res.status == 200) {
+            console.log(res.data[0])
+            for(var i=0;i<3;i++){
+              this.newsShow.push(res.data[i])
+            }
+            console.log(this.newsShow);
+
+          } else {
+            console.log(res.data)
+          }
+        })
+        // 动态
+        let params2 = {};
+        params2['id'] = 123;
+        API.get('static/trends.json', params2).then((res) => {
+          console.log(res.data)
+          if (res.status == 200) {
+            console.log(res.data[0])
+            for(var i=0;i<4;i++){
+              this.trendsShow.push(res.data[i])
+            }
+            console.log(this.trendsShow);
+
+          } else {
+            console.log(res.data)
+          }
+        })
+        //公告
+        let params3 = {};
+        params3['id'] = 123;
+        API.get('static/notice.json', params3).then((res) => {
+          console.log(res.data)
+          if (res.status == 200) {
+            console.log(res.data[0])
+            for(var i=0;i<4;i++){
+              this.noticeShow.push(res.data[i])
+            }
+            console.log(this.noticeShow);
+
+          } else {
+            console.log(res.data)
+          }
+        })
+      },
+      newsGo(id){
+        this.$router.push({name:'newDetails',query:{id:id}})
+      },
+      noticeGo(id){
+        this.$router.push({name:'noticeDetails',query:{id:id}})
+      },
+      dynamicGo(id){
+        this.$router.push({name:'deynamicDetails',query:{id:id}})
       }
     },
     created() {
-
+      this.getShowList()
     }
   }
 </script>

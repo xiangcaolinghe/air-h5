@@ -1,120 +1,35 @@
 <template>
-  <div class="list">
+  <div class="list" >
     <br>
     <div class="contain">
-      <ul class="current_banner">
-        <li><a @click="switcher(1)" class="banner_color" :class="{active:isActive == 1}">换季通知</a></li>
-        <li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</li>
-        <li><a @click="switcher(2)" class="banner_color" :class="{active:isActive == 2}">临时航线</a></li>
-        <li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</li>
-        <li><a @click="switcher(3)" class="banner_color" :class="{active:isActive == 3}">会议通知</a></li>
+      <ul class="current_banner" ref="ulWidth">
+        <li v-for="i in typeList" :key="i.id"><a @click="switcher(i)" class="banner_color" :class="{active:isActive == i.id}">{{i.label}}</a></li>
       </ul>
     </div>
     <br/>
     <div class="title_hr">
       <div class="banner_hr">
-        <div class="bar_hr"></div>
+        <div class="bar_hr" :style="{ width: widthStyle + 'px' }"></div>
       </div>
     </div>
     <br/> <br/>
-        <div class="contain">
+        <div class="contain" >
           <div class="current_date">
             <div class="date_month"><span class="current_month">{{month}}</span></div>
             <div class="date_day"><span class="current_day">{{day}}</span></div>
             <div class="jintian">今天</div>
             <div class="date_week">{{week}}</div>
           </div>
-          <div class="contentList" :class="{active:isActive == 1}">
-            <div v-for="(item,index) in list">
-              <div class="news_img">
-                <div class="circle"></div>
-                <div class="shux"></div>
-              </div>
-              <ul class="content">
-                <li class="title"><a href="/notice/details">{{item.title}}</a></li>
-                <li class="contents"><a href="/notice/details">{{item.content}}</a></li>
-                <li class="time">{{item.time}}</li>
-                <li><br/></li>
-              </ul>
-              <!--<div v-if="index<list.length-1" class="content-hr"></div>-->
-            </div>
-            <br/><br/>
-            <!--分页-->
-            <el-pagination
-              @size-change="handleSizeChange"
-              @current-change="handleCurrentChange"
-              :current-page="currentPage"
-              :page-sizes="[10, 20, 30, 40]"
-              :page-size="pageSize"
-              layout="total, sizes, prev, pager, next, jumper"
-              :total=parseInt(total)>
-            </el-pagination>
-            <br/><br/>
-          </div>
-          <div class="contentList" :class="{active:isActive == 2}">
-            <div v-for="(item,index) in list">
-              <div class="news_img">
-                <div class="circle"></div>
-                <div class="shux"></div>
-              </div>
-              <ul class="content">
-                <li class="title"><a href="/notice/details">{{item.title}}</a></li>
-                <li class="contents"><a href="/notice/details">{{item.content}}</a></li>
-                <li class="time">{{item.time}}</li>
-                <li><br/></li>
-              </ul>
-              <!--<div v-if="index<list.length-1" class="content-hr"></div>-->
-            </div>
-            <br/><br/>
-            <!--分页-->
-            <el-pagination
-              @size-change="handleSizeChange"
-              @current-change="handleCurrentChange"
-              :current-page="currentPage"
-              :page-sizes="[10, 20, 30, 40]"
-              :page-size="pageSize"
-              layout="total, sizes, prev, pager, next, jumper"
-              :total=parseInt(total)>
-            </el-pagination>
-            <br/><br/>
-          </div>
-          <div class="contentList" :class="{active:isActive == 3}">
-            <div v-for="(item,index) in list">
-              <div class="news_img">
-                <div class="circle"></div>
-                <div class="shux"></div>
-              </div>
-              <ul class="content">
-                <li class="title"><a href="/notice/details">{{item.title}}</a></li>
-                <li class="contents"><a href="/notice/details">{{item.content}}</a></li>
-                <li class="time">{{item.time}}</li>
-                <li><br/></li>
-              </ul>
-              <!--<div v-if="index<list.length-1" class="content-hr"></div>-->
-            </div>
-            <br/><br/>
-            <!--分页-->
-            <el-pagination
-              @size-change="handleSizeChange"
-              @current-change="handleCurrentChange"
-              :current-page="currentPage"
-              :page-sizes="[10, 20, 30, 40]"
-              :page-size="pageSize"
-              layout="total, sizes, prev, pager, next, jumper"
-              :total=parseInt(total)>
-            </el-pagination>
-            <br/><br/>
-          </div>
           <div class="contentList">
-            <div v-for="(item,index) in list">
+            <div v-for="i in contentList">
               <div class="news_img">
                 <div class="circle"></div>
                 <div class="shux"></div>
               </div>
-              <ul class="content">
-                <li class="title"><a href="/notice/details">{{item.title}}</a></li>
-                <li class="contents"><a href="/notice/details">{{item.content}}</a></li>
-                <li class="time">{{item.time}}</li>
+              <ul class="content" >
+                <li class="title"><a><router-link :to="{path:'/notice/details',query:{id:i.id}}">{{i.title}}</router-link></a></li>
+                <li class="contents"><router-link :to="{path:'/notice/details',query:{id:i.id}}">{{i.content}}</router-link></li>
+                <li class="time">{{i.date}}</li>
                 <li><br/></li>
               </ul>
               <!--<div v-if="index<list.length-1" class="content-hr"></div>-->
@@ -147,26 +62,29 @@
   export default {
     data(){
       return{
-        list:[],
         currentPage: 1,      //当前页
         total: 20,          //数据总条数
         pageSize: 10,        //每页显示的数据条数
         month:'',
         day:'',
         week:'',
-        changeNoticeList:[],
-        temporaryRoutesList:[],
-        meetingNoticeList:[],
-        isActive:1
+        typeList:[],
+        contentList : [],
+        widthStyle:''
       }
     },
     methods: {
-      handleSizeChange(val) {
+      // 翻页器：当前页，同时上一页下一页也能获取当前页
+      handleCurrentChange(val) {
+        console.log(val);
         this.pageSize = val;
       },
-      handleCurrentChange(val) {
+      // 翻页器：选择10条还是20条、
+      handleSizeChange(val) {
+        console.log(val);
         this.currentPage = val;
       },
+      // 时间
       currentDate(){
         var date = new Date();
         var month = date.getMonth() + 1;
@@ -197,89 +115,61 @@
         this.day=day;
         this.week=week;
       },
-      switcher(number){
-        if (number===1){
-          this.isActive=number;
-          this.list=this.changeNoticeList;
-        }else if (number===2){
-          this.isActive=number;
-          this.temporaryRoutesList=[
-            {img: '/static/img/news-1.cf434b2.png',title: '玉树地震,西北空管局气象中心区域报室组织临时天气会商2',content:
-              '西北空管局管制中心主动作为，承接咸阳机场运管委战略解码指标，努力促进航班正常性工作，取得了良好成绩，' +
-              '西安咸阳国际机场放行正常率达到92.21%，始发正常率达92.18%，两项指标均位列全国同级机场第一。同时，' +
-              '咸阳机场离港航班正常率达83.99%，平均滑入时间、平均滑出时间、关舱门平均等待时间较去年同期均有明显平均滑入时间、平均滑出时间、关舱门平均等待时间较去年同期均有明显缩短', time: '2018/08/18'},
-            {img: '/static/img/news-1.cf434b2.png',title: '玉树地震,西北空管局气象中心区域报室组织临时天气会商2',content:
-              '西北空管局管制中心主动作为，承接咸阳机场运管委战略解码指标，努力促进航班正常性工作，取得了良好成绩，' +
-              '西安咸阳国际机场放行正常率达到92.21%，始发正常率达92.18%，两项指标均位列全国同级机场第一。同时，' +
-              '咸阳机场离港航班正常率达83.99%，平均滑入时间、平均滑出时间、关舱门平均等待时间较去年同期均有明显缩短', time: '2018/08/18'},
-            {img: '/static/img/news-1.cf434b2.png',title: '玉树地震,西北空管局气象中心区域报室组织临时天气会商2',content:
-              '西北空管局管制中心主动作为，承接咸阳机场运管委战略解码指标，努力促进航班正常性工作，取得了良好成绩，' +
-              '西安咸阳国际机场放行正常率达到92.21%，始发正常率达92.18%，两项指标均位列全国同级机场第一。同时，' +
-              '咸阳机场离港航班正常率达83.99%，平均滑入时间、平均滑出时间、关舱门平均等待时间较去年同期均有明显缩短', time: '2018/08/18'},
-            {img: '/static/img/news-1.cf434b2.png',title: '玉树地震,西北空管局气象中心区域报室组织临时天气会商2',content:
-              '西北空管局管制中心主动作为，承接咸阳机场运管委战略解码指标，努力促进航班正常性工作，取得了良好成绩，' +
-              '西安咸阳国际机场放行正常率达到92.21%，始发正常率达92.18%，两项指标均位列全国同级机场第一。同时，' +
-              '咸阳机场离港航班正常率达83.99%，平均滑入时间、平均滑出时间、关舱门平均等待时间较去年同期均有明显缩短', time: '2018/08/18'},
-            {img: '/static/img/news-1.cf434b2.png',title: '玉树地震,西北空管局气象中心区域报室组织临时天气会商2',content:
-              '西北空管局管制中心主动作为，承接咸阳机场运管委战略解码指标，努力促进航班正常性工作，取得了良好成绩，' +
-              '西安咸阳国际机场放行正常率达到92.21%，始发正常率达92.18%，两项指标均位列全国同级机场第一。同时，' +
-              '咸阳机场离港航班正常率达83.99%，平均滑入时间、平均滑出时间、关舱门平均等待时间较去年同期均有明显缩短', time: '2018/08/18'}
-          ];
-          this.list=this.temporaryRoutesList;
-        }else if (number===3){
-          this.isActive=number;
-          this.meetingNoticeList=[
-            {img: '/static/img/news-1.cf434b2.png',title: '玉树地震,西北空管局气象中心区域报室组织临时天气会商3',content:
-              '西北空管局管制中心主动作为，承接咸阳机场运管委战略解码指标，努力促进航班正常性工作，取得了良好成绩，' +
-              '西安咸阳国际机场放行正常率达到92.21%，始发正常率达92.18%，两项指标均位列全国同级机场第一。同时，' +
-              '咸阳机场离港航班正常率达83.99%，平均滑入时间、平均滑出时间、关舱门平均等待时间较去年同期均有明显平均滑入时间、平均滑出时间、关舱门平均等待时间较去年同期均有明显缩短', time: '2018/08/18'},
-            {img: '/static/img/news-1.cf434b2.png',title: '玉树地震,西北空管局气象中心区域报室组织临时天气会商3',content:
-              '西北空管局管制中心主动作为，承接咸阳机场运管委战略解码指标，努力促进航班正常性工作，取得了良好成绩，' +
-              '西安咸阳国际机场放行正常率达到92.21%，始发正常率达92.18%，两项指标均位列全国同级机场第一。同时，' +
-              '咸阳机场离港航班正常率达83.99%，平均滑入时间、平均滑出时间、关舱门平均等待时间较去年同期均有明显缩短', time: '2018/08/18'},
-            {img: '/static/img/news-1.cf434b2.png',title: '玉树地震,西北空管局气象中心区域报室组织临时天气会商3',content:
-              '西北空管局管制中心主动作为，承接咸阳机场运管委战略解码指标，努力促进航班正常性工作，取得了良好成绩，' +
-              '西安咸阳国际机场放行正常率达到92.21%，始发正常率达92.18%，两项指标均位列全国同级机场第一。同时，' +
-              '咸阳机场离港航班正常率达83.99%，平均滑入时间、平均滑出时间、关舱门平均等待时间较去年同期均有明显缩短', time: '2018/08/18'},
-            {img: '/static/img/news-1.cf434b2.png',title: '玉树地震,西北空管局气象中心区域报室组织临时天气会商3',content:
-              '西北空管局管制中心主动作为，承接咸阳机场运管委战略解码指标，努力促进航班正常性工作，取得了良好成绩，' +
-              '西安咸阳国际机场放行正常率达到92.21%，始发正常率达92.18%，两项指标均位列全国同级机场第一。同时，' +
-              '咸阳机场离港航班正常率达83.99%，平均滑入时间、平均滑出时间、关舱门平均等待时间较去年同期均有明显缩短', time: '2018/08/18'},
-            {img: '/static/img/news-1.cf434b2.png',title: '玉树地震,西北空管局气象中心区域报室组织临时天气会商3',content:
-              '西北空管局管制中心主动作为，承接咸阳机场运管委战略解码指标，努力促进航班正常性工作，取得了良好成绩，' +
-              '西安咸阳国际机场放行正常率达到92.21%，始发正常率达92.18%，两项指标均位列全国同级机场第一。同时，' +
-              '咸阳机场离港航班正常率达83.99%，平均滑入时间、平均滑出时间、关舱门平均等待时间较去年同期均有明显缩短', time: '2018/08/18'}
-          ];
-          this.list=this.meetingNoticeList;
-        }
-      }
+      // 页面初始化
+      getPage(){
+        // 分类
+        let params = {};
+        params['id'] = 123;
+        API.get('static/notListSelect.json', params).then((res) => {
+          console.log(res.data)
+          if (res.status == 200) {
+            this.typeList = res.data;
+            console.log(this.typeList);
+            // 第一个分类的列表
+            this.isActive = this.typeList[0].id;
+            let params2 = {};
+            params2['id'] = this.typeList[0].id;
+            API.get('static/news.json', params2).then((res) => {
+              console.log(res.data)
+              if (res.status == 200) {
+                this.contentList = res.data;
+                console.log(this.contentList);
+              } else {
+                console.log(res.data)
+              }
+            })
+            // 分类横条样式
+            var that = this;
+            setTimeout(function(){
+              that.widthStyle = that.$refs.ulWidth.clientWidth;
+            })
+          } else {
+            console.log(res.data)
+          }
+        })
+      },
+      // 点击分类
+      switcher(id){
+        this.isActive = id.id;
+        console.log(id)
+        let params = {};
+        params['id'] = id;
+        API.get('static/news.json', params).then((res) => {
+          console.log(res.data)
+          if (res.status == 200) {
+            this.contentList = res.data;
+            console.log(this.contentList);
+          } else {
+            console.log(res.data)
+          }
+        })
+      },
     },
     mounted: function () {
       this.currentDate();
-      this.changeNoticeList=[
-        {img: '/static/img/news-1.cf434b2.png',title: '玉树地震,西北空管局气象中心区域报室组织临时天气会商1',content:
-          '西北空管局管制中心主动作为，承接咸阳机场运管委战略解码指标，努力促进航班正常性工作，取得了良好成绩，' +
-          '西安咸阳国际机场放行正常率达到92.21%，始发正常率达92.18%，两项指标均位列全国同级机场第一。同时，' +
-          '咸阳机场离港航班正常率达83.99%，平均滑入时间、平均滑出时间、关舱门平均等待时间较去年同期均有明显平均滑入时间、平均滑出时间、关舱门平均等待时间较去年同期均有明显缩短', time: '2018/08/18'},
-        {img: '/static/img/news-1.cf434b2.png',title: '玉树地震,西北空管局气象中心区域报室组织临时天气会商1',content:
-          '西北空管局管制中心主动作为，承接咸阳机场运管委战略解码指标，努力促进航班正常性工作，取得了良好成绩，' +
-          '西安咸阳国际机场放行正常率达到92.21%，始发正常率达92.18%，两项指标均位列全国同级机场第一。同时，' +
-          '咸阳机场离港航班正常率达83.99%，平均滑入时间、平均滑出时间、关舱门平均等待时间较去年同期均有明显缩短', time: '2018/08/18'},
-        {img: '/static/img/news-1.cf434b2.png',title: '玉树地震,西北空管局气象中心区域报室组织临时天气会商1',content:
-          '西北空管局管制中心主动作为，承接咸阳机场运管委战略解码指标，努力促进航班正常性工作，取得了良好成绩，' +
-          '西安咸阳国际机场放行正常率达到92.21%，始发正常率达92.18%，两项指标均位列全国同级机场第一。同时，' +
-          '咸阳机场离港航班正常率达83.99%，平均滑入时间、平均滑出时间、关舱门平均等待时间较去年同期均有明显缩短', time: '2018/08/18'},
-        {img: '/static/img/news-1.cf434b2.png',title: '玉树地震,西北空管局气象中心区域报室组织临时天气会商1',content:
-          '西北空管局管制中心主动作为，承接咸阳机场运管委战略解码指标，努力促进航班正常性工作，取得了良好成绩，' +
-          '西安咸阳国际机场放行正常率达到92.21%，始发正常率达92.18%，两项指标均位列全国同级机场第一。同时，' +
-          '咸阳机场离港航班正常率达83.99%，平均滑入时间、平均滑出时间、关舱门平均等待时间较去年同期均有明显缩短', time: '2018/08/18'},
-        {img: '/static/img/news-1.cf434b2.png',title: '玉树地震,西北空管局气象中心区域报室组织临时天气会商1',content:
-          '西北空管局管制中心主动作为，承接咸阳机场运管委战略解码指标，努力促进航班正常性工作，取得了良好成绩，' +
-          '西安咸阳国际机场放行正常率达到92.21%，始发正常率达92.18%，两项指标均位列全国同级机场第一。同时，' +
-          '咸阳机场离港航班正常率达83.99%，平均滑入时间、平均滑出时间、关舱门平均等待时间较去年同期均有明显缩短', time: '2018/08/18'}
-      ];
-      this.list=this.changeNoticeList;
-
+    },
+    created(){
+      this.getPage()
     }
   }
 </script>
@@ -295,6 +185,7 @@
     text-decoration: none;  /*去掉前面的圆点*/
     list-style: none;
     float: left;
+    margin-right: 40px;
   }
   .current_banner li a {
     text-decoration: none;
@@ -307,6 +198,7 @@
     display: none;
     margin-top: -10%;
     margin-left: 9%;
+    display: block;
 
   }
   .active{
@@ -332,7 +224,7 @@
   .bar_hr{
     background-color: #026ab3;
     height: 100%;
-    width: 27%;
+    /*width: 27%;*/
   }
   .current_date{
     width: 80px;
