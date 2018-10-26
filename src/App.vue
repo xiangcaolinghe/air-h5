@@ -43,6 +43,7 @@ export default {
   @import './assets/styles/footer.less';
   @import './assets/styles/quill.snow.css';
   @import './assets/styles/quill.core.css';
+  @import './assets/styles/mintui.css';
 #app {
   font-family: "Microsoft YaHei","Arial","黑体","宋体",sans-serif;
   -webkit-font-smoothing: antialiased;

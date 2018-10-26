@@ -50,7 +50,6 @@
         }
       },
       mounted: function () {
-        this.getDetail();
       },
       methods:{
         getPage(){

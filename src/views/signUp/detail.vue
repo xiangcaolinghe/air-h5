@@ -25,7 +25,7 @@
                     <div class="title">{{meetingData.meetingName}}</div>
                     <div class="time"><i class="icon iconfont icon-shijian"></i>{{meetingData.data[0]}} -- {{meetingData.data[1]}}</div>
                     <div class="address"><i class="icon iconfont icon-dingweiweizhi"></i>{{meetingData.meetingPlace}}</div>
-                    <div class="btn" @click="dialogFormVisible = true">在线报名</div>
+                    <div class="btn"><router-link :to="{path:'/form',query:{id:meetingData.id}}">在线报名</router-link></div>
                     <div class="wechart">
                         <img src="" alt="">
                         <p class="name">扫描二维码报名</p>
@@ -92,48 +92,6 @@
                 </div>
             </div>
         </div>
-        <!--对话框-->
-        <el-dialog title="请填写报名表单" :visible.sync="dialogFormVisible" class="sign-dialog">
-            <el-form :model="form">
-                <el-form-item label="报名形式：" :label-width="formLabelWidth">
-                    <el-select v-model="form.shape" placeholder="请选择报名形式">
-                        <el-option label="以个人形式报名" value="1"></el-option>
-                        <el-option label="以单位集体形式报名" value="2"></el-option>
-                    </el-select>
-                </el-form-item>
-                <el-form-item label="参会名称：" :label-width="formLabelWidth">
-                    <el-input v-model="form.meeting" autocomplete="off" placeholder="请填写您的真实信息"></el-input>
-                </el-form-item>
-                <el-form-item label="参会人名称：" :label-width="formLabelWidth">
-                    <el-input v-model="form.name" autocomplete="off" placeholder="请填写您的真实信息"></el-input>
-                </el-form-item>
-                <el-form-item label="所属单位：" :label-width="formLabelWidth">
-                    <el-input v-model="form.unit" autocomplete="off" placeholder="请填写您的真实信息"></el-input>
-                </el-form-item>
-                <el-form-item label="联系方式：" :label-width="formLabelWidth">
-                    <el-input v-model="form.mobile" autocomplete="off" placeholder="请填写您的真实信息"></el-input>
-                </el-form-item>
-                <el-form-item label="到会日期：" :label-width="formLabelWidth">
-                    <el-input v-model="form.date" autocomplete="off" placeholder="请填写您的真实信息"></el-input>
-                </el-form-item>
-                <el-form-item label="乘坐交通工具：" prop="resource" :label-width="formLabelWidth">
-                    <el-radio-group v-model="form.traffic">
-                        <el-radio label="1">火车</el-radio>
-                        <el-radio label="2">飞机</el-radio>
-                    </el-radio-group>
-                </el-form-item>
-                <el-form-item label="车次：" :label-width="formLabelWidth">
-                    <el-input v-model="form.train" autocomplete="off" placeholder="请填写您的真实信息"></el-input>
-                </el-form-item>
-                <el-form-item label="时间：" :label-width="formLabelWidth">
-                    <el-input v-model="form.time" autocomplete="off" placeholder="请填写您的真实信息"></el-input>
-                </el-form-item>
-            </el-form>
-            <div slot="footer" class="dialog-footer">
-                <el-button type="primary" @click="dialogFormVisible = false" class="confirm">确 定</el-button>
-                <el-button @click="dialogFormVisible = false" class="cancel">取 消</el-button>
-            </div>
-        </el-dialog>
     </div>
 </template>
 
@@ -332,13 +290,16 @@
                     width:136px;
                     height:46px;
                     line-height: 46px;
-                    color:#fff;
+                    color:#fff !important;
                     margin-top: 28px;
                     font-size: 18px;
                     cursor: pointer;
                     background: #da422a;
                     font-weight: 600;
                     text-align: center;
+                  a {
+                    color:#fff !important;
+                  }
                 }
                 .wechart {
                     width:110px;

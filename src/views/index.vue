@@ -17,7 +17,7 @@
                         <div class="item" :class="{active:isActive == 1}">
                             <div class="list" v-for="i in newsShow" :key="i.id" @click="newsGo(i.id)">
                                 <img :src="i.url" alt="" class="img">
-                                <div class="title">{{i.title}}</div>
+                                <div class="title" :class="i.bs == 1 ? Red : Black">{{i.title}}</div>
                                 <div class="article">{{i.content}}</div>
                                 <div class="time">发布时间：{{i.date}}</div>
                             </div>
@@ -40,19 +40,23 @@
                 </div>
                 <div class="right">
                     <div class="nav-table">
-                        <div class="cell"><i class="icon iconfont icon-ji"></i><p class="name">换季管理</p></div>
+                        <div class="cell" :style="{background:Color}"><i class="icon iconfont icon-ji"></i><p class="name">换季管理</p></div>
                         <div class="cell"><i class="icon iconfont icon-tongji1"></i><p class="name">月度管理</p></div>
                         <div class="cell"><i class="icon iconfont icon-tongji"></i><p class="name">区内管理</p></div>
                         <div class="cell"><i class="icon iconfont icon-flightSchedule"></i><p class="name">飞行程序</p></div>
-                        <div class="cell"><div class="mask"><i class="icon iconfont icon-hangxian"></i></div><p class="name">临时航线</p></div>
+                        <div class="cell" :style="{background:Color}"><div class="mask"><i class="icon iconfont icon-hangxian" :style="{color:Color}"></i></div><p class="name">临时航线</p></div>
                         <div class="cell"><div class="mask"><i class="icon iconfont icon-feihangxiaoshi"></i></div><p class="name">ARINC424</p></div>
                     </div>
-                    <div class="input-table">
-                        <div class="cell"><span class="mask"><i class="icon iconfont icon-wode"></i></span><input type="text" class="input" placeholder="请输入您的用户名"></div>
-                        <div class="cell"><span class="mask"><i class="icon iconfont icon-mima"></i></span><input type="text" class="input" placeholder="请输入您的密码"></div>
-                        <div class="cell"><input type="text" class="code input" placeholder="短信验证"><span class="code-btn">获取验证码</span></div>
-                        <div class="cell button">登陆</div>
+                    <div class="input-table loginTab" v-show="loginShow">
+                        <div class="cell"><span class="mask"><i class="icon iconfont icon-wode"></i></span><input type="text" class="input" placeholder="请输入您的用户名" v-model="userName"></div>
+                        <div class="cell"><span class="mask"><i class="icon iconfont icon-mima"></i></span><input type="text" class="input" placeholder="请输入您的密码" v-model="passWord"></div>
+                        <div class="cell"><input type="text" class="code input" placeholder="短信验证" v-model="code"><span class="code-btn" @click="validate">获取验证码</span></div>
+                        <div class="cell button" @click="login">登陆</div>
                     </div>
+                  <div class="loginTab" v-show="!loginShow">
+                    <p>欢迎 <span>管理员</span> 登录</p>
+                    <p @click="quit">【退出登录】</p>
+                  </div>
                 </div>
             </div>
             <div class="trends inner-c">
@@ -65,10 +69,10 @@
                 <div class="right">
                     <div class="title">班机航线走向建议</div>
                     <div class="input-table">
-                        <div class="cell"><span class="mask"><i class="icon iconfont icon-yuanhuan"></i></span><input type="text" class="input" placeholder="请输入起点名称"></div>
-                        <div class="cell"><span class="mask"><i class="icon iconfont icon-round-copy"></i></span><input type="text" class="input" placeholder="请输入途径城市名称"></div>
-                        <div class="cell"><span class="mask"><i class="icon iconfont icon-qizhongdian"></i></span><input type="text" class="input" placeholder="请输入终点名称"></div>
-                        <div class="cell button">查看走向建议</div>
+                        <div class="cell"><span class="mask"><i class="icon iconfont icon-yuanhuan"></i></span><input type="text" class="input" placeholder="请输入起点名称" v-model="bj.qd"></div>
+                        <div class="cell"><span class="mask"><i class="icon iconfont icon-round-copy"></i></span><input type="text" class="input" placeholder="请输入途径城市名称" v-model="bj.tj"></div>
+                        <div class="cell"><span class="mask"><i class="icon iconfont icon-qizhongdian"></i></span><input type="text" class="input" placeholder="请输入终点名称" v-model="bj.zd"></div>
+                        <div class="cell button" @click="Lookzxjy">查看走向建议</div>
                     </div>
                 </div>
             </div>
@@ -86,10 +90,23 @@
 //    name: 'HelloWorld',
     data () {
       return {
+        loginShow : true,
         isActive:1,
         newsShow : [],
         trendsShow : [],
-        noticeShow : []
+        noticeShow : [],
+        bj:{
+          qd : '',
+          tj : '',
+          zd : ''
+        },
+        userName : '',
+        passWord : '',
+        code : '',
+        // Color : '#026ab3',
+        Color : '#ccc',
+        Red : 'Red',
+        Black : 'Black'
       }
     },
     methods:{
@@ -165,16 +182,80 @@
       },
       dynamicGo(id){
         this.$router.push({name:'deynamicDetails',query:{id:id}})
-      }
+      },
+      // 走向建议
+      Lookzxjy(){
+        console.log(this.bj)
+      },
+      // 登录
+      login(){
+
+        if(!this.userName){
+          this.$message({
+            type: 'error',
+            message: '请输入用户名!'
+          });
+        }else if(!this.passWord){
+          this.$message({
+            type: 'error',
+            message: '请输入密码!'
+          });
+        }else if(!this.code){
+          this.$message({
+            type: 'error',
+            message: '请输入验证码!'
+          });
+        }else {
+          this.loginShow = false;
+        }
+      },
+      // 退出
+      quit(){
+        this.loginShow = true;
+        this.userName = ''
+        this.passWord = ''
+        this.code = ''
+      },
+      // 验证码
+      validate(){
+        console.log(this.userName)
+        let val = /^1[34578]\d{9}$/;
+        if(!val.test(this.userName)){
+          this.$message({
+            type: 'error',
+            message: '请输入正确的手机号!'
+          });
+        }else{
+          let params = {};
+          params['userName'] = this.userName;
+          API.get('static/news.json', params).then((res) => {
+            if (res.status == 200) {
+              this.$message({
+                type: 'success',
+                message: '请输入验证码!'
+              });
+            } else {
+              console.log(res.data)
+            }
+          })
+        }
+      },
     },
     created() {
       this.getShowList()
+
     }
   }
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="less">
+  .Red {
+    color: #CF2727!important; ;
+  }
+  .Black {
+    color: #0b0306!important; ;
+  }
     .home-page {
         width:100%;
         .banner {
@@ -511,5 +592,23 @@
                 }
             }
         }
+      .loginTab {
+        width: 380px;
+        height: 275px;
+        p:nth-of-type(1) {
+          text-align: center;
+          font-size: 16px;
+          line-height: 40px;
+          margin-top: 100px;
+          font-weight: bold;
+        }
+        p:nth-of-type(2) {
+          text-align: center;
+          font-size: 14px;
+          font-weight: bold;
+          color: #026ab3;
+          cursor: pointer;
+        }
+      }
     }
 </style>

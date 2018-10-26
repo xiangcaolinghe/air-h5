@@ -23,7 +23,14 @@
           <el-input v-model="form.mobile" autocomplete="off" placeholder="请填写联系方式"></el-input>
         </el-form-item>
         <el-form-item label="到会日期：" :label-width="formLabelWidth">
-          <el-input v-model="form.date" autocomplete="off" placeholder="请填写到会日期"></el-input>
+          <el-input v-model="form.date" autocomplete="off" placeholder="请填写到会日期" @focus="openPick1"></el-input>
+          <mt-datetime-picker
+            ref="picker1"
+            type="date"
+            :startDate="startDate"
+            @confirm="handleConfirm1">
+          </mt-datetime-picker>
+          <!--v-model="form.date"-->
         </el-form-item>
         <el-form-item label="乘坐交通工具：" prop="resource" :label-width="formLabelWidth" class="jtgj">
           <el-radio-group v-model="form.traffic" >
@@ -35,12 +42,17 @@
           <el-input v-model="form.train" autocomplete="off" placeholder="请填写车次"></el-input>
         </el-form-item>
         <el-form-item label="时间：" :label-width="formLabelWidth">
-          <el-input v-model="form.time" autocomplete="off" placeholder="请填写时间"></el-input>
+          <el-input v-model="form.time" autocomplete="off" placeholder="请填写时间" @focus="openPick2"></el-input>
+          <mt-datetime-picker
+            ref="picker2"
+            type="datetime"
+            :startDate="startDate"
+            @confirm="handleConfirm2">
+          </mt-datetime-picker>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="dialogFormVisible = false" class="confirm">确 定</el-button>
-        <el-button @click="dialogFormVisible = false" class="cancel">取 消</el-button>
+        <el-button type="primary" @click="save" class="confirm">提 交</el-button>
       </div>
 
   </div>
@@ -48,6 +60,7 @@
 </template>
 
 <script>
+   import moment from 'moment'
     export default {
       data(){
         return{
@@ -63,11 +76,59 @@
             time: '',
             traffic:'1',
             date:'',
-            train:''
+            train:'',
           },
+          // pickerValue:'',
+          startDate:new Date(),
         }
       },
-      methods:{}
+      methods:{
+        openPick1(){
+          this.$refs.picker1.open();
+        },
+        openPick2(){
+          this.$refs.picker2.open();
+        },
+        handleConfirm1 (data) {
+          let date = moment(data).format('YYYY-MM-DD')
+          this.form.date = date
+        },
+        handleConfirm2 (data) {
+          let date = moment(data).format('YYYY-MM-DD HH:mm:ss')
+          this.form.time = date
+        },
+        save(){
+          console.log(this.form)
+          let params = {};
+          params['id'] = this.$route.query.id;
+         console.log(this.$route.query.id)
+          API.get('static/mettingDetails.json', params).then((res) => {
+            console.log(res.data)
+            if (res.status == 200) {
+              this.form = {
+                name: '',
+                  shape: '1',
+                  meeting:'',
+                  mobile:'',
+                  unit:'',
+                  time: '',
+                  traffic:'1',
+                  date:'',
+                  train:'',
+              },
+              this.$message({
+                type: 'success',
+                message: '提交成功!'
+              });
+            } else {
+              this.$message({
+                type: 'error',
+                message: '提交失败!'
+              });
+            }
+          })
+        }
+      },
     }
 </script>
 

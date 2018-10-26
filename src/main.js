@@ -6,8 +6,10 @@ import router from './router'
 import API from './config/APIHeader';
 import LocalStorageUtils from  './utils/LocalStorageUtils'
 import ElementUI from 'element-ui';
+import Mint from 'mint-ui';
 import 'element-ui/lib/theme-chalk/index.css';
 Vue.use(ElementUI);
+Vue.use(Mint);
 window.API = API;
 Vue.config.productionTip = false
 const storage = new LocalStorageUtils();
