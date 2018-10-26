@@ -3,13 +3,13 @@
         <div class="banner">
             <img src="./../../assets/images/banner.png" alt="" class="img">
         </div>
-        <div class="list-content inner-c">
-            <router-link :to="{name:'sign.detail'}" class="cell">
-                <div class="img-box"><img src="" alt="" class="img"></div>
+        <div class="list-content inner-c" >
+            <router-link :to="{path:'/sign/detail',query:{id:i.id}}" class="cell" v-for="i in meetingList" :key="i.id">
+                <div class="img-box"><img src="./../../assets/images/erwm.png" class="img"></div>
                 <div class="detail">
-                    <div class="title">董卿对自己有多狠？沉迷工作看不见儿子生病，网友：杨幂不要学</div>
-                    <div class="time"><i class="icon iconfont icon-shijian"></i>2018-08-20  10:49:45 -- 2018-08-20  10:49:59</div>
-                    <div class="address"><i class="icon iconfont icon-dingweiweizhi"></i>北京市东城区毛家湾胡同甲13号</div>
+                    <div class="title">{{i.meetingName}}</div>
+                    <div class="time"><i class="icon iconfont icon-shijian"></i>{{i.data[0]}} -- {{i.data[1]}}</div>
+                    <div class="address"><i class="icon iconfont icon-dingweiweizhi"></i>{{i.meetingPlace}}</div>
                 </div>
             </router-link>
         </div>
@@ -20,14 +20,26 @@
   export default {
     data () {
       return {
-
+        meetingList : []
       }
     },
     methods:{
+      getPage(){
+        let params1 = {};
+        params1['id'] = 123;
+        API.get('static/mettingDetails.json', params1).then((res) => {
+          console.log(res.data)
+          if (res.status == 200) {
+            this.meetingList = res.data;
+          } else {
+            console.log(res.data)
+          }
+        })
+      }
 
     },
     created() {
-
+      this.getPage();
     }
   }
 </script>
@@ -62,11 +74,9 @@
                  .img-box {
                      width:558px;
                      margin-bottom: 10px;
-                     height:357px;
                      .img {
-                         display: block;
-                         width:558px;
-                         height:357px;
+                       display: block;
+                       margin: 50px auto;
                      }
                  }
                 .detail {

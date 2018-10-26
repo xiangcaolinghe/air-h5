@@ -20,11 +20,11 @@
         </div>
         <div class="inner-c detail-table">
             <div class="info">
-                <div class="img"><img src="" alt="" class="pic"></div>
+                <div class="img"><img class="ewm pic" src="./../../assets/images/erwm.png"></div>
                 <div class="detail">
-                    <div class="title">董卿对自己有多狠？沉迷工作看不见儿子生病，网友：杨幂不要学</div>
-                    <div class="time"><i class="icon iconfont icon-shijian"></i>2018-08-20  10:49:45 -- 2018-08-20  10:49:59</div>
-                    <div class="address"><i class="icon iconfont icon-dingweiweizhi"></i>北京市东城区毛家湾胡同甲13号</div>
+                    <div class="title">{{meetingData.meetingName}}</div>
+                    <div class="time"><i class="icon iconfont icon-shijian"></i>{{meetingData.data[0]}} -- {{meetingData.data[1]}}</div>
+                    <div class="address"><i class="icon iconfont icon-dingweiweizhi"></i>{{meetingData.meetingPlace}}</div>
                     <div class="btn" @click="dialogFormVisible = true">在线报名</div>
                     <div class="wechart">
                         <img src="" alt="">
@@ -44,9 +44,7 @@
                 <a name="detail"></a>
                 <div class="tab">
                   <div class="intro">
-                      亚洲和中国是全球经济未来增长的重要引擎，亚洲中金联盟从亚洲角度纵览全球经济格局，分析投资市场新形式，发掘投资新机遇，以实现我国金融业平等协商，兼顾各方利益，反映各方诉求，携手推动更大范围、更高水平、更深层次的大开放、大交流、大融合。
-                      “中国金融峰会暨绿色金融颁奖盛典”自首届启动以来至今已成功举办了八届。历届峰会都得到了全国人大、全国政协及相关部委办领导的重视和肯定，并被给予厚望。他们希望能通过我们的活动让更多的金融机构提高树立品牌发展意识，参与社会信用体系建设，共同创造绿色生态金融环境。
-                      届时，由亚洲中金联盟、亚洲金融协会、全国商业银行联合会、中国金融诚信联盟、818绿色金融日组委会、《金融天下》杂志社等机构联合主办，以“防控金融风险—共筑创新、诚信、绿色的金融生态圈”为主题的第九届中国金融峰会暨2018年度“绿色金融”颁奖盛典将于2018年8月于上海隆重召开，相关部委领导、亚洲知名企业代表、行业专家将隆重出席，数百家主流媒体共同见证。
+                      {{meetingData.abstract}}
                   </div>
                 </div>
                 <!--主办单位-->
@@ -54,9 +52,7 @@
                 <div class="tab">
                     <div class="title">主办单位</div>
                     <ul>
-                        <li>金融科技公司</li>
-                        <li>网贷平台</li>
-                        <li>互联网金融</li>
+                      <li v-for="item in meetingData.partakeHost">{{item}}</li>
                     </ul>
                 </div>
                 <!--参会相关单位-->
@@ -64,9 +60,7 @@
                 <div class="tab">
                     <div class="title">参会相关单位</div>
                     <ul>
-                        <li>金融科技公司</li>
-                        <li>网贷平台</li>
-                        <li>互联网金融</li>
+                      <li v-for="item in meetingData.partakeCompany">{{item}}</li>
                     </ul>
                 </div>
                 <!--会议联系人-->
@@ -74,25 +68,19 @@
                 <div class="tab">
                     <div class="title">会议联系人</div>
                     <ul>
-                        <li>姓名 珍珍</li>
-                        <li>微信 Quhanguo123</li>
-                        <li>电话 13121349367</li>
+                      <li>姓名 {{meetingData.contacts}}</li>
+                      <li>微信 {{meetingData.wx}}</li>
+                      <li>电话 {{meetingData.phone}}</li>
                     </ul>
                 </div>
                 <!--会议日程-->
                 <a name="date"></a>
                 <div class="tab">
                     <div class="title">会议日程</div>
-                    <ul>
-                        <li>十二项热点议题直击当前金融业关注焦点</li>
-                        <li>1 “一行两会”监管机构改革后，监管职能如何调整</li>
-                        <li>2 防范金融风险，着力点在哪里</li>
-                        <li>3 绿色金融如何发展</li>
-                        <li>4 金融业开放新阶段面临的机遇与挑战</li>
-                        <li>5 金融科技和资本市场如何服务实体经济</li>
-                        <li>6 金融科技创新引领普惠金融发展</li>
-                        <li>7 大数据&人工智能、金融科技&监管科技</li>
-                    </ul>
+                  <div class="ql-snow" >
+                    <div class="ql-editor" v-html="meetingData.agenda"></div>
+                  </div>
+
                     <span class="upload">附件点击下载.doc</span>
                 </div>
                 <!--备注-->
@@ -156,6 +144,20 @@
         dialogTableVisible: false,
         dialogFormVisible: false,
         active:1,
+        meetingData : {
+          meetingName : '',
+          data : [],
+          meetingPlace : '',
+          abstract : '',
+          contacts : '',
+          wx : '',
+          phone : '',
+          remarks : '',
+          partakeHost : [],
+          partakeCompany : [],
+          agenda : '',
+          fileList : []
+        },
         form: {
           name: '',
           shape: '1',
@@ -173,10 +175,23 @@
     methods:{
       tabActive(id) {
         this.active = id
+      },
+      getPage(){
+        console.log(this.$route.query.id)
+        let params1 = {};
+        params1['id'] = this.$route.query.id;
+        API.get('static/mettingDetails.json', params1).then((res) => {
+          console.log(res.data)
+          if (res.status == 200) {
+            this.meetingData = res.data[0];
+          } else {
+            console.log(res.data)
+          }
+        })
       }
     },
     created() {
-
+      this.getPage()
     }
   }
 </script>
@@ -240,6 +255,13 @@
 </style>
 <style lang="less" scoped>
     @import '../../assets/styles/list.less';
+    .ewm {
+      width: 250px;
+      height: 250px;
+      display: block;
+      margin: 0 auto;
+      margin-top: 30px;
+    }
     .title_hr{
         background-color: #f8f8f8;
         height: 10px;

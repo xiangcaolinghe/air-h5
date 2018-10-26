@@ -8,7 +8,7 @@
                 <div class="news-bg"></div>
                 <div class="left">
                     <div class="tab">
-                        <div class="item" :class="{active:isActive == 1}" @click="newsTab(1)">新闻</div>
+                        <div class="item" :class="{active:isActive == 1}" @click="newsTab(1)"><span>新闻<i></i></span></div>
                         <div class="item" :class="{active:isActive == 2}" @click="newsTab(2)">动态</div>
                         <div class="item" :class="{active:isActive == 3}" @click="newsTab(3)">公告</div>
                     </div>

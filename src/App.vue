@@ -1,8 +1,8 @@
 <template>
   <div id="app">
-    <c-header v-show="!$route.meta.auth"></c-header>
+    <c-header v-show="!formShow"></c-header>
     <router-view/>
-    <c-footer v-show="!$route.meta.auth"></c-footer>
+    <c-footer v-show="!formShow"></c-footer>
   </div>
 </template>
 
@@ -12,8 +12,26 @@
 export default {
   name: 'App',
   components:{ CHeader, CFooter },
+  data () {
+    return {
+      formShow : false
+    }
+  },
+  watch:{
+    $route(to,from){
+      if(to.path == '/form'){
+        this.formShow = true
+      }else {
+        this.formShow = false
+      }
+    }
+  },
   created() {
-
+    if(this.$route.path == '/form'){
+      this.formShow = true
+    }else {
+      this.formShow = false
+    }
   }
 }
 </script>

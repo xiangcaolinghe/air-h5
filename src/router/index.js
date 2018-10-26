@@ -14,7 +14,9 @@ import DynamicDetails from '@/views/dynamic/details'
 import NoticeList from '@/views/notice/list'
 import NoticeDetails from '@/views/notice/details'
 import signUpList from '@/views/signUp/list'
+import signUpForm from '@/views/signUp/form'
 import signUpDetail from '@/views/signUp/detail'
+
 Vue.use(Router)
 
 export default new Router({
@@ -39,6 +41,11 @@ export default new Router({
       path: '/sign/detail',
       name: 'sign.detail',
       component: signUpDetail
+    },
+    {
+      path: '/form',
+      name: 'form',
+      component: signUpForm
     },
     {
       path: '/manage',
