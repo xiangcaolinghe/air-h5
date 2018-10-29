@@ -15,7 +15,7 @@
       <div v-for="(item,index) in newsList" :key="item.id" @click="newsGo(item.id)">
         <div class="news_img"><img :src="item.url" style="width: 240px;"/></div>
         <ul class="content">
-          <li class="title"><a>{{item.title}}</a></li>
+          <li class="title"><a :class="item.bs == 1 ? Red : Black">{{item.title}}</a></li>
           <li class="contents"><a>{{item.content}}</a></li>
           <li class="time">{{item.date}}</li>
           <li><br/></li>
@@ -53,6 +53,8 @@
           currentPage: 1,      //当前页
           total: 20,          //数据总条数
           pageSize: 10,        //每页显示的数据条数
+          Red : 'Red',
+          Black : 'Black'
         }
       },
       methods: {
@@ -87,4 +89,10 @@
 
 <style lang="less" scoped>
   @import '../../assets/styles/list.less';
+  .Red {
+    color: #CF2727!important; ;
+  }
+  .Black {
+    color: #0b0306!important; ;
+  }
 </style>

@@ -30,7 +30,7 @@
             <div class="shux"></div>
           </div>
           <ul class="content">
-            <li class="title"><a href="/dynamic/details">{{item.title}}</a></li>
+            <li class="title"><a href="/dynamic/details" :class="item.bs == 1 ? Red : Black">{{item.title}}</a></li>
             <li class="contents"><a href="/dynamic/details">{{item.content}}</a></li>
             <li class="time">{{item.date}}</li>
             <li><br/></li>
@@ -71,7 +71,9 @@
         month:'',
         day:'',
         week:'',
-        newsList:[]
+        newsList:[],
+        Red : 'Red',
+        Black : 'Black'
       }
     },
     methods: {
@@ -140,6 +142,13 @@
 
 <style lang="less" scoped>
   @import '../../assets/styles/list.less';
+  .Red {
+    color: #CF2727!important; ;
+  }
+  .Black {
+    color: #0b0306!important; ;
+  }
+
   .title_hr{
     background-color: #f8f8f8;
     height: 10px;

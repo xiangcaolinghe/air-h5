@@ -8,9 +8,9 @@
                 <div class="news-bg"></div>
                 <div class="left">
                     <div class="tab">
-                        <div class="item" :class="{active:isActive == 1}" @click="newsTab(1)"><span>新闻<i></i></span></div>
-                        <div class="item" :class="{active:isActive == 2}" @click="newsTab(2)">动态</div>
-                        <div class="item" :class="{active:isActive == 3}" @click="newsTab(3)">公告</div>
+                        <div class="item newst" :class="{active:isActive == 1}" @click="newsTab(1)"><span>新闻<i class="newsts"></i></span></div>
+                        <div class="item newst" :class="{active:isActive == 2}" @click="newsTab(2)">动态<i class="newsts"></i></div>
+                        <div class="item newst" :class="{active:isActive == 3}" @click="newsTab(3)">公告<i class="newsts"></i></div>
                     </div>
                     <div class="more" @click="newsList()">查看更多</div>
                     <div class="tab-content">
@@ -24,14 +24,14 @@
                         </div>
                         <div class="item common" :class="{active:isActive == 2}">
                             <div class="list" v-for="i in trendsShow" :key="i.id" @click="dynamicGo(i.id)">
-                                <div class="title">{{i.title}}</div>
+                                <div class="title" :class="i.bs == 1 ? Red : Black">{{i.title}}</div>
                                 <div class="article">{{i.content}}</div>
                                 <div class="time">发布时间：{{i.date}}</div>
                             </div>
                         </div>
                         <div class="item common" :class="{active:isActive == 3}" >
                             <div class="list" v-for="i in noticeShow" :key="i.id" @click="noticeGo(i.id)">
-                                <div class="title">{{i.title}}</div>
+                                <div class="title" :class="i.bs == 1 ? Red : Black">{{i.title}}</div>
                                 <div class="article">{{i.content}}</div>
                                 <div class="time">发布时间：{{i.date}}</div>
                             </div>
@@ -230,10 +230,6 @@
           params['userName'] = this.userName;
           API.get('static/news.json', params).then((res) => {
             if (res.status == 200) {
-              this.$message({
-                type: 'success',
-                message: '请输入验证码!'
-              });
             } else {
               console.log(res.data)
             }
@@ -266,6 +262,18 @@
                 display: block;
             }
         }
+      .newst {
+        position: relative;
+        .newsts {
+          width: 8px;
+          height: 8px;
+          background: red;
+          position: absolute;
+          left: 45px;
+          top: 20px;
+          border-radius: 4px;
+        }
+      }
         .middle-table {
             .module {
                 overflow: hidden;

@@ -27,7 +27,7 @@
                 <div class="shux"></div>
               </div>
               <ul class="content" >
-                <li class="title"><a><router-link :to="{path:'/notice/details',query:{id:i.id}}">{{i.title}}</router-link></a></li>
+                <li class="title"><a><router-link :to="{path:'/notice/details',query:{id:i.id}}" :class="i.bs == 1 ? Red : Black">{{i.title}}</router-link></a></li>
                 <li class="contents"><router-link :to="{path:'/notice/details',query:{id:i.id}}">{{i.content}}</router-link></li>
                 <li class="time">{{i.date}}</li>
                 <li><br/></li>
@@ -70,7 +70,9 @@
         week:'',
         typeList:[],
         contentList : [],
-        widthStyle:''
+        widthStyle:'',
+        Red : 'Red',
+        Black : 'Black'
       }
     },
     methods: {
@@ -176,6 +178,12 @@
 
 <style lang="less" scoped>
   @import '../../assets/styles/list.less';
+  .Red {
+    color: #CF2727!important; ;
+  }
+  .Black {
+    color: #0b0306!important; ;
+  }
   .current_banner{
     font-size: 18px;
     font-weight: bold;
