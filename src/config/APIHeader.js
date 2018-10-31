@@ -60,7 +60,7 @@ class API {
     return axios.get(uri,config);
   }
 
-  static  delete(){
+  static  delete(uri,params){
     config.params=API.sigParams(uri,params);
     config.url=uri;
     return axios.delete(uri,config);
