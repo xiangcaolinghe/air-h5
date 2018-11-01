@@ -53,8 +53,8 @@
           label="置顶"
           width="120">
           <template slot-scope="scope">
-            <el-button type="text" size="small" class="look" @click="toggleTop(scope.row.id,scope.row.status)">
-              {{scope.row.fTop == 0 ? "取消置顶" : "置顶"}}
+            <el-button type="text" size="small" class="look" @click="toggleTop(scope.row.id,scope.row.fTop)">
+              {{scope.row.fTop == 1 ? "取消置顶" : "置顶"}}
             </el-button>
           </template>
         </el-table-column>
@@ -62,10 +62,10 @@
           label="操作"
           width="250">
           <template slot-scope="scope">
-            <el-button type="text" size="small" class="release" @click="Release(scope.row.id)"
+            <el-button type="text" size="small" class="release" @click="Release(scope.row.id,scope.row.fStatus)"
                        v-show="!scope.row.fbStatus">发布
             </el-button>
-            <el-button type="text" size="small" class="release" @click="ReleaseNo(scope.row.id)"
+            <el-button type="text" size="small" class="release" @click="ReleaseNo(scope.row.id,scope.row.fStatus)"
                        v-show="scope.row.fbStatus">取消发布
             </el-button>
             <el-button type="text" size="small" class="look" @click="linkDetail(scope.row.id)">查看</el-button>
@@ -113,10 +113,9 @@
               <span class="name">缩略图：</span>
               <el-upload
                 class="avatar-uploader"
-                action="https://jsonplaceholder.typicode.com/posts/"
+                action="http://192.168.3.41:8083/newsInfo/newsFile"
                 :show-file-list="false"
-                :on-change="AddImgChange"
-                :auto-upload="false">
+                :on-success="succImgAdd">
                 <img v-if="addObject.fImgUrl" :src="addObject.fImgUrl" class="avatar">
                 <i v-else class="el-icon-plus avatar-uploader-icon"></i>
               </el-upload>
@@ -183,10 +182,9 @@
               <span class="name">缩略图：</span>
               <el-upload
                 class="avatar-uploader"
-                action="http://192.168.3.41:8083/newsInfo/newsFiles"
+                action="http://192.168.3.41:8083/newsInfo/newsFile"
                 :show-file-list="false"
-                :on-change="EditImgChange"
-                :auto-upload="false">
+                :on-success="succImgEdit">
                 <img v-if="editObject.fImgUrl" :src="editObject.fImgUrl" class="avatar">
                 <i v-else class="el-icon-plus avatar-uploader-icon"></i>
               </el-upload>
@@ -240,7 +238,7 @@
         editPop: false,
         addPop: false,
         fb: true,
-        fSystemId : 1,
+        fSystemId: 1,
         // 搜索初始化
         SearchInp: '',
         // 删除选择初始化
@@ -250,28 +248,28 @@
         addObject: {
           fTitle: '',
           fContent: '',
+          furl: '',
           fImgUrl: '',
           fAuthor: '',
           fFrom: '',
-          fEnclUrl : '',
-          fEnclName : ''
+          fEnclUrl: '',
+          fEnclName: ''
         },
         editObject: {
           fTitle: '',
           fContent: '',
+          furl: '',
           fImgUrl: '',
           fAuthor: '',
           fFrom: '',
-          fEnclUrl : '',
-          fEnclName : ''
+          fEnclUrl: '',
+          fEnclName: ''
         },
         AddfileList: [],
         EditfileList: [],
-        files:[],
-        // filesEdit:[],
         currentPage: 1,
         pageSize: 10,
-        total: 100,
+        total: 0,
         editorOption: {
           // something config
         },
@@ -280,16 +278,16 @@
     },
     computed: {},
     methods: {
-
       // 页面初始化
       getPage() {
         let params = {};
         params['page'] = this.currentPage;
         params['count'] = this.pageSize;
         API.get('/newsInfo/FindAll', params).then((res) => {
-          if (res.data.code == 200){
+          if (res.data.code == 200) {
             console.log(res.data)
             this.tableData = res.data.data;
+            this.total = res.data.count;
             for (var i = 0; i < this.tableData.length; i++) {
               if (this.tableData[i].fStatus == '1') {
                 this.tableData[i].fbStatus = true;
@@ -315,16 +313,215 @@
           console.log(res.data)
           if (res.data.code == 200) {
             this.tableData = res.data.data;
+            this.total = res.data.count;
           } else {
             console.log(res.data)
           }
         })
       },
+      // 新增
+      addOpen() {
+        this.addPop = true;
+        this.AddfileList = [];
+        this.addObject = {
+          fTitle: '',
+          fContent: '',
+          furl: '',
+          fImgUrl: '',
+          fAuthor: '',
+          fFrom: '',
+          fEnclUrl: ''
+        }
+      },
+      // 新增保存
+      addSave() {
+        // 上传数据
+        var arr = [];
+        var arr2 = [];
+        for (var i = 0; i < this.AddfileList.length; i++) {
+          if (this.AddfileList[i].response.code == '200') {
+            arr.push(this.AddfileList[i].response.data.revealImage);
+            arr2.push(this.AddfileList[i].response.data.imageName);
+          }
+        }
+        this.addObject.fEnclUrl = arr.join(',');
+        this.addObject.fEnclName = arr2.join(',');
+        let params = {};
+        params['fTitle'] = this.addObject.fTitle;
+        params['fContent'] = this.addObject.fContent;
+        params['fImgUrl'] = this.addObject.furl;
+        params['fEnclUrl'] = this.addObject.fEnclUrl;
+        params['fEnclName'] = this.addObject.fEnclName;
+        params['fAuthor'] = this.addObject.fAuthor;
+        params['fFrom'] = this.addObject.fFrom;
+        params['fSystemId'] = this.fSystemId;
+        console.log(params)
+        API.post('/newsInfo/create', params).then((res) => {
+          console.log(res.data)
+          if (res.data.code == 200) {
+            this.addPop = false;
+            this.getPage();
+            this.$message({
+              type: 'success',
+              message: '新增成功!'
+            });
+          } else {
+            this.$message({
+              type: 'error',
+              message: '新增失败!'
+            });
+          }
+        })
+      },
+      // 新增图片上传
+      succImgAdd(response, file, fileList) {
+        let fileName = file.name;
+        let regex = /(.jpg|.jpeg|.gif|.png|.bmp)$/;
+        if (regex.test(fileName.toLowerCase())) {
+          this.addObject.furl = response.data.revealImage;
+          this.addObject.fImgUrl = URL.createObjectURL(file.raw);
+        } else {
+          this.$message.error('请选择图片文件');
+        }
+      },
+      // 新增上传功能成功
+      succAdd(response, file, fileList) {
+        this.AddfileList = fileList;
+      },
+      // 新增上传功能删除
+      remAdd(file, fileList) {
+        this.AddfileList = fileList;
+      },
+      // 编辑
+      editOpen(id) {
+        this.editPop = true;
+        this.EditfileList = [];
+        this.editObject = {
+          fTitle: '',
+          fContent: '',
+          furl: '',
+          fImgUrl: '',
+          fAuthor: '',
+          fFrom: '',
+          fEnclUrl: ''
+        }
+        let params = {};
+        params['id'] = id;
+        API.get('/newsInfo/FindById', params).then((res) => {
+          console.log(res.data)
+          if (res.data.code == 200) {
+            this.editObject = res.data.data.data;
+            // this.editObject.fImgUrl = "http://img.weixinyidu.com/160403/0980ac6b.jpg";
+            // this.editObject.fImgUrl = "http://localhost:8083/plugin/image/image1541044241511.jpeg";
+            // console.log(res.data.data.data)
+            // console.log(this.editObject.fImgUrl)
+            // 上传列表
+            this.EditfileList = res.data.data.file;
+            var obj = [];
+            for (var i = 0; i < res.data.data.file.length; i++) {
+              obj.push({url: res.data.data.file[i].fenclUrl, name: res.data.data.file[i].fenclName})
+            }
+            this.EditfileList = obj;
+          } else {
+            console.log(res.data)
+          }
+        })
+      },
+      // 编辑保存
+      editSave() {
+        // 上传部分
+        var arr = [];
+        var arr2 = [];
+        for (var i = 0; i < this.EditfileList.length; i++) {
+          if (this.EditfileList[i].response && this.EditfileList[i].response.code == '200') {
+            arr.push(this.EditfileList[i].response.data.revealImage);
+            arr2.push(this.EditfileList[i].response.data.imageName);
+          } else {
+            arr.push(this.EditfileList[i].url)
+            arr2.push(this.EditfileList[i].name)
+          }
+        }
+        this.editObject.fEnclUrl = arr.join(',');
+        this.editObject.fEnclName = arr2.join(',');
+
+        let params = {};
+        params['id'] = this.editObject.id;
+        params['fTitle'] = this.editObject.fTitle;
+        params['fContent'] = this.editObject.fContent;
+        params['fImgUrl'] = this.editObject.furl;
+        params['fEnclUrl'] = this.editObject.fEnclUrl;
+        params['fEnclName'] = this.editObject.fEnclName;
+        params['fAuthor'] = this.editObject.fAuthor;
+        params['fFrom'] = this.editObject.fFrom;
+        params['fSystemId'] = this.fSystemId;
+        console.log(params)
+        API.put('/newsInfo/newsUpdate', params).then((res) => {
+          if (res.data.code == 200) {
+            this.editPop = false;
+            this.getPage();
+            this.$message({
+              type: 'success',
+              message: '编辑成功!'
+            });
+          } else {
+            this.$message({
+              type: 'error',
+              message: '编辑失败!'
+            });
+          }
+        })
+      },
+      // 编辑图片上传
+      succImgEdit(response, file, fileList) {
+        let fileName = file.name;
+        let regex = /(.jpg|.jpeg|.gif|.png|.bmp)$/;
+        if (regex.test(fileName.toLowerCase())) {
+          this.editObject.furl = response.data.revealImage;
+          this.editObject.fImgUrl = URL.createObjectURL(file.raw);
+        } else {
+          this.$message.error('请选择图片文件');
+        }
+      },
+      // 编辑上传功能成功
+      succEdit(response, file, fileList) {
+        this.EditfileList = fileList;
+      },
+      // 编辑上传功能删除
+      remEdit(file, fileList) {
+        this.EditfileList = fileList;
+      },
+      // 文件上传部分
+      handleExceed(files, fileList) {
+        this.$message.warning(`当前已有${fileList.length} 个文件，限制选择5个文件，本次选择了 ${files.length} 个文件`);
+      },
+      // 单个删除
+      del(id) {
+        this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          let params = {};
+          params['id'] = id;
+          API.delete('/newsInfo/newsDelete', params).then((res) => {
+            if (res.data.code == 200) {
+              this.getPage();
+              this.$message({
+                type: 'success',
+                message: '删除成功!'
+              });
+            } else {
+              this.$message({
+                type: 'error',
+                message: '删除失败!'
+              });
+            }
+          })
+        })
+      },
       // 选择
       handleSelectionChange(val) {
         this.multipleSelection = val;
-        console.log(this.multipleSelection)
-        //this.multipleSelection2 =  this.multipleSelection.join(',');
       },
       // 选择删除
       selectDel() {
@@ -365,232 +562,74 @@
         })
       },
       // 置顶
-      toggleTop(id, status) {
+      toggleTop(id, fTop) {
         let params = {};
         params['id'] = id;
-        API.get('/newsInfo/newsupdatetop', params).then((res) => {
-          console.log(res.data)
-          /*if (res.status == 200) {
-            this.getPage()
-          } else {
-            console.log(res.data)
-          }*/
-        })
-      },
-      // 新增
-      addOpen() {
-        this.addPop = true;
-        this.files = [];
-        this.addObject = {
-          fTitle: '',
-          fContent: '',
-          fImgUrl: '',
-          fAuthor: '',
-          fFrom: '',
-          fEnclUrl : ''
-        }
-      },
-      // 新增保存
-      addSave() {
-        console.log(this.files)
-        var arr = [];
-        var arr2 = [];
-        for(var i=0;i<this.files.length;i++){
-          if(this.files[i].response.code == '200'){
-              arr.push(this.files[i].response.data.revealImage);
-              arr2.push(this.files[i].response.data.imageName);
-          }
-        }
-        this.addObject.fEnclUrl = arr.join(',');
-        this.addObject.fEnclName = arr2.join(',');
-        let params = {};
-        params['fTitle'] = this.addObject.fTitle;
-        params['fContent'] = this.addObject.fContent;
-        // params['fImgUrl'] = this.addObject.fImgUrl;
-        params['fEnclUrl'] = this.addObject.fEnclUrl;
-        params['fEnclName'] = this.addObject.fEnclName;
-        params['fAuthor'] = this.addObject.fAuthor;
-        params['fFrom'] = this.addObject.fFrom;
-        params['fSystemId'] = this.fSystemId;
+        params['fTop'] = fTop;
         console.log(params)
-        API.post('/newsInfo/create', params).then((res) => {
+        API.post('/newsInfo/newsupdatetop', params).then((res) => {
           console.log(res.data)
           if (res.data.code == 200) {
-            this.addPop = false;
-            this.getPage();
-            this.$message({
-              type: 'success',
-              message: '新增成功!'
-            });
+            this.getPage()
           } else {
             this.$message({
               type: 'error',
-              message: '新增失败!'
+              message: '置顶失败!'
             });
           }
         })
       },
-      // 新增上传成功
-      succAdd(response, file, fileList){
-        this.files = fileList;
-        console.log(fileList)
+      //发布
+      Release(id, fStatus) {
+        let params = {};
+        params['id'] = id;
+        params['fStatus'] = fStatus;
+        console.log(params)
+        API.post('/newsInfo/newsrelease', params).then((res) => {
+          console.log(res.data)
+          if (res.data.code == 200) {
+            this.getPage()
+          } else {
+            this.$message({
+              type: 'error',
+              message: '发布失败!'
+            });
+          }
+        })
       },
-      // 新增上传删除
-      remAdd(file, fileList){
-        this.files = fileList;
-        console.log(fileList)
+      // 取消发布
+      ReleaseNo(id, fStatus) {
+        let params = {};
+        params['id'] = id;
+        params['fStatus'] = fStatus;
+        console.log(params)
+        API.post('/newsInfo/newsrelease', params).then((res) => {
+          console.log(res.data)
+          if (res.data.code == 200) {
+            this.getPage()
+          } else {
+            this.$message({
+              type: 'error',
+              message: '取消发布失败!'
+            });
+          }
+        })
       },
       // 查看
       linkDetail(id) {
         this.$router.push({name: 'backstage.news.detail', query: {id: id}})
       },
-
-      // 编辑
-      editOpen(id) {
-        this.editPop = true;
-        this.EditfileList = [];
-        this.editObject = {
-          fTitle: '',
-          fContent: '',
-          fImgUrl: '',
-          fAuthor: '',
-          fFrom: '',
-          fEnclUrl : ''
-        }
-        let params = {};
-        params['id'] = id;
-        API.get('/newsInfo/FindById', params).then((res) => {
-          console.log(res.data)
-          if (res.data.code == 200) {
-            this.editObject = res.data.data.data;
-            this.EditfileList = res.data.data.file;
-            var obj = [];
-            for(var i=0;i<res.data.data.file.length;i++){
-              obj.push({url:res.data.data.file[i].fenclUrl,name:res.data.data.file[i].fenclName})
-            }
-            this.EditfileList = obj;
-          } else {
-            console.log(res.data)
-          }
-        })
-      },
-      // 编辑保存
-      editSave() {
-        var arr = [];
-        var arr2 = [];
-        console.log(this.EditfileList)
-        for(var i=0;i<this.EditfileList.length;i++){
-          if(this.EditfileList[i].response && this.EditfileList[i].response.code == '200') {
-            arr.push(this.EditfileList[i].response.data.revealImage);
-            arr2.push(this.EditfileList[i].response.data.imageName);
-          }else {
-            arr.push(this.EditfileList[i].url)
-            arr2.push(this.EditfileList[i].name)
-          }
-        }
-        this.editObject.fEnclUrl = arr.join(',');
-        this.editObject.fEnclName = arr2.join(',');
-
-        let params = {};
-        params['id'] = this.editObject.id;
-        params['fTitle'] = this.editObject.fTitle;
-        params['fContent'] = this.editObject.fContent;
-        // params['fImgUrl'] = this.editObject.fImgUrl;
-        params['fEnclUrl'] = this.editObject.fEnclUrl;
-        params['fEnclName'] = this.editObject.fEnclName;
-        params['fAuthor'] = this.editObject.fAuthor;
-        params['fFrom'] = this.editObject.fFrom;
-        params['fSystemId'] = this.fSystemId;
-        console.log(params)
-        API.put('/newsInfo/newsUpdate', params).then((res) => {
-          if (res.data.code == 200) {
-            this.editPop = false;
-            this.getPage();
-            this.$message({
-              type: 'success',
-              message: '编辑成功!'
-            });
-          } else {
-            this.$message({
-              type: 'error',
-              message: '编辑失败!'
-            });
-          }
-        })
-      },
-      // 编辑上传成功
-      succEdit(response, file, fileList){
-        this.EditfileList = fileList;
-        console.log(fileList)
-      },
-      // 编辑上传删除
-      remEdit(file, fileList){
-        this.EditfileList = fileList;
-        console.log(fileList)
-      },
-      // 单个删除
-      del(id) {
-        this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning'
-        }).then(() => {
-          let params = {};
-          params['id'] = id;
-          console.log(params)
-          API.delete('/newsInfo/newsDelete', params).then((res) => {
-            console.log(res.data)
-            if (res.data.code == 200) {
-              this.getPage();
-              this.$message({
-                type: 'success',
-                message: '删除成功!'
-              });
-            } else {
-              this.$message({
-                type: 'error',
-                message: '删除失败!'
-              });
-            }
-          })
-        })
-      },
-      //发布
-      Release(id) {
-      },
-      // 取消发布
-      ReleaseNo(id) {
-      },
       // 翻页器：当前页，同时上一页下一页也能获取当前页
       handleCurrentChange(val) {
+        this.currentPage = val;
+        this.getPage()
         console.log(val);
       },
       // 翻页器：选择10条还是20条、
       handleSizeChange(val) {
+        this.pageSize = val;
+        this.getPage()
         console.log(val);
-      },
-      // 文件上传部分
-      handleExceed(files, fileList) {
-        this.$message.warning(`当前已有${fileList.length} 个文件，限制选择5个文件，本次选择了 ${files.length} 个文件`);
-      },
-      // 缩略图上传部分
-      AddImgChange(file, fileList) {
-        let fileName = file.name;
-        let regex = /(.jpg|.jpeg|.gif|.png|.bmp)$/;
-        if (regex.test(fileName.toLowerCase())) {
-          this.addObject.fImgUrl = URL.createObjectURL(file.raw);
-        } else {
-          this.$message.error('请选择图片文件');
-        }
-      },
-      EditImgChange(file, fileList) {
-        let fileName = file.name;
-        let regex = /(.jpg|.jpeg|.gif|.png|.bmp)$/;
-        if (regex.test(fileName.toLowerCase())) {
-          this.editObject.fImgUrl = URL.createObjectURL(file.raw);
-        } else {
-          this.$message.error('请选择图片文件');
-        }
       },
       // 编辑器
       onEditorChange({editor, html, text}) {
