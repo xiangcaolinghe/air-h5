@@ -10,7 +10,7 @@
           <el-option
             v-for="item in options"
             :key="item.id"
-            :label="item.label"
+            :label="item.iName"
             :value="item.id">
           </el-option>
         </el-select>
@@ -39,12 +39,12 @@
           class="column">
         </el-table-column>
         <el-table-column
-          prop="title"
+          prop="nTitle"
           label="标题"
           :show-overflow-tooltip="true">
         </el-table-column>
         <el-table-column
-          prop="classify"
+          prop="iId"
           label="分类"
           width="100">
           <!--<template slot-scope="scope">
@@ -52,17 +52,17 @@
           </template>-->
         </el-table-column>
         <el-table-column
-          prop="releaseDate"
+          prop="nCreateTime"
           label="创建时间"
           width="120">
         </el-table-column>
         <el-table-column
-          prop="name"
+          prop="uname"
           label="创建者"
           width="100">
         </el-table-column>
         <el-table-column
-          prop="releaseDate"
+          prop="nReleaseTime"
           label="发布时间"
           width="120">
         </el-table-column>
@@ -71,8 +71,8 @@
           label="置顶"
           width="100">
           <template slot-scope="scope">
-            <el-button type="text" size="small" class="look" @click="toggleTop(scope.row.id,scope.row.status)">
-              {{scope.row.status == 0 ? "取消置顶" : "置顶"}}
+            <el-button type="text" size="small" class="look" @click="toggleTop(scope.row.id,scope.row.nTop)">
+              {{scope.row.nTop == 1 ? "取消置顶" : "置顶"}}
             </el-button>
           </template>
         </el-table-column>
@@ -80,10 +80,10 @@
           label="操作"
           width="300">
           <template slot-scope="scope">
-            <el-button type="text" size="small" class="release" @click="Release(scope.row.id)"
+            <el-button type="text" size="small" class="release" @click="Release(scope.row.id,scope.row.nStatus)"
                        v-show="!scope.row.fbStatus">发布
             </el-button>
-            <el-button type="text" size="small" class="release" @click="ReleaseNo(scope.row.id)"
+            <el-button type="text" size="small" class="release" @click="ReleaseNo(scope.row.id,scope.row.nStatus)"
                        v-show="scope.row.fbStatus">取消发布
             </el-button>
             <el-button type="text" size="small" class="look" @click="linkDetail(scope.row.id)">查看</el-button>
@@ -106,7 +106,6 @@
       </el-pagination>
     </div>
     <!--短信提醒弹框-->
-
     <el-dialog title="短信提醒" :visible.sync="tipPop" class="tip-dialog footer-top" :close-on-click-modal="false">
       <el-dialog
         title="模板"
@@ -170,15 +169,15 @@
       <div class="content">
         <div class="cell">
           <span class="name">标题：</span>
-          <el-input v-model="addObject.title" placeholder="请输入内容" class="flew-input"></el-input>
+          <el-input v-model="addObject.nTitle" placeholder="请输入内容" class="flew-input"></el-input>
         </div>
         <div class="cell">
           <span class="name">分类：</span>
-          <el-select v-model="addObject.classify" placeholder="请选择活动区域" class="flew-input">
+          <el-select v-model="addObject.iId" placeholder="请选择活动区域" class="flew-input">
             <el-option
               v-for="item in options"
               :key="item.id"
-              :label="item.label"
+              :label="item.iName"
               :value="item.id"></el-option>
           </el-select>
         </div>
@@ -186,13 +185,13 @@
           <el-col :span="11">
             <div class="cell">
               <span class="name">作者：</span>
-              <el-input v-model="addObject.author" placeholder="请输入内容" class="flew-input"></el-input>
+              <el-input v-model="addObject.nAuthor" placeholder="请输入内容" class="flew-input"></el-input>
             </div>
           </el-col>
           <el-col :span="11" :offset="2">
             <div class="cell">
               <span class="name">来源：</span>
-              <el-input v-model="addObject.source" placeholder="请输入内容" class="flew-input"></el-input>
+              <el-input v-model="addObject.nFrom" placeholder="请输入内容" class="flew-input"></el-input>
             </div>
           </el-col>
         </el-row>
@@ -202,11 +201,10 @@
               <span class="name">缩略图：</span>
               <el-upload
                 class="avatar-uploader"
-                action="https://jsonplaceholder.typicode.com/posts/"
+                action="http://192.168.3.41:8083/newsInfo/newsFile"
                 :show-file-list="false"
-                :on-change="AddImgChange"
-                :auto-upload="false">
-                <img v-if="addObject.url" :src="addObject.url" class="avatar">
+                :on-success="succImgAdd">
+                <img v-if="addObject.nImgUrl" :src="addObject.nImgUrl" class="avatar">
                 <i v-else class="el-icon-plus avatar-uploader-icon"></i>
               </el-upload>
             </div>
@@ -217,8 +215,14 @@
               <el-upload
                 ref="Addupload"
                 class="upload-demo"
-                action="https://jsonplaceholder.typicode.com/posts/"
-                :file-list="AddfileList" :auto-upload="false" :multiple="true" :limit="5" :on-exceed="handleExceed">
+                action="http://192.168.3.41:8083/newsInfo/newsFiles"
+                :file-list="AddfileList"
+                :auto-upload="true"
+                :multiple="true"
+                :limit="5"
+                :on-exceed="handleExceed"
+                :on-success="succAdd"
+                :on-remove="remAdd">
                 <el-button size="small" type="primary" slot="trigger">选择文件</el-button>
                 <!--<div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>-->
               </el-upload>
@@ -228,7 +232,7 @@
         <div class="cell">
           <span class="name">内容：</span>
           <quill-editor ref="myTextEditor"
-                        v-model="addObject.content"
+                        v-model="addObject.nContent"
                         :config="editorOption"
                         @change="onAddChange($event)">
           </quill-editor>
@@ -244,15 +248,15 @@
       <div class="content">
         <div class="cell">
           <span class="name">标题：</span>
-          <el-input v-model="editObject.title" placeholder="请输入内容" class="flew-input"></el-input>
+          <el-input v-model="editObject.nTitle" placeholder="请输入内容" class="flew-input"></el-input>
         </div>
         <div class="cell">
           <span class="name">分类：</span>
-          <el-select v-model="editObject.classify" placeholder="请选择活动区域" class="flew-input">
+          <el-select v-model="editObject.iId" placeholder="请选择活动区域" class="flew-input">
             <el-option
               v-for="item in options"
               :key="item.id"
-              :label="item.label"
+              :label="item.iName"
               :value="item.id"></el-option>
           </el-select>
         </div>
@@ -260,13 +264,13 @@
           <el-col :span="11">
             <div class="cell">
               <span class="name">作者：</span>
-              <el-input v-model="editObject.author" placeholder="请输入内容" class="flew-input"></el-input>
+              <el-input v-model="editObject.nAuthor" placeholder="请输入内容" class="flew-input"></el-input>
             </div>
           </el-col>
           <el-col :span="11" :offset="2">
             <div class="cell">
               <span class="name">来源：</span>
-              <el-input v-model="editObject.source" placeholder="请输入内容" class="flew-input"></el-input>
+              <el-input v-model="editObject.nFrom" placeholder="请输入内容" class="flew-input"></el-input>
             </div>
           </el-col>
         </el-row>
@@ -276,11 +280,10 @@
               <span class="name">缩略图：</span>
               <el-upload
                 class="avatar-uploader"
-                action="https://jsonplaceholder.typicode.com/posts/"
+                action="http://192.168.3.41:8083/newsInfo/newsFile"
                 :show-file-list="false"
-                :on-change="EditImgChange"
-                :auto-upload="false">
-                <img v-if="editObject.url" :src="editObject.url" class="avatar">
+                :on-success="succImgEdit">
+                <img v-if="editObject.nImgUrl" :src="editObject.nImgUrl" class="avatar">
                 <i v-else class="el-icon-plus avatar-uploader-icon"></i>
               </el-upload>
             </div>
@@ -291,8 +294,13 @@
               <el-upload
                 ref="Editupload"
                 class="upload-demo"
-                action="https://jsonplaceholder.typicode.com/posts/"
-                :file-list="EditfileList" :auto-upload="false" :multiple="true" :limit="5" :on-exceed="handleExceed">
+                action="http://192.168.3.41:8083/newsInfo/newsFiles"
+                :file-list="EditfileList"
+                :multiple="true"
+                :limit="5"
+                :on-exceed="handleExceed"
+                :on-success="succEdit"
+                :on-remove="remEdit">
                 <el-button size="small" type="primary" slot="trigger">选择文件</el-button>
                 <!--<div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>-->
               </el-upload>
@@ -302,7 +310,7 @@
         <div class="cell">
           <span class="name">内容：</span>
           <quill-editor ref="myTextEditor"
-                        v-model="editObject.content"
+                        v-model="editObject.nContent"
                         :config="editorOption"
                         @change="onEditorChange($event)">
           </quill-editor>
@@ -330,6 +338,7 @@
         tipPop: false,
         innerTipPop: false,
         dialogVisible: false,
+        nSystemId : 1,
         // 搜索部分初始化
         SearchInp: '',
         SearchValue: '',
@@ -338,6 +347,7 @@
         // 删除选择初始化
         multipleSelection: [],
         activeTableDataId: [],
+        activeTableDataId2: '',
 
         messAge: '',
         msgList: [],
@@ -361,26 +371,32 @@
         }],
         userList: [],
         addObject: {
-          title: '',
-          content: '',
-          url: '',
-          author: '',
-          source: '',
-          classify: ''
+          nTitle: '',
+          nImgUrl : '',
+          nurl : '',
+          nEnclUrl : '',
+          nEnclName : '',
+          nContent: '',
+          nAuthor: '',
+          nFrom: '',
+          iId: ''
         },
         editObject: {
-          title: '',
-          content: '',
-          url: '',
-          author: '',
-          source: '',
-          classify: ''
+          nTitle: '',
+          nImgUrl : '',
+          nurl : '',
+          nEnclUrl : '',
+          nEnclName : '',
+          nContent: '',
+          nAuthor: '',
+          nFrom: '',
+          iId: ''
         },
         AddfileList: [],
         EditfileList: [],
         currentPage: 1,
         pageSize: 10,
-        total: 100,
+        total: 0,
         editorOption: {
           // something config
         },
@@ -394,55 +410,42 @@
 //      }
     },
     methods: {
-
-      // 搜索
-      search() {
-        console.log(this.SearchInp)
-        console.log(this.SearchValue)
-      },
-      //分类
-      classify() {
-        let params = {};
-        API.get('static/notListSelect.json', params).then((res) => {
-          if (res.status == 200) {
-            console.log(res.data)
-            this.options = res.data;
-          } else {
-            console.log(res.data)
-          }
-        })
-      },
-      // 页面初始化
+// 页面初始化
       getPage() {
         let params = {};
-        API.get('static/notList.json', params).then((res) => {
-          if (res.status == 200) {
+        params['page'] = this.currentPage;
+        params['count'] = this.pageSize;
+        API.get('/notice/FindAll', params).then((res) => {
+          if (res.data.code == 200) {
             console.log(res.data)
-            this.tableData = res.data;
+            this.tableData = res.data.data;
+            this.total = res.data.count;
             for (var i = 0; i < this.tableData.length; i++) {
-              if (this.tableData[i].fb == '1') {
+              if (this.tableData[i].nStatus == '1') {
                 this.tableData[i].fbStatus = true;
               } else {
                 this.tableData[i].fbStatus = false;
               }
             }
-            console.log(this.tableData)
-            this.currentPage = 4
           } else {
             console.log(res.data)
           }
         })
       },
-      // 置顶
-      toggleTop(id, status) {
-        console.log(id)
-        console.log(status)
+      // 搜索
+      search() {
+        console.log(this.SearchInp)
         let params = {};
-        params['id'] = id;
-        params['status'] = status;
-        API.get('static/notList.json', params).then((res) => {
-          if (res.status == 200) {
-            this.getPage()
+        params['title'] = this.SearchInp;
+        params['iId'] = this.SearchValue;
+        params['page'] = this.currentPage;
+        params['count'] = this.pageSize;
+        console.log(params)
+        API.get('/notice/FindBytitle', params).then((res) => {
+          console.log(res.data)
+          if (res.data.code == 200) {
+            this.tableData = res.data.data;
+            this.total = res.data.count;
           } else {
             console.log(res.data)
           }
@@ -451,28 +454,46 @@
       //新增
       addOpen() {
         this.addPop = true;
+        this.AddfileList = [];
         this.addObject = {
-          title: '',
-          content: '',
-          url: '',
-          author: '',
-          source: '',
-          classify: ''
+          nTitle: '',
+          nImgUrl : '',
+          nurl : '',
+          nEnclUrl : '',
+          nEnclName : '',
+          nContent: '',
+          nAuthor: '',
+          nFrom: '',
+          iId: ''
         }
       },
       // 新增保存
       addSave() {
-        this.$refs.Addupload.submit();
-        console.log(this.addObject)
+        // 上传数据
+        var arr = [];
+        var arr2 = [];
+        for (var i = 0; i < this.AddfileList.length; i++) {
+          if (this.AddfileList[i].response.code == '200') {
+            arr.push(this.AddfileList[i].response.data.revealImage);
+            arr2.push(this.AddfileList[i].response.data.imageName);
+          }
+        }
+        this.addObject.nEnclUrl = arr.join(',');
+        this.addObject.nEnclName = arr2.join(',');
         let params = {};
-        params['title'] = this.addObject.title;
-        params['content'] = this.addObject.content;
-        params['url'] = this.addObject.url;
-        params['author'] = this.addObject.author;
-        params['source'] = this.addObject.source;
-        params['classify'] = this.addObject.classify;
-        API.get('static/list.json', params).then((res) => {
-          if (res.status == 200) {
+        params['nTitle'] = this.addObject.nTitle;
+        params['nContent'] = this.addObject.nContent;
+        params['nImgUrl'] = this.addObject.nurl;
+        params['nAuthor'] = this.addObject.nAuthor;
+        params['nFrom'] = this.addObject.nFrom;
+        params['nEnclUrl'] = this.addObject.nEnclUrl;
+        params['nEnclName'] = this.addObject.nEnclName;
+        params['iId'] = this.addObject.iId;
+        params['nSystemId'] = this.nSystemId;
+        console.log(params)
+        API.post('/notice/create', params).then((res) => {
+          console.log(res.data)
+          if (res.data.code == 200) {
             this.addPop = false;
             this.getPage();
             this.$message({
@@ -487,18 +508,54 @@
           }
         })
       },
+      // 新增图片上传
+      succImgAdd(response, file, fileList) {
+        let fileName = file.name;
+        let regex = /(.jpg|.jpeg|.gif|.png|.bmp)$/;
+        if (regex.test(fileName.toLowerCase())) {
+          this.addObject.nurl = response.data.revealImage;
+          this.addObject.nImgUrl = URL.createObjectURL(file.raw);
+        } else {
+          this.$message.error('请选择图片文件');
+        }
+      },
+      // 新增上传功能成功
+      succAdd(response, file, fileList) {
+        this.AddfileList = fileList;
+      },
+      // 新增上传功能删除
+      remAdd(file, fileList) {
+        this.AddfileList = fileList;
+      },
       // 编辑
       editOpen(id) {
-        this.editPop = true
+        this.editPop = true;
+        this.EditfileList = [];
+        this.editObject = {
+          nTitle: '',
+          nImgUrl: '',
+          nurl: '',
+          nEnclUrl: '',
+          nEnclName: '',
+          nContent: '',
+          nAuthor: '',
+          nFrom: '',
+          iId: ''
+        }
         let params = {};
         params['id'] = id;
-        API.get('static/edit.json', params).then((res) => {
+        API.get('/notice/FindById', params).then((res) => {
           console.log(res.data)
-          if (res.status == 200) {
-            console.log(res.data[0])
-            // this.editObject.title = '12345'
-            this.editObject = res.data[0];
-            this.EditfileList = res.data[0].fileList;
+          if (res.data.code == 200) {
+            this.editObject = res.data.data.data;
+            this.editObject.nurl = this.editObject.nImgUrl;
+            // 上传列表
+            this.EditfileList = res.data.data.file;
+            var obj = [];
+            for (var i = 0; i < res.data.data.file.length; i++) {
+              obj.push({url: res.data.data.file[i].fenclUrl, name: res.data.data.file[i].fenclName})
+            }
+            this.EditfileList = obj;
           } else {
             console.log(res.data)
           }
@@ -506,18 +563,36 @@
       },
       // 编辑保存
       editSave() {
-        this.$refs.Editupload.submit();
-        console.log(this.editObject)
+        // 上传部分
+        var arr = [];
+        var arr2 = [];
+        for (var i = 0; i < this.EditfileList.length; i++) {
+          if (this.EditfileList[i].response && this.EditfileList[i].response.code == '200') {
+            arr.push(this.EditfileList[i].response.data.revealImage);
+            arr2.push(this.EditfileList[i].response.data.imageName);
+          } else {
+            arr.push(this.EditfileList[i].url)
+            arr2.push(this.EditfileList[i].name)
+          }
+        }
+        this.editObject.nEnclUrl = arr.join(',');
+        this.editObject.nEnclName = arr2.join(',');
+
+        console.log(this.editObject.nurl)
         let params = {};
         params['id'] = this.editObject.id;
-        params['title'] = this.editObject.title;
-        params['content'] = this.editObject.content;
-        params['url'] = this.editObject.url;
-        params['author'] = this.editObject.author;
-        params['source'] = this.editObject.source;
-        params['classify'] = this.editObject.classify;
-        API.get('static/list.json', params).then((res) => {
-          if (res.status == 200) {
+        params['nTitle'] = this.editObject.nTitle;
+        params['nContent'] = this.editObject.nContent;
+        params['nImgUrl'] = this.editObject.nurl;
+        params['nAuthor'] = this.editObject.nAuthor;
+        params['nFrom'] = this.editObject.nFrom;
+        params['nEnclUrl'] = this.editObject.nEnclUrl;
+        params['nEnclName'] = this.editObject.nEnclName;
+        params['iId'] = this.editObject.iId;
+        params['nSystemId'] = this.nSystemId;
+        console.log(params)
+        API.put('/notice/noticeUpdate', params).then((res) => {
+          if (res.data.code == 200) {
             this.editPop = false;
             this.getPage();
             this.$message({
@@ -532,6 +607,29 @@
           }
         })
       },
+      // 编辑图片上传
+      succImgEdit(response, file, fileList) {
+        let fileName = file.name;
+        let regex = /(.jpg|.jpeg|.gif|.png|.bmp)$/;
+        if (regex.test(fileName.toLowerCase())) {
+          this.editObject.nurl = response.data.revealImage;
+          this.editObject.nImgUrl = URL.createObjectURL(file.raw);
+        } else {
+          this.$message.error('请选择图片文件');
+        }
+      },
+      // 编辑上传功能成功
+      succEdit(response, file, fileList) {
+        this.EditfileList = fileList;
+      },
+      // 编辑上传功能删除
+      remEdit(file, fileList) {
+        this.EditfileList = fileList;
+      },
+      // 文件上传部分
+      handleExceed(files, fileList) {
+        this.$message.warning(`当前已有${fileList.length} 个文件，限制选择5个文件，本次选择了 ${files.length} 个文件`);
+      },
       // 单个删除
       del(id) {
         this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
@@ -541,69 +639,13 @@
         }).then(() => {
           let params = {};
           params['id'] = id;
-          /*this.tableData = this.tableData.filter(ele => {
-            return ele.id != id;
-          })*/
-          API.get('static/list.json', params).then((res) => {
-            if (res.status == 200) {
+          API.delete('/notice/noticeDelete', params).then((res) => {
+            if (res.data.code == 200) {
               this.getPage();
               this.$message({
                 type: 'success',
                 message: '删除成功!'
               });
-            } else {
-              this.$message({
-                type: 'error',
-                message: '删除失败!'
-              });
-            }
-          })
-        }).catch(() => {
-          this.$message({
-            type: 'info',
-            message: '已取消删除'
-          });
-        });
-      },
-      //发布
-      Release(id) {
-      },
-      // 取消发布
-      ReleaseNo(id) {
-      },
-      // 选择删除
-      selectDel() {
-        if (this.multipleSelection.length == 0) {
-          this.$message({
-            type: 'info',
-            message: '请选择需要删除的数据'
-          });
-          return
-        }
-        this.multipleSelection.forEach(ele => {
-          this.activeTableDataId.push({'id': ele.id})
-        })
-        this.$confirm('您确定要删除这' + this.multipleSelection.length + '条数据吗?', '提示', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning'
-        }).then(() => {
-          /*Array.from(this.activeTableDataId).forEach(element => {
-            this.tableData = this.tableData.filter(ele => {
-              console.log(ele.id != element.id)
-              return ele.id != element.id;
-            })
-          })*/
-          let params = {};
-          params['idlist'] = this.activeTableDataId;
-          API.get('static/edit.json', params).then((res) => {
-            console.log(res)
-            if (res.status == 200) {
-              this.$message({
-                type: 'success',
-                message: '删除成功!'
-              });
-              this.getPage();
             } else {
               this.$message({
                 type: 'error',
@@ -617,6 +659,111 @@
       handleSelectionChange(val) {
         this.multipleSelection = val;
       },
+      // 选择删除
+      selectDel() {
+        if (this.multipleSelection.length == 0) {
+          this.$message({
+            type: 'info',
+            message: '请选择需要删除的数据'
+          });
+          return
+        }
+        this.multipleSelection.forEach(ele => {
+          this.activeTableDataId.push(ele.id)
+        })
+        this.activeTableDataId2 = this.activeTableDataId.join(',');
+        this.$confirm('您确定要删除这' + this.multipleSelection.length + '条数据吗?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          let params = {};
+          params['id'] = this.activeTableDataId2;
+          API.delete('/notice/noticeDelete', params).then((res) => {
+            console.log(res.data)
+            if (res.data.code == 200) {
+              this.$message({
+                type: 'success',
+                message: '删除成功!'
+              });
+              this.getPage();
+            } else {
+              this.$message({
+                type: 'error',
+                message: '删除失败!'
+              });
+            }
+          })
+        })
+      },
+      // 置顶
+      toggleTop(id, nTop) {
+        let params = {};
+        params['id'] = id;
+        params['nTop'] = nTop;
+        console.log(params)
+        API.post('/notice/noticeupdatetop', params).then((res) => {
+          console.log(res.data)
+          if (res.data.code == 200) {
+            this.getPage()
+          } else {
+            this.$message({
+              type: 'error',
+              message: '置顶失败!'
+            });
+          }
+        })
+      },
+      //发布
+      Release(id,nStatus) {
+        let params = {};
+        params['id'] = id;
+        params['nStatus'] = nStatus;
+        console.log(params)
+        API.post('/notice/noticerelease', params).then((res) => {
+          console.log(res.data)
+          if (res.data.code == 200) {
+            this.getPage()
+          } else {
+            this.$message({
+              type: 'error',
+              message: '发布失败!'
+            });
+          }
+        })
+      },
+      // 取消发布
+      ReleaseNo(id,nStatus) {
+        let params = {};
+        params['id'] = id;
+        params['nStatus'] = nStatus;
+        console.log(params)
+        API.post('/notice/noticerelease', params).then((res) => {
+          console.log(res.data)
+          if (res.data.code == 200) {
+            this.getPage()
+          } else {
+            this.$message({
+              type: 'error',
+              message: '取消发布失败!'
+            });
+          }
+        })
+      },
+      //分类
+      classify() {
+        let params = {};
+        API.get('/ification/FindAll', params).then((res) => {
+          if(res.data.code == 200){
+            this.options = res.data.data;
+          }
+          console.log(this.options)
+        })
+      },
+
+
+
+
       // 短信提醒
       tip(id) {
         this.tipPop = true
@@ -662,38 +809,17 @@
       linkDetail(id) {
         this.$router.push({name: 'backstage.notice.detail', query: {id: id}})
       },
-
-
       // 翻页器：当前页，同时上一页下一页也能获取当前页
       handleCurrentChange(val) {
         console.log(val);
+        this.currentPage = val;
+        this.getPage()
       },
       // 翻页器：选择10条还是20条、
       handleSizeChange(val) {
         console.log(val);
-      },
-      // 文件上传部分
-      handleExceed(files, fileList) {
-        this.$message.warning(`当前已有${fileList.length} 个文件，限制选择5个文件，本次选择了 ${files.length} 个文件`);
-      },
-      // 缩略图上传部分
-      AddImgChange(file, fileList) {
-        let fileName = file.name;
-        let regex = /(.jpg|.jpeg|.gif|.png|.bmp)$/;
-        if (regex.test(fileName.toLowerCase())) {
-          this.addObject.url = URL.createObjectURL(file.raw);
-        } else {
-          this.$message.error('请选择图片文件');
-        }
-      },
-      EditImgChange(file, fileList) {
-        let fileName = file.name;
-        let regex = /(.jpg|.jpeg|.gif|.png|.bmp)$/;
-        if (regex.test(fileName.toLowerCase())) {
-          this.editObject.url = URL.createObjectURL(file.raw);
-        } else {
-          this.$message.error('请选择图片文件');
-        }
+        this.pageSize = val;
+        this.getPage()
       },
       // 编辑器
       onEditorChange({editor, html, text}) {

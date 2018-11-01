@@ -328,6 +328,7 @@
           fContent: '',
           furl: '',
           fImgUrl: '',
+          fEnclName : '',
           fAuthor: '',
           fFrom: '',
           fEnclUrl: ''
@@ -401,6 +402,7 @@
           fContent: '',
           furl: '',
           fImgUrl: '',
+          fEnclName : '',
           fAuthor: '',
           fFrom: '',
           fEnclUrl: ''
@@ -411,10 +413,7 @@
           console.log(res.data)
           if (res.data.code == 200) {
             this.editObject = res.data.data.data;
-            // this.editObject.fImgUrl = "http://img.weixinyidu.com/160403/0980ac6b.jpg";
-            // this.editObject.fImgUrl = "http://localhost:8083/plugin/image/image1541044241511.jpeg";
-            // console.log(res.data.data.data)
-            // console.log(this.editObject.fImgUrl)
+            this.editObject.furl = this.editObject.fImgUrl;
             // 上传列表
             this.EditfileList = res.data.data.file;
             var obj = [];
@@ -543,7 +542,6 @@
         }).then(() => {
           let params = {};
           params['id'] = this.activeTableDataId2;
-          console.log(params)
           API.delete('/newsInfo/newsDelete', params).then((res) => {
             console.log(res.data)
             if (res.data.code == 200) {
