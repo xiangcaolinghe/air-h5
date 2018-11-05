@@ -24,16 +24,11 @@
           class="column">
         </el-table-column>
         <el-table-column
-          prop="label"
+          prop="iName"
           label="分类名称">
         </el-table-column>
         <el-table-column
-          prop="name"
-          label="创建者"
-          width="120">
-        </el-table-column>
-        <el-table-column
-          prop="date"
+          prop="iCreateTime"
           label="创建时间"
           width="120">
         </el-table-column>
@@ -52,7 +47,7 @@
       <div class="content">
         <div class="cell">
           <span class="name">分类：</span>
-          <el-input v-model="addObject.label" placeholder="请输入内容" class="flew-input"></el-input>
+          <el-input v-model="addObject.iName" placeholder="请输入内容" class="flew-input"></el-input>
         </div>
       </div>
       <div slot="footer" class="dialog-footer">
@@ -65,7 +60,7 @@
       <div class="content">
         <div class="cell">
           <span class="name">分类：</span>
-          <el-input v-model="editObject.label" placeholder="请输入内容" class="flew-input"></el-input>
+          <el-input v-model="editObject.iName" placeholder="请输入内容" class="flew-input"></el-input>
         </div>
       </div>
       <div slot="footer" class="dialog-footer">
@@ -87,14 +82,16 @@
         loading: false,
         editPop: false,
         addPop: false,
+        iSystemId : 1,
         // 删除选择初始化
         multipleSelection: [],
         activeTableDataId: [],
+        activeTableDataId2: '',
         addObject: {
-          label: '',
+          iName: '',
         },
         editObject: {
-          label: '',
+          iName: '',
         },
         tableData: []
       }
@@ -104,76 +101,31 @@
       // 页面初始化
       getPage() {
         let params = {};
-        API.get('static/classify.json', params).then((res) => {
-          if (res.status == 200) {
+        API.get('/ification/FindAll', params).then((res) => {
+          if (res.data.code == 200) {
             console.log(res.data)
-            this.tableData = res.data;
+            this.tableData = res.data.data;
           } else {
             console.log(res.data)
           }
-        })
-      },
-      // 选择
-      handleSelectionChange(val) {
-        this.multipleSelection = val;
-        console.log(this.multipleSelection)
-      },
-      // 选择删除
-      selectDel() {
-        if (this.multipleSelection.length == 0) {
-          this.$message({
-            type: 'info',
-            message: '请选择需要删除的数据'
-          });
-          return
-        }
-        this.multipleSelection.forEach(ele => {
-          this.activeTableDataId.push({'id': ele.id})
-        })
-        this.$confirm('您确定要删除这' + this.multipleSelection.length + '条数据吗?', '提示', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning'
-        }).then(() => {
-          /*Array.from(this.activeTableDataId).forEach(element => {
-            this.tableData = this.tableData.filter(ele => {
-              console.log(ele.id != element.id)
-              return ele.id != element.id;
-            })
-          })*/
-          let params = {};
-          params['idlist'] = this.activeTableDataId;
-          API.get('static/edit.json', params).then((res) => {
-            console.log(res)
-            if (res.status == 200) {
-              this.$message({
-                type: 'success',
-                message: '删除成功!'
-              });
-              this.getPage();
-            } else {
-              this.$message({
-                type: 'error',
-                message: '删除失败!'
-              });
-            }
-          })
         })
       },
       // 新增
       addOpen() {
         this.addPop = true;
         this.addObject = {
-          title: '',
+          iName: '',
         }
       },
       // 新增保存
       addSave() {
-        console.log(this.addObject)
         let params = {};
-        params['title'] = this.addObject.title;
-        API.get('static/list.json', params).then((res) => {
-          if (res.status == 200) {
+        params['iName'] = this.addObject.iName;
+        params['iSystemId'] = this.iSystemId;
+        console.log(params)
+        API.post('/ification/create', params).then((res) => {
+          console.log(res.data)
+          if (res.data.code == 200) {
             this.addPop = false;
             this.getPage();
             this.$message({
@@ -193,12 +145,11 @@
         this.editPop = true
         let params = {};
         params['id'] = id;
-        API.get('static/classify.json', params).then((res) => {
+        API.get('/ification/FindByid', params).then((res) => {
           console.log(res.data)
-          if (res.status == 200) {
-            console.log(res.data[0])
+          if (res.data.code == 200) {
             // this.editObject.title = '12345'
-            this.editObject = res.data[0];
+            this.editObject = res.data.data;
           } else {
             console.log(res.data)
           }
@@ -209,9 +160,10 @@
         console.log(this.editObject)
         let params = {};
         params['id'] = this.editObject.id;
-        params['title'] = this.editObject.title;
-        API.get('static/list.json', params).then((res) => {
-          if (res.status == 200) {
+        params['iName'] = this.editObject.iName;
+        API.put('/ification/ificatUpdate', params).then((res) => {
+          console.log(res.data)
+          if (res.data.code == 200) {
             this.editPop = false;
             this.getPage();
             this.$message({
@@ -235,11 +187,8 @@
         }).then(() => {
           let params = {};
           params['id'] = id;
-          /*this.tableData = this.tableData.filter(ele => {
-            return ele.id != id;
-          })*/
-          API.get('static/list.json', params).then((res) => {
-            if (res.status == 200) {
+          API.delete('/ification/ificatDelete', params).then((res) => {
+            if (res.data.code == 200) {
               this.getPage();
               this.$message({
                 type: 'success',
@@ -252,21 +201,53 @@
               });
             }
           })
-        }).catch(() => {
+        })
+      },
+      // 选择
+      handleSelectionChange(val) {
+        this.multipleSelection = val;
+        console.log(this.multipleSelection)
+      },
+      // 选择删除
+      selectDel() {
+        if (this.multipleSelection.length == 0) {
           this.$message({
             type: 'info',
-            message: '已取消删除'
+            message: '请选择需要删除的数据'
           });
-        });
+          return
+        }
+        this.multipleSelection.forEach(ele => {
+          this.activeTableDataId.push(ele.id)
+        })
+        this.activeTableDataId2 = this.activeTableDataId.join(',');
+        this.$confirm('您确定要删除这' + this.multipleSelection.length + '条数据吗?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          let params = {};
+          params['id'] = this.activeTableDataId2;
+          API.delete('/ification/ificatDelete', params).then((res) => {
+            console.log(res.data)
+            if (res.data.code == 200) {
+              this.$message({
+                type: 'success',
+                message: '删除成功!'
+              });
+              this.getPage();
+            } else {
+              this.$message({
+                type: 'error',
+                message: '删除失败!'
+              });
+            }
+          })
+        })
       },
     },
     created() {
       this.getPage();
-    },
-    mounted() {
-      // you can use current editor object to do something(editor methods)
-      console.log('this is my editor', this.editor)
-      // this.editor to do something...
     }
 
   }
@@ -286,7 +267,7 @@
     }
     .search-nav {
       .btn-cell {
-        float: right;
+        float: right!important;
       }
     }
 

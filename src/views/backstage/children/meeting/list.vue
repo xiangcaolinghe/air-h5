@@ -29,22 +29,22 @@
           class="column">
         </el-table-column>
         <el-table-column
-          prop="meetingName"
+          prop="mname"
           label="会议名称"
           :show-overflow-tooltip="true">
         </el-table-column>
         <el-table-column
-          prop="releaseDate"
+          prop="mcreateTime"
           label="创建时间"
           width="120">
         </el-table-column>
         <el-table-column
-          prop="name"
+          prop="uname"
           label="创建者"
           width="100">
         </el-table-column>
         <el-table-column
-          prop="releaseDate"
+          prop="mreleaseTime"
           label="发布时间"
           width="120">
         </el-table-column>
@@ -52,10 +52,10 @@
           label="操作"
           width="300">
           <template slot-scope="scope">
-            <el-button type="text" size="small" class="release" @click="Release(scope.row.id)"
+            <el-button type="text" size="small" class="release" @click="Release(scope.row.id,scope.row.mstatus)"
                        v-show="!scope.row.fbStatus">发布
             </el-button>
-            <el-button type="text" size="small" class="release" @click="ReleaseNo(scope.row.id)"
+            <el-button type="text" size="small" class="release" @click="ReleaseNo(scope.row.id,scope.row.mstatus)"
                        v-show="scope.row.fbStatus">取消发布
             </el-button>
             <el-button type="text" size="small" class="look" @click="linkDetail(scope.row.id)">查看</el-button>
@@ -77,55 +77,55 @@
       </el-pagination>
     </div>
     <!--添加弹框-->
-    <el-dialog title="添加新闻" :visible.sync="addPop" class="tip-dialog" :close-on-click-modal="false">
+    <el-dialog title="添加会议" :visible.sync="addPop" class="tip-dialog" :close-on-click-modal="false">
       <div class="content">
         <div class="cell">
           <span class="name">会议名称：</span>
-          <el-input v-model="addObject.meetingName" placeholder="请输入内容" class="flew-input"></el-input>
+          <el-input v-model="addObject.mName" placeholder="请输入内容" class="flew-input"></el-input>
         </div>
         <el-row>
           <el-col :span="11">
             <div class="cell">
-              <span class="name">会议时间：</span>
-              <el-date-picker
-                class="flew-input"
-                v-model="addObject.data"
-                type="datetimerange"
-                :picker-options="pickerOptions2"
-                range-separator="至"
-                start-placeholder="开始日期"
-                end-placeholder="结束日期"
-                align="right"
-                value-format="yyyy-MM-dd HH:mm:ss">
-              </el-date-picker>
+              <span class="name">会议联系人：</span>
+              <el-input v-model="addObject.mContacts" placeholder="请输入内容" class="flew-input"></el-input>
             </div>
           </el-col>
           <el-col :span="11" :offset="2">
             <div class="cell">
               <span class="name">会议地址：</span>
-              <el-input v-model="addObject.meetingPlace" placeholder="请输入内容" class="flew-input"></el-input>
+              <el-input v-model="addObject.mAddress" placeholder="请输入内容" class="flew-input"></el-input>
             </div>
           </el-col>
         </el-row>
         <div class="cell">
           <span class="name">会议简介：</span>
-          <el-input type="textarea" v-model="addObject.abstract" class="flew-input"></el-input>
+          <el-input type="textarea" v-model="addObject.mBrief" class="flew-input"></el-input>
         </div>
         <div class="cell">
-          <span class="name">会议联系人：</span>
-          <el-input v-model="addObject.contacts" placeholder="请输入内容" class="flew-input"></el-input>
+          <span class="name">会议时间：</span>
+          <el-date-picker
+            class="flew-input"
+            v-model="addObject.data"
+            type="datetimerange"
+            :picker-options="pickerOptions2"
+            range-separator="至"
+            start-placeholder="开始日期"
+            end-placeholder="结束日期"
+            align="right"
+            value-format="yyyy-MM-dd HH:mm:ss">
+          </el-date-picker>
         </div>
         <el-row>
           <el-col :span="11">
             <div class="cell">
               <span class="name">联系人微信：</span>
-              <el-input v-model="addObject.wx" placeholder="请输入内容" class="flew-input"></el-input>
+              <el-input v-model="addObject.mWechat" placeholder="请输入内容" class="flew-input"></el-input>
             </div>
           </el-col>
           <el-col :span="11" :offset="2">
             <div class="cell">
               <span class="name">联系人电话：</span>
-              <el-input v-model="addObject.phone" placeholder="请输入内容" class="flew-input"></el-input>
+              <el-input v-model="addObject.mPhone" placeholder="请输入内容" class="flew-input"></el-input>
             </div>
           </el-col>
         </el-row>
@@ -133,7 +133,7 @@
           <span class="name">主办单位：</span>
           <el-tag
             :key="tag"
-            v-for="tag in addObject.partakeHost"
+            v-for="tag in addObject.mHostUnit"
             closable
             :disable-transitions="false"
             @close="AddhandleClose(tag)">
@@ -154,7 +154,7 @@
           <span class="name">参会单位：</span>
           <el-tag
             :key="tag"
-            v-for="tag in addObject.partakeCompany"
+            v-for="tag in addObject.mParticipatingUnits"
             closable
             :disable-transitions="false"
             @close="AddhandleClose2(tag)">
@@ -173,15 +173,21 @@
         </div>
         <div class="cell">
           <span class="name">备注：</span>
-          <el-input type="textarea" v-model="addObject.remarks" class="flew-input"></el-input>
+          <el-input type="textarea" v-model="addObject.mRemarks" class="flew-input"></el-input>
         </div>
         <div class="cell">
           <span class="name">上传附件：</span>
           <el-upload
             ref="Addupload"
             class="upload-demo"
-            action="https://jsonplaceholder.typicode.com/posts/"
-            :file-list="AddfileList" :auto-upload="false" :multiple="true" :limit="5" :on-exceed="handleExceed">
+            action="http://192.168.3.41:8083/newsInfo/newsFiles"
+            :file-list="AddfileList"
+            :auto-upload="true"
+            :multiple="true"
+            :limit="5"
+            :on-exceed="handleExceed"
+            :on-success="succAdd"
+            :on-remove="remAdd">
             <el-button size="small" type="primary" slot="trigger">选择文件</el-button>
             <!--<div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>-->
           </el-upload>
@@ -189,7 +195,7 @@
         <div class="cell">
           <span class="name">会议日程：</span>
           <quill-editor ref="myTextEditor"
-                        v-model="addObject.agenda"
+                        v-model="addObject.mContent"
                         :config="editorOption"
                         @change="onAddChange($event)">
           </quill-editor>
@@ -205,51 +211,51 @@
       <div class="content">
         <div class="cell">
           <span class="name">会议名称：</span>
-          <el-input v-model="editObject.meetingName" placeholder="请输入内容" class="flew-input"></el-input>
+          <el-input v-model="editObject.mName" placeholder="请输入内容" class="flew-input"></el-input>
         </div>
         <el-row>
           <el-col :span="11">
             <div class="cell">
-              <span class="name">会议时间：</span>
-              <el-date-picker
-                class="flew-input"
-                v-model="editObject.data"
-                type="datetimerange"
-                :picker-options="pickerOptions2"
-                range-separator="至"
-                start-placeholder="开始日期"
-                end-placeholder="结束日期"
-                align="right"
-                value-format="yyyy-MM-dd HH:mm:ss">
-              </el-date-picker>
+              <span class="name">会议联系人：</span>
+              <el-input v-model="editObject.mContacts" placeholder="请输入内容" class="flew-input"></el-input>
             </div>
           </el-col>
           <el-col :span="11" :offset="2">
             <div class="cell">
               <span class="name">会议地址：</span>
-              <el-input v-model="editObject.meetingPlace" placeholder="请输入内容" class="flew-input"></el-input>
+              <el-input v-model="editObject.mAddress" placeholder="请输入内容" class="flew-input"></el-input>
             </div>
           </el-col>
         </el-row>
         <div class="cell">
           <span class="name">会议简介：</span>
-          <el-input type="textarea" v-model="editObject.abstract" class="flew-input"></el-input>
+          <el-input type="textarea" v-model="editObject.mBrief" class="flew-input"></el-input>
         </div>
         <div class="cell">
-          <span class="name">会议联系人：</span>
-          <el-input v-model="editObject.contacts" placeholder="请输入内容" class="flew-input"></el-input>
+          <span class="name">会议时间：</span>
+          <el-date-picker
+            class="flew-input"
+            v-model="EditData"
+            type="datetimerange"
+            :picker-options="pickerOptions2"
+            range-separator="至"
+            start-placeholder="开始日期"
+            end-placeholder="结束日期"
+            align="right"
+            value-format="yyyy-MM-dd HH:mm:ss">
+          </el-date-picker>
         </div>
         <el-row>
           <el-col :span="11">
             <div class="cell">
               <span class="name">联系人微信：</span>
-              <el-input v-model="editObject.wx" placeholder="请输入内容" class="flew-input"></el-input>
+              <el-input v-model="editObject.mWechat" placeholder="请输入内容" class="flew-input"></el-input>
             </div>
           </el-col>
           <el-col :span="11" :offset="2">
             <div class="cell">
               <span class="name">联系人电话：</span>
-              <el-input v-model="editObject.phone" placeholder="请输入内容" class="flew-input"></el-input>
+              <el-input v-model="editObject.mPhone" placeholder="请输入内容" class="flew-input"></el-input>
             </div>
           </el-col>
         </el-row>
@@ -257,7 +263,7 @@
           <span class="name">主办单位：</span>
           <el-tag
             :key="tag"
-            v-for="tag in editObject.partakeHost"
+            v-for="tag in editObject.mHostUnit"
             closable
             :disable-transitions="false"
             @close="EdithandleClose(tag)">
@@ -278,7 +284,7 @@
           <span class="name">参会单位：</span>
           <el-tag
             :key="tag"
-            v-for="tag in editObject.partakeCompany"
+            v-for="tag in editObject.mParticipatingUnits"
             closable
             :disable-transitions="false"
             @close="EdithandleClose2(tag)">
@@ -297,22 +303,27 @@
         </div>
         <div class="cell">
           <span class="name">备注：</span>
-          <el-input type="textarea" v-model="editObject.remarks" class="flew-input"></el-input>
+          <el-input type="textarea" v-model="editObject.mRemarks" class="flew-input"></el-input>
         </div>
         <div class="cell">
           <span class="name">上传附件：</span>
           <el-upload
             ref="Editupload"
             class="upload-demo"
-            action="https://jsonplaceholder.typicode.com/posts/"
-            :file-list="EditfileList" :auto-upload="false" :multiple="true" :limit="5" :on-exceed="handleExceed">
+            action="http://192.168.3.41:8083/newsInfo/newsFiles"
+            :file-list="EditfileList"
+            :multiple="true"
+            :limit="5"
+            :on-exceed="handleExceed"
+            :on-success="succEdit"
+            :on-remove="remEdit">
             <el-button size="small" type="primary" slot="trigger">选择文件</el-button>
           </el-upload>
         </div>
         <div class="cell">
           <span class="name">会议日程：</span>
           <quill-editor ref="myTextEditor"
-                        v-model="editObject.agenda"
+                        v-model="editObject.mContent"
                         :config="editorOption"
                         @change="onEditChange($event)">
           </quill-editor>
@@ -337,24 +348,29 @@
         loading: false,
         editPop: false,
         addPop: false,
+        data:'',
+        mSystemId : 1,
         // 搜索初始化
         SearchInp: '',
         // 删除选择初始化
         multipleSelection: [],
         activeTableDataId: [],
+        activeTableDataId2: '',
         tableData: [],
         addObject: {
-          meetingName: '',
+          mName: '',
           data: '',
-          meetingPlace: '',
-          abstract: '',
-          contacts: '',
-          wx: '',
-          phone: '',
-          remarks: '',
-          partakeHost: [],
-          partakeCompany: [],
-          agenda: ''
+          mAddress: '',
+          mBrief: '',
+          mContacts: '',
+          mWechat: '',
+          mPhone: '',
+          mRemarks: '',
+          mHostUnit: [],
+          mParticipatingUnits: [],
+          mContent: '',
+          mEnclName : '',
+          mEnclUrl : ''
         },
         // 新增的主办单位标签内容
         addValue: '',
@@ -364,18 +380,20 @@
 
         editObject: {
           id: '',
-          meetingName: '',
-          data: '',
-          meetingPlace: '',
-          abstract: '',
-          contacts: '',
-          wx: '',
-          phone: '',
-          remarks: '',
-          partakeHost: [],
-          partakeCompany: [],
-          agenda: ''
+          mName: '',
+          mAddress: '',
+          mBrief: '',
+          mContacts: '',
+          mWechat: '',
+          mPhone: '',
+          mRemarks: '',
+          mHostUnit: [],
+          mParticipatingUnits: [],
+          mContent: '',
+          mEnclName : '',
+          mEnclUrl : ''
         },
+        EditData : '',
         // 编辑的主办单位标签内容
         editValue: '',
         editVisible: false,
@@ -387,7 +405,7 @@
 
         currentPage: 1,
         pageSize: 10,
-        total: 100,
+        total: 0,
         editorOption: {
           // something config
         },
@@ -425,19 +443,19 @@
       // 页面初始化
       getPage() {
         let params = {};
-        API.get('static/mettingList.json', params).then((res) => {
-          if (res.status == 200) {
+        API.get('/meeTing/FindAll', params).then((res) => {
+          if (res.data.code == 200) {
             console.log(res.data)
-            this.tableData = res.data;
+            this.tableData = res.data.data;
+            this.total = res.data.count;
             for (var i = 0; i < this.tableData.length; i++) {
-              if (this.tableData[i].fb == '1') {
+              if (this.tableData[i].mstatus == '1') {
                 this.tableData[i].fbStatus = true;
               } else {
                 this.tableData[i].fbStatus = false;
               }
             }
             console.log(this.tableData)
-            this.currentPage = 4
           } else {
             console.log(res.data)
           }
@@ -447,11 +465,11 @@
       search() {
         console.log(this.SearchInp)
         let params = {};
-        params['search'] = this.SearchInp;
-        API.get('static/list.json', params).then((res) => {
-          if (res.status == 200) {
+        params['name'] = this.SearchInp;
+        API.get('/meeTing/FindByName', params).then((res) => {
+          if (res.data.code == 200) {
             console.log(res.data)
-            this.tableData = res.data;
+            this.tableData = res.data.data;
           } else {
             console.log(res.data)
           }
@@ -460,38 +478,57 @@
       // 新增
       addOpen() {
         this.addPop = true;
+        this.AddfileList = [];
         this.addObject = {
-          meetingName: '',
+          mName: '',
           data: '',
-          meetingPlace: '',
-          abstract: '',
-          contacts: '',
-          wx: '',
-          phone: '',
-          remarks: '',
-          partakeCompany: [],
-          partakeHost: [],
-          agenda: ''
+          mAddress: '',
+          mBrief: '',
+          mContacts: '',
+          mWechat: '',
+          mPhone: '',
+          mRemarks: '',
+          mHostUnit: [],
+          mParticipatingUnits: [],
+          mContent: '',
+          mEnclName : '',
+          mEnclUrl : ''
         }
       },
       // 新增保存
       addSave() {
-        this.$refs.Addupload.submit();
         console.log(this.addObject)
+        // 上传数据
+        var arr = [];
+        var arr2 = [];
+        for (var i = 0; i < this.AddfileList.length; i++) {
+          if (this.AddfileList[i].response.code == '200') {
+            arr.push(this.AddfileList[i].response.data.revealImage);
+            arr2.push(this.AddfileList[i].response.data.imageName);
+          }
+        }
+        this.addObject.mEnclUrl = arr.join(',');
+        this.addObject.mEnclName = arr2.join(',');
         let params = {};
-        params['meetingName'] = this.addObject.meetingName;
-        params['data'] = this.addObject.data;
-        params['meetingPlace'] = this.addObject.meetingPlace;
-        params['abstract'] = this.addObject.abstract;
-        params['contacts'] = this.addObject.contacts;
-        params['wx'] = this.addObject.wx;
-        params['phone'] = this.addObject.phone;
-        params['remarks'] = this.addObject.remarks;
-        params['partakeCompany'] = this.addObject.partakeCompany;
-        params['partakeHost'] = this.addObject.partakeHost;
-        params['agenda'] = this.addObject.agenda;
-        API.get('static/list.json', params).then((res) => {
-          if (res.status == 200) {
+        params['mName'] = this.addObject.mName;
+        params['mStartTime'] = this.addObject.data[0];
+        params['mEndTime'] = this.addObject.data[1];
+        params['mAddress'] = this.addObject.mAddress;
+        params['mBrief'] = this.addObject.mBrief;
+        params['mContacts'] = this.addObject.mContacts;
+        params['mWechat'] = this.addObject.mWechat;
+        params['mPhone'] = this.addObject.mPhone;
+        params['mHostUnit'] = this.addObject.mHostUnit.join(",");
+        params['mParticipatingUnits'] = this.addObject.mParticipatingUnits.join(",");
+        params['mRemarks'] = this.addObject.mRemarks;
+        params['mEnclUrl'] = this.addObject.mEnclUrl;
+        params['mEnclName'] = this.addObject.mEnclName;
+        params['mContent'] = this.addObject.mContent;
+        params['mSystemId'] = this.mSystemId;
+        console.log(params)
+        API.post('/meeTing/create', params).then((res) => {
+          console.log(res.data)
+          if (res.data.code == 200) {
             this.addPop = false;
             this.getPage();
             this.$message({
@@ -506,17 +543,55 @@
           }
         })
       },
+      // 新增上传功能成功
+      succAdd(response, file, fileList) {
+        this.AddfileList = fileList;
+      },
+      // 新增上传功能删除
+      remAdd(file, fileList) {
+        this.AddfileList = fileList;
+      },
       //编辑
       editOpen(id) {
+        this.editObject = {
+          mName: '',
+          mAddress: '',
+          mBrief: '',
+          mContacts: '',
+          mWechat: '',
+          mPhone: '',
+          mRemarks: '',
+          mHostUnit: [],
+          mParticipatingUnits: [],
+          mContent: '',
+          mEnclName : '',
+          mEnclUrl : ''
+        }
+        this.EditData = [];
+        this.EditfileList = [];
         this.editPop = true;
+        console.log(this.editObject.data)
         let params = {};
         params['id'] = id;
-        API.get('static/mettingEdit.json', params).then((res) => {
+        console.log(params)
+        API.get('/meeTing/FindById', params).then((res) => {
           console.log(res.data)
-          if (res.status == 200) {
-            console.log(res.data[0])
-            this.editObject = res.data[0];
-            this.EditfileList = res.data[0].fileList;
+          if (res.data.code == 200) {
+            this.editObject = res.data.data.data;
+            this.editObject.mHostUnit = res.data.data.data.mHostUnit.split(',');
+            this.editObject.mParticipatingUnits = res.data.data.data.mParticipatingUnits.split(',');
+            var arr = [];
+            arr[0] = res.data.data.data.mStartTime;
+            arr[1] = res.data.data.data.mEndTime;
+            this.EditData = arr;
+            console.log(this.EditData)
+            // 上传列表
+            this.EditfileList = res.data.data.file;
+            var obj = [];
+            for (var i = 0; i < res.data.data.file.length; i++) {
+              obj.push({url: res.data.data.file[i].fenclUrl, name: res.data.data.file[i].fenclName})
+            }
+            this.EditfileList = obj;
           } else {
             console.log(res.data)
           }
@@ -524,23 +599,44 @@
       },
       // 编辑保存
       editSave() {
-        this.$refs.Editupload.submit();
         console.log(this.editObject)
+        // 上传部分
+        var arr = [];
+        var arr2 = [];
+        for (var i = 0; i < this.EditfileList.length; i++) {
+          if (this.EditfileList[i].response && this.EditfileList[i].response.code == '200') {
+            arr.push(this.EditfileList[i].response.data.revealImage);
+            arr2.push(this.EditfileList[i].response.data.imageName);
+          } else {
+            arr.push(this.EditfileList[i].url)
+            arr2.push(this.EditfileList[i].name)
+          }
+        }
+        this.editObject.mEnclUrl = arr.join(',');
+        this.editObject.mEnclName = arr2.join(',');
         let params = {};
+
         params['id'] = this.editObject.id;
-        params['meetingName'] = this.editObject.meetingName;
-        params['data'] = this.editObject.data;
-        params['meetingPlace'] = this.editObject.meetingPlace;
-        params['abstract'] = this.editObject.abstract;
-        params['contacts'] = this.editObject.contacts;
-        params['wx'] = this.editObject.wx;
-        params['phone'] = this.editObject.phone;
-        params['remarks'] = this.editObject.remarks;
-        params['partakeCompany'] = this.editObject.partakeCompany;
-        params['partakeHost'] = this.editObject.partakeHost;
-        params['agenda'] = this.editObject.agenda;
-        API.get('static/list.json', params).then((res) => {
-          if (res.status == 200) {
+        params['mName'] = this.editObject.mName;
+        params['mStartTime'] = this.EditData[0];
+        params['mEndTime'] = this.EditData[1];
+        params['mAddress'] = this.editObject.mAddress;
+        params['mBrief'] = this.editObject.mBrief;
+        params['mContacts'] = this.editObject.mContacts;
+        params['mWechat'] = this.editObject.mWechat;
+        params['mPhone'] = this.editObject.mPhone;
+        params['mHostUnit'] = this.editObject.mHostUnit.join(",");
+        params['mParticipatingUnits'] = this.editObject.mParticipatingUnits.join(",");
+        params['mRemarks'] = this.editObject.mRemarks;
+        params['mEnclUrl'] = this.editObject.mEnclUrl;
+        params['mEnclName'] = this.editObject.mEnclName;
+        params['mContent'] = this.editObject.mContent;
+        params['mSystemId'] = this.mSystemId;
+
+        console.log(params)
+        API.put('/meeTing/update', params).then((res) => {
+          console.log(res.data)
+          if (res.data.code == 200) {
             this.editPop = false;
             this.getPage();
             this.$message({
@@ -555,10 +651,46 @@
           }
         })
       },
+      // 编辑上传功能成功
+      succEdit(response, file, fileList) {
+        this.EditfileList = fileList;
+      },
+      // 编辑上传功能删除
+      remEdit(file, fileList) {
+        this.EditfileList = fileList;
+      },
+      // 文件上传部分
+      handleExceed(files, fileList) {
+        this.$message.warning(`当前已有${fileList.length} 个文件，限制选择5个文件，本次选择了 ${files.length} 个文件`);
+      },
+      // 单个删除
+      del(id) {
+        this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          let params = {};
+          params['id'] = id;
+          API.delete('/meeTing/delete', params).then((res) => {
+            if (res.data.code == 200) {
+              this.getPage();
+              this.$message({
+                type: 'success',
+                message: '删除成功!'
+              });
+            } else {
+              this.$message({
+                type: 'error',
+                message: '删除失败!'
+              });
+            }
+          })
+        })
+      },
       // 选择
       handleSelectionChange(val) {
         this.multipleSelection = val;
-        console.log(this.multipleSelection)
       },
       // 选择删除
       selectDel() {
@@ -570,22 +702,17 @@
           return
         }
         this.multipleSelection.forEach(ele => {
-          this.activeTableDataId.push({'id': ele.id})
+          this.activeTableDataId.push(ele.id)
         })
+        this.activeTableDataId2 = this.activeTableDataId.join(',');
         this.$confirm('您确定要删除这' + this.multipleSelection.length + '条数据吗?', '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
-          /*Array.from(this.activeTableDataId).forEach(element => {
-            this.tableData = this.tableData.filter(ele => {
-              console.log(ele.id != element.id)
-              return ele.id != element.id;
-            })
-          })*/
           let params = {};
-          params['idlist'] = this.activeTableDataId;
-          API.get('static/edit.json', params).then((res) => {
+          params['id'] = this.activeTableDataId2;
+          API.delete('/meeTing/delete', params).then((res) => {
             console.log(res)
             if (res.status == 200) {
               this.$message({
@@ -602,50 +729,48 @@
           })
         })
       },
-      // 单个删除
-      del(id) {
-        this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning'
-        }).then(() => {
-          let params = {};
-          params['id'] = id;
-          /*this.tableData = this.tableData.filter(ele => {
-            return ele.id != id;
-          })*/
-          API.get('static/list.json', params).then((res) => {
-            if (res.status == 200) {
-              this.getPage();
-              this.$message({
-                type: 'success',
-                message: '删除成功!'
-              });
-            } else {
-              this.$message({
-                type: 'error',
-                message: '删除失败!'
-              });
-            }
-          })
-        }).catch(() => {
-          this.$message({
-            type: 'info',
-            message: '已取消删除'
-          });
-        });
-      },
+
       //发布
-      Release(id) {
+      Release(id, mstatus) {
+        let params = {};
+        params['id'] = id;
+        params['mStatus'] = mstatus;
+        console.log(params)
+        API.post('/meeTing/release', params).then((res) => {
+          console.log(res.data)
+          if (res.data.code == 200) {
+            this.getPage()
+          } else {
+            this.$message({
+              type: 'error',
+              message: '发布失败!'
+            });
+          }
+        })
       },
       // 取消发布
-      ReleaseNo(id) {
+      ReleaseNo(id, mstatus) {
+        let params = {};
+        params['id'] = id;
+        params['mStatus'] = mstatus;
+        console.log(params)
+        API.post('/meeTing/release', params).then((res) => {
+          console.log(res.data)
+          if (res.data.code == 200) {
+            this.getPage()
+          } else {
+            this.$message({
+              type: 'error',
+              message: '取消发布失败!'
+            });
+          }
+        })
       },
       // 新增主办单位标签
       AddhandleClose(tag) {
         console.log(tag)
         // this.dynamicTags.splice(this.dynamicTags.indexOf(tag), 1);
-        this.addObject.partakeHost.splice(this.addObject.partakeHost.indexOf(tag), 1);
+        this.addObject.mHostUnit.splice(this.addObject.mHostUnit.indexOf(tag), 1);
       },
       AddshowInput() {
         this.addVisible = true;
@@ -654,11 +779,11 @@
         });
       },
       AddhandleInputConfirm() {
-        console.log(this.addObject.partakeHost)
+        console.log(this.addObject.mHostUnit)
         let inputValue = this.addValue;
         if (inputValue) {
           // this.dynamicTags.push(inputValue);
-          this.addObject.partakeHost.push(inputValue)
+          this.addObject.mHostUnit.push(inputValue)
         }
         this.addVisible = false;
         this.addValue = '';
@@ -667,7 +792,7 @@
       AddhandleClose2(tag) {
         console.log(tag)
         // this.dynamicTags.splice(this.dynamicTags.indexOf(tag), 1);
-        this.addObject.partakeCompany.splice(this.addObject.partakeCompany.indexOf(tag), 1);
+        this.addObject.mParticipatingUnits.splice(this.addObject.mParticipatingUnits.indexOf(tag), 1);
       },
       AddshowInput2() {
         this.addVisible2 = true;
@@ -676,11 +801,11 @@
         });
       },
       AddhandleInputConfirm2() {
-        console.log(this.addObject.partakeCompany)
+        console.log(this.addObject.mParticipatingUnits)
         let inputValue = this.addValue2;
         if (inputValue) {
           // this.dynamicTags.push(inputValue);
-          this.addObject.partakeCompany.push(inputValue)
+          this.addObject.mParticipatingUnits.push(inputValue)
         }
         this.addVisible2 = false;
         this.addValue2 = '';
@@ -689,7 +814,7 @@
       EdithandleClose(tag) {
         console.log(tag)
         // this.dynamicTags.splice(this.dynamicTags.indexOf(tag), 1);
-        this.editObject.partakeHost.splice(this.editObject.partakeHost.indexOf(tag), 1);
+        this.editObject.mHostUnit.splice(this.editObject.mHostUnit.indexOf(tag), 1);
       },
       EditshowInput() {
         this.editVisible = true;
@@ -698,11 +823,11 @@
         });
       },
       EdithandleInputConfirm() {
-        console.log(this.editObject.partakeHost)
+        console.log(this.editObject.mHostUnit)
         let inputValue = this.editValue;
         if (inputValue) {
           // this.dynamicTags.push(inputValue);
-          this.editObject.partakeHost.push(inputValue)
+          this.editObject.mHostUnit.push(inputValue)
         }
         this.editVisible = false;
         this.editValue = '';
@@ -711,7 +836,7 @@
       EdithandleClose2(tag) {
         console.log(tag)
         // this.dynamicTags.splice(this.dynamicTags.indexOf(tag), 1);
-        this.editObject.partakeCompany.splice(this.editObject.partakeCompany.indexOf(tag), 1);
+        this.editObject.mParticipatingUnits.splice(this.editObject.mParticipatingUnits.indexOf(tag), 1);
       },
       EditshowInput2() {
         this.editVisible2 = true;
@@ -720,19 +845,16 @@
         });
       },
       EdithandleInputConfirm2() {
-        console.log(this.editObject.partakeCompany)
+        console.log(this.editObject.mParticipatingUnits)
         let inputValue = this.editValue2;
         if (inputValue) {
           // this.dynamicTags.push(inputValue);
-          this.editObject.partakeCompany.push(inputValue)
+          this.editObject.mParticipatingUnits.push(inputValue)
         }
         this.editVisible2 = false;
         this.editValue2 = '';
       },
-      // 文件上传部分
-      handleExceed(files, fileList) {
-        this.$message.warning(`当前已有${fileList.length} 个文件，限制选择5个文件，本次选择了 ${files.length} 个文件`);
-      },
+
 
       // 编辑器
       onEditChange({editor, html, text}) {
@@ -747,10 +869,14 @@
       // 翻页器：当前页，同时上一页下一页也能获取当前页
       handleCurrentChange(val) {
         console.log(val);
+        this.currentPage = val;
+        this.getPage()
       },
       // 翻页器：选择10条还是20条、
       handleSizeChange(val) {
         console.log(val);
+        this.pageSize = val;
+        this.getPage();
       },
       // 进入详情
       linkDetail(id) {
@@ -773,6 +899,9 @@
   @import "./../../../../assets/styles/base2";
 
   .backstage-meeting-page {
+    .quill-editor {
+      margin-left: 35px!important;
+    }
     .tip-dialog {
       .el-dialog__body {
         .cell {

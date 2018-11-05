@@ -29,15 +29,15 @@
           class="column">
         </el-table-column>
         <el-table-column
-          prop="userName"
+          prop="uName"
           label="用户名">
         </el-table-column>
         <el-table-column
-          prop="date"
+          prop="uCreateTime"
           label="创建时间">
         </el-table-column>
         <el-table-column
-          prop="name"
+          prop="qname"
           label="创建人">
         </el-table-column>
         <el-table-column
@@ -56,7 +56,7 @@
       <div class="content">
         <div class="cell">
           <span class="name">用户名：</span>
-          <el-input v-model="addObject.userName" placeholder="请输入内容" class="flew-input"></el-input>
+          <el-input v-model="addObject.uName" placeholder="请输入内容" class="flew-input"></el-input>
         </div>
         <div class="cell qx">
           <span class="name">权限：</span>
@@ -65,7 +65,7 @@
             </el-checkbox>
             <div style="margin: 15px 0;"></div>
             <el-checkbox-group v-model="checkedCities" @change="AddhandleChecked">
-              <el-checkbox v-for="p in power" :label="p.value" :key="p.key">{{p.value}}</el-checkbox>
+              <el-checkbox v-for="p in power" :label="p.qName" :key="p.id">{{p.qName}}</el-checkbox>
             </el-checkbox-group>
           </div>
         </div>
@@ -80,7 +80,7 @@
       <div class="content">
         <div class="cell">
           <span class="name">用户名：</span>
-          <el-input v-model="editObject.userName" placeholder="请输入内容" class="flew-input"
+          <el-input v-model="editObject.uName" placeholder="请输入内容" class="flew-input"
                     v-bind:disabled="look"></el-input>
         </div>
         <div class="cell qx">
@@ -91,7 +91,7 @@
             </el-checkbox>
             <div style="margin: 15px 0;"></div>
             <el-checkbox-group v-model="EditcheckedCities" @change="EdithandleChecked">
-              <el-checkbox v-for="p in power" :label="p.value" :key="p.key" v-bind:disabled="look">{{p.value}}
+              <el-checkbox v-for="p in power" :label="p.qName" :key="p.id" v-bind:disabled="look">{{p.qName}}
               </el-checkbox>
             </el-checkbox-group>
           </div>
@@ -106,15 +106,8 @@
 </template>
 
 <script>
-/*  import 'quill/dist/quill.core.css'
-  import 'quill/dist/quill.snow.css'
-  import 'quill/dist/quill.bubble.css'*/
-
-  import {quillEditor} from 'vue-quill-editor'
-
   export default {
     name: '',
-    components: {quillEditor},
     data() {
       return {
         loading: false,
@@ -122,12 +115,14 @@
         addPop: false,
         checkAll: false,
         look: false,
+        uSystemId : 1,
         title: "编辑",
         // 搜索初始化
         SearchInp: '',
         // 删除选择初始化
         multipleSelection: [],
         activeTableDataId: [],
+        activeTableDataId2: '',
         tableData: [],
         // 权限项
         power: [],
@@ -141,13 +136,13 @@
         EditcheckAll: false,
 
         addObject: {
-          userName: '',
+          uName: '',
           powerList: []
         },
         editObject: {
           userName: '',
           powerList: [],
-          userid: ''
+          id: ''
         }
       }
     },
@@ -155,18 +150,18 @@
       // 页面初始化
       getPage() {
         let params = {};
-        API.get('static/userList.json', params).then((res) => {
-          if (res.status == 200) {
+        API.get('/ususer/FindAll', params).then((res) => {
+          if (res.data.code == 200) {
             console.log(res.data)
-            this.tableData = res.data;
+            this.tableData = res.data.data;
           } else {
             console.log(res.data)
           }
         })
-        API.get('static/power.json', params).then((res) => {
-          if (res.status == 200) {
-            console.log(res.data)
-            this.power = res.data;
+        API.get('/juris/FindAll', params).then((res) => {
+          console.log(res.data)
+          if (res.data.code == 200) {
+            this.power = res.data.data;
           } else {
             console.log(res.data)
           }
@@ -174,17 +169,180 @@
       },
       // 搜索
       search() {
-        console.log(this.SearchInp)
         let params = {};
-        params['search'] = this.SearchInp;
-        API.get('static/userList.json', params).then((res) => {
-          if (res.status == 200) {
-            console.log(res.data)
-            this.tableData = res.data;
+        params['name'] = this.SearchInp;
+        API.get('/ususer/FindByName', params).then((res) => {
+          console.log(res.data)
+          if (res.data.code == 200) {
+            this.tableData = res.data.data;
           } else {
             console.log(res.data)
           }
         })
+      },
+
+      // 新增
+      addOpen() {
+        this.checkedCities = [];
+        this.addPop = true;
+        this.addObject = {
+          uName: '',
+          powerList: []
+        }
+      },
+      // 新增保存
+      addSave() {
+        let params = {};
+        params['uName'] = this.addObject.uName;
+        params['qId'] = this.addObject.powerList;
+        params['uSystemId'] = this.uSystemId;
+        console.log(params)
+        API.post('/ususer/create', params).then((res) => {
+          console.log(res.data)
+          if (res.data.code == 200) {
+            this.addPop = false;
+            this.getPage();
+            this.$message({
+              type: 'success',
+              message: '新增成功!'
+            });
+          } else {
+            this.$message({
+              type: 'error',
+              message: '新增失败!'
+            });
+          }
+        })
+      },
+      // 新增权限
+      AddAllhandleChecked(val) {
+        var cityOptions = []
+        var cityOptionsKey = []
+        for (var i = 0; i < this.power.length; i++) {
+          cityOptions.push(this.power[i].qName);
+          cityOptionsKey.push(this.power[i].id);
+        }
+        this.checkedCities = val ? cityOptions : [];
+        this.addObject.powerList = val ? cityOptionsKey : [];
+        this.isIndeterminate = false;
+      },
+      AddhandleChecked(value) {
+        console.log(value)
+        this.addObject.powerList = []
+        var ctOption = value;
+        for (var i = 0; i < ctOption.length; i++) {
+          for (var j = 0; j < this.power.length; j++) {
+            if (ctOption[i] == this.power[j].qName) {
+              this.addObject.powerList.push(this.power[j].id)
+            }
+          }
+        }
+        console.log(this.addObject.powerList)
+        let checkedCount = value.length;
+        this.checkAll = checkedCount === this.power.length;
+        this.isIndeterminate = checkedCount > 0 && checkedCount < this.power.length;
+      },
+      // 编辑
+      editOpen(id) {
+        this.look = false;
+        this.title = "编辑";
+        this.EditcheckedCities = [];
+        this.editObject = {
+          uName: '',
+          powerList: []
+        }
+        var arr = [];
+        this.editPop = true;
+        let params = {};
+        params['id'] = id;
+        API.get('/ususer/FindByid', params).then((res) => {
+          console.log(res.data)
+          if (res.data.code == 200) {
+            this.editObject = res.data.data;
+            this.editObject.uName = res.data.data.uname;
+            arr = res.data.data.qid;
+            this.editObject.powerList = Array.prototype.slice.call(arr);
+            this.editObject.powerList = arr;
+            for (var i = 0; i < arr.length; i++) {
+              for (var j = 0; j < this.power.length; j++) {
+                if (arr[i] == this.power[j].id) {
+                  this.EditcheckedCities.push(this.power[j].qName);
+                  // this.editObject.powerList.push(this.power[j].id)
+                }
+              }
+            }
+            console.log(this.EditcheckedCities)
+            console.log(this.editObject.powerList)
+          } else {
+            console.log(res.data)
+          }
+        })
+      },
+      // 编辑保存
+      editSave() {
+        console.log(this.editObject.powerList)
+        console.log(this.editObject)
+        var params = {
+          qId : []
+        };
+        params['id'] = this.editObject.id;
+        params['uName'] = this.editObject.uName;
+        console.log(this.editObject.powerList)
+        console.log(params.qId)
+        /*for(var i=0;i<this.editObject.powerList.length;i++){
+          params.qId[i] = this.editObject.powerList[i]
+        }*/
+        params['qId'] = this.editObject.powerList.join(',');
+        params['uSystemId'] = this.uSystemId;
+
+
+        console.log(params)
+        API.put('/ususer/update', params).then((res) => {
+          console.log(res.data)
+          if (res.data.code == 200) {
+            this.editPop = false;
+            this.getPage();
+            this.$message({
+              type: 'success',
+              message: '编辑成功!'
+            });
+          } else {
+            this.$message({
+              type: 'error',
+              message: '编辑失败!'
+            });
+          }
+        })
+      },
+
+      // 编辑权限
+      EditAllhandleChecked(val) {
+        var cityOptions = []
+        var cityOptionsKey = []
+        for (var i = 0; i < this.power.length; i++) {
+          cityOptions.push(this.power[i].qName);
+          cityOptionsKey.push(this.power[i].id);
+        }
+        this.EditcheckedCities = val ? cityOptions : [];
+        this.editObject.powerList = val ? cityOptionsKey : [];
+        console.log(this.editObject.powerList)
+        this.EditisIndeterminate = false;
+      },
+      EdithandleChecked(value) {
+        console.log(value)
+        this.editObject.powerList = []
+        var ctOption = value;
+        for (var i = 0; i < ctOption.length; i++) {
+          for (var j = 0; j < this.power.length; j++) {
+            if (ctOption[i] == this.power[j].qName) {
+              this.editObject.powerList.push(this.power[j].id)
+            }
+          }
+        }
+        console.log(this.editObject.powerList)
+        let checkedCount = value.length;
+        this.EditcheckAll = checkedCount === this.power.length;
+        this.EditisIndeterminate = checkedCount > 0 && checkedCount < this.power.length;
       },
       // 选择
       handleSelectionChange(val) {
@@ -201,16 +359,17 @@
           return
         }
         this.multipleSelection.forEach(ele => {
-          this.activeTableDataId.push({'id': ele.id})
+          this.activeTableDataId.push( ele.id )
         })
+        this.activeTableDataId2 = this.activeTableDataId.join(',');
         this.$confirm('您确定要删除这' + this.multipleSelection.length + '条数据吗?', '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
           let params = {};
-          params['idlist'] = this.activeTableDataId;
-          API.get('static/userList.json', params).then((res) => {
+          params['id'] = this.activeTableDataId2;
+          API.delete('/ususer/delete', params).then((res) => {
             console.log(res)
             if (res.status == 200) {
               this.$message({
@@ -239,7 +398,7 @@
           /*this.tableData = this.tableData.filter(ele => {
             return ele.id != id;
           })*/
-          API.get('static/list.json', params).then((res) => {
+          API.delete('/ususer/delete', params).then((res) => {
             if (res.status == 200) {
               this.getPage();
               this.$message({
@@ -260,149 +419,6 @@
           });
         });
       },
-      // 新增
-      addOpen() {
-        this.checkedCities = [];
-        this.addPop = true;
-        this.addObject = {
-          userName: '',
-          powerList: []
-        }
-      },
-      // 新增保存
-      addSave() {
-        console.log(this.addObject)
-        console.log(this.addObject.powerList)
-        let params = {};
-        params['userName'] = this.addObject.userName;
-        params['power'] = this.addObject.powerList;
-        API.get('static/userList.json', params).then((res) => {
-          if (res.status == 200) {
-            this.addPop = false;
-            this.getPage();
-            this.$message({
-              type: 'success',
-              message: '新增成功!'
-            });
-          } else {
-            this.$message({
-              type: 'error',
-              message: '新增失败!'
-            });
-          }
-        })
-      },
-      // 编辑
-      editOpen(id) {
-        this.look = false;
-        this.title = "编辑";
-        this.EditcheckedCities = [];
-        var arr = [];
-        this.editPop = true;
-        let params = {};
-        params['id'] = id;
-        API.get('static/userList.json', params).then((res) => {
-          console.log(res.data)
-          if (res.status == 200) {
-            console.log(res.data[0])
-            this.editObject = res.data[0];
-            arr = res.data[1].power
-            for (var i = 0; i < arr.length; i++) {
-              for (var j = 0; j < this.power.length; j++) {
-                if (arr[i] == this.power[j].key) {
-                  this.EditcheckedCities.push(this.power[j].value);
-                }
-              }
-            }
-          } else {
-            console.log(res.data)
-          }
-        })
-      },
-      // 编辑保存
-      editSave() {
-        console.log(this.editObject.powerList)
-        console.log(this.editObject)
-        let params = {};
-        params['id'] = this.editObject.id;
-        params['userName'] = this.editObject.userName;
-        params['power'] = this.editObject.powerList;
-        API.get('static/userList.json', params).then((res) => {
-          if (res.status == 200) {
-            this.editPop = false;
-            this.getPage();
-            this.$message({
-              type: 'success',
-              message: '编辑成功!'
-            });
-          } else {
-            this.$message({
-              type: 'error',
-              message: '编辑失败!'
-            });
-          }
-        })
-      },
-
-      // 新增权限
-      AddAllhandleChecked(val) {
-        var cityOptions = []
-        var cityOptionsKey = []
-        for (var i = 0; i < this.power.length; i++) {
-          cityOptions.push(this.power[i].value);
-          cityOptionsKey.push(this.power[i].key);
-        }
-        this.checkedCities = val ? cityOptions : [];
-        this.addObject.powerList = val ? cityOptionsKey : [];
-        this.isIndeterminate = false;
-      },
-      AddhandleChecked(value) {
-        console.log(value)
-        this.addObject.powerList = []
-        var ctOption = value;
-        for (var i = 0; i < ctOption.length; i++) {
-          for (var j = 0; j < this.power.length; j++) {
-            if (ctOption[i] == this.power[j].value) {
-              this.addObject.powerList.push(this.power[j].key)
-            }
-          }
-        }
-        console.log(this.addObject.powerList)
-        let checkedCount = value.length;
-        this.checkAll = checkedCount === this.power.length;
-        this.isIndeterminate = checkedCount > 0 && checkedCount < this.power.length;
-      },
-
-      // 编辑权限
-      EditAllhandleChecked(val) {
-        var cityOptions = []
-        var cityOptionsKey = []
-        for (var i = 0; i < this.power.length; i++) {
-          cityOptions.push(this.power[i].value);
-          cityOptionsKey.push(this.power[i].key);
-        }
-        this.EditcheckedCities = val ? cityOptions : [];
-        this.editObject.powerList = val ? cityOptionsKey : [];
-        console.log(this.editObject.powerList)
-        this.EditisIndeterminate = false;
-      },
-      EdithandleChecked(value) {
-        console.log(value)
-        this.editObject.powerList = []
-        var ctOption = value;
-        for (var i = 0; i < ctOption.length; i++) {
-          for (var j = 0; j < this.power.length; j++) {
-            if (ctOption[i] == this.power[j].value) {
-              this.editObject.powerList.push(this.power[j].key)
-            }
-          }
-        }
-        console.log(this.editObject.powerList)
-        let checkedCount = value.length;
-        this.EditcheckAll = checkedCount === this.power.length;
-        this.EditisIndeterminate = checkedCount > 0 && checkedCount < this.power.length;
-      },
-
       // 进入详情
       linkDetail(id) {
         this.editOpen(id);
