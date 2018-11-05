@@ -18,21 +18,21 @@
     <br/>
     <div class="news_tails">
       <div class="news_title">
-        {{datail.title}}
+        {{datail.nTitle}}
       </div>
       <br/><br/>
       <div class="dis">
-        <span>作者：{{datail.author}}</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-        <span>发布时间：{{datail.time}}</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-        <span>来源：{{datail.origin}}</span>
+        <span>作者：{{datail.nAuthor}}</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <span>发布时间：{{datail.nReleaseTime}}</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <span>来源：{{datail.nFrom}}</span>
       </div>
       <br/><br/>
       <div class="detail_content ql-snow" >
-        <div class="ql-editor" v-html="datail.content"></div>
+        <div class="ql-editor" v-html="datail.nContent"></div>
       </div>
       <br/><br/>
-      <div class="down_res">
-        <a href="datail.download_url" style="color: #df6657;text-align: left;">{{datail.download_name}}</a>
+      <div class="down_res" v-for="i in file">
+        <a :href="i.fenclUrl" style="color: #df6657;text-align: left;" >{{i.fenclName}}</a>
       </div>
       <br/><br/><br/>
     </div>
@@ -44,6 +44,7 @@
     data(){
       return{
         datail:{},
+        file : []
       }
     },
     mounted: function () {
@@ -53,12 +54,13 @@
       getDetail(){
         let params={};
         params['id'] = this.$route.query.id;
-        API.get('static/newsDetails.json',params).then((res)=>{
-          if(res.status == 200) {
-            this.datail = res.data[0];
+        API.get('/notice/FindById',params).then((res)=>{
+          console.log(res.data)
+          if(res.data.code == 200) {
+            this.datail = res.data.data.data;
+            this.file = res.data.data.file
           }
         })
-
         console.log(this.$route.query.id)
 
       }

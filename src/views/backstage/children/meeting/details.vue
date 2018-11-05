@@ -20,9 +20,9 @@
       <div class="info">
         <div class="img"><img class="ewm pic" src="../../../../assets/images/erwm.png"></div>
         <div class="detail">
-          <div class="title">{{datail.meetingName}}</div>
-          <div class="time"><i class="icon iconfont icon-shijian"></i>{{datail.data[0]}} -- {{datail.data[1]}}</div>
-          <div class="address"><i class="icon iconfont icon-dingweiweizhi"></i>{{datail.meetingPlace}}</div>
+          <div class="title">{{datail.mName}}</div>
+          <div class="time"><i class="icon iconfont icon-shijian"></i>{{datail.mStartTime}} -- {{datail.mEndTime}}</div>
+          <div class="address"><i class="icon iconfont icon-dingweiweizhi"></i>{{datail.mAddress}}</div>
           <div class="btn">在线报名</div>
           <div class="wechart">
             <!--<img class="ewm" src="erwm.png">-->
@@ -42,7 +42,7 @@
         <a name="detail"></a>
         <div class="tab">
           <div class="intro">
-            {{datail.abstract}}
+            {{datail.mBrief}}
           </div>
         </div>
         <!--主办单位-->
@@ -50,7 +50,7 @@
         <div class="tab">
           <div class="title">主办单位</div>
           <ul>
-            <li v-for="item in datail.partakeHost">{{item}}</li>
+            <li v-for="item in partakeHost">{{item}}</li>
           </ul>
         </div>
         <!--参会相关单位-->
@@ -58,7 +58,7 @@
         <div class="tab">
           <div class="title">参会相关单位</div>
           <ul>
-            <li v-for="item in datail.partakeCompany">{{item}}</li>
+            <li v-for="item in partakeCompany">{{item}}</li>
           </ul>
         </div>
         <!--会议联系人-->
@@ -66,23 +66,26 @@
         <div class="tab">
           <div class="title">会议联系人</div>
           <ul>
-            <li>姓名 {{datail.contacts}}</li>
-            <li>微信 {{datail.wx}}</li>
-            <li>电话 {{datail.phone}}</li>
+            <li>姓名 {{datail.mContacts}}</li>
+            <li>微信 {{datail.mWechat}}</li>
+            <li>电话 {{datail.mPhone}}</li>
           </ul>
         </div>
         <!--会议日程-->
         <a name="date"></a>
         <div class="tab">
           <div class="title">会议日程</div>
-          <div v-html="datail.agenda"></div>
-          <span class="upload">附件点击下载.doc</span>
+          <div v-html="datail.mContent"></div>
+          <div v-for="i in file" class="uploadBox">
+            <a :href="i.fenclUrl" class="upload">{{i.fenclName}}</a>
+          </div>
+
         </div>
         <!--备注-->
         <div class="tab">
           <div class="title">备注</div>
           <ul>
-            <li>请认真填写报名信息，报名信息审核通过后会短信通知详细参会信息。</li>
+            <li>{{datail.mRemarks}}</li>
           </ul>
         </div>
       </div>
@@ -95,20 +98,21 @@
       data(){
         return{
           datail:{
-            meetingName : '',
-            data : [],
-            meetingPlace : '',
-            abstract : '',
-            partakeHost : [],
-            partakeCompany : [],
-            contacts : '',
-            wx : '',
-            phone : '',
-            agenda : '',
-            remarks : ''
+            mName : '',
+            mStartTime : '',
+            mEndTime : '',
+            mAddress : '',
+            mBrief : '',
+            mContacts : '',
+            mWechat : '',
+            mPhone : '',
+            mContent : '',
+            mRemarks : ''
           },
-          active:1,
-          abc : './../../../assets/logo.png'
+          partakeHost : [],
+          partakeCompany : [],
+          file:[],
+          active:1
         }
       },
       mounted: function () {
@@ -118,10 +122,13 @@
         getDetail() {
           let params = {};
           params['id'] = this.$route.query.id;
-          API.get('static/mettingDetails.json', params).then((res) => {
-            if (res.status == 200) {
-              this.datail = res.data[0];
-              console.log(this.datail)
+          API.get('/meeTing/FindById', params).then((res) => {
+            console.log(res.data)
+            if(res.data.code == 200) {
+              this.datail = res.data.data.data;
+              this.file = res.data.data.file;
+              this.partakeHost = res.data.data.data.mHostUnit.split(',');
+              this.partakeCompany = res.data.data.data.mParticipatingUnits.split(',');
             }
           })
 
@@ -312,13 +319,16 @@
             color:#666;
           }
         }
-        .upload {
-          font-size: 18px;
-          color:#da422a;
-          cursor: pointer;
-          text-decoration: underline;
-          font-weight: 600;
-          line-height: 60px;
+        .uploadBox {
+          margin: 10px 0;
+          .upload {
+            font-size: 18px;
+            color:#da422a;
+            cursor: pointer;
+            text-decoration: underline;
+            font-weight: 600;
+            /*line-height: 60px;*/
+          }
         }
       }
     }
