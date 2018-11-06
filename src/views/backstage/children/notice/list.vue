@@ -44,7 +44,7 @@
           :show-overflow-tooltip="true">
         </el-table-column>
         <el-table-column
-          prop="iId"
+          prop="iname"
           label="分类"
           width="100">
           <!--<template slot-scope="scope">

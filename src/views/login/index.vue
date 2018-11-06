@@ -10,7 +10,7 @@
           <div class="input-table" v-show="show">
             <div class="cell user">
               <span class="name">账号</span>
-              <input type="text" class="input" placeholder="请输入账号/手机号" v-model="userNum">
+              <input type="text" class="input" placeholder="请输入账号" v-model="userNum">
             </div>
             <div class="cell password">
               <span class="name">密码</span>

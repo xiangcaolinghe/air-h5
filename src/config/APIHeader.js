@@ -81,9 +81,9 @@ class API {
   }
 
   static put(uri,params){
-
-    config.params=API.sigParams(uri,params);
-    return axios.put(uri,params,config);
+    var data=qs.stringify(params);
+    // config.params=API.sigParams(uri,params);
+    return axios.put(uri,data,config);
   }
 
   static getNonce() {

@@ -443,6 +443,8 @@
       // 页面初始化
       getPage() {
         let params = {};
+        params['page'] = this.currentPage;
+        params['count'] = this.pageSize;
         API.get('/meeTing/FindAll', params).then((res) => {
           if (res.data.code == 200) {
             console.log(res.data)
