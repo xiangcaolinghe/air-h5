@@ -369,6 +369,7 @@
           mHostUnit: [],
           mParticipatingUnits: [],
           mContent: '',
+          mContents: '',
           mEnclName : '',
           mEnclUrl : ''
         },
@@ -390,6 +391,7 @@
           mHostUnit: [],
           mParticipatingUnits: [],
           mContent: '',
+          mContents: '',
           mEnclName : '',
           mEnclUrl : ''
         },
@@ -493,6 +495,7 @@
           mHostUnit: [],
           mParticipatingUnits: [],
           mContent: '',
+          mContents: '',
           mEnclName : '',
           mEnclUrl : ''
         }
@@ -526,6 +529,7 @@
         params['mEnclUrl'] = this.addObject.mEnclUrl;
         params['mEnclName'] = this.addObject.mEnclName;
         params['mContent'] = this.addObject.mContent;
+        params['mContents'] = this.addObject.mContents.replace(/[\r\n]/g,"");
         params['mSystemId'] = this.mSystemId;
         console.log(params)
         API.post('/meeTing/create', params).then((res) => {
@@ -566,6 +570,7 @@
           mHostUnit: [],
           mParticipatingUnits: [],
           mContent: '',
+          mContents: '',
           mEnclName : '',
           mEnclUrl : ''
         }
@@ -633,6 +638,7 @@
         params['mEnclUrl'] = this.editObject.mEnclUrl;
         params['mEnclName'] = this.editObject.mEnclName;
         params['mContent'] = this.editObject.mContent;
+        params['mContents'] = this.editObject.mContents.replace(/[\r\n]/g,"");
         params['mSystemId'] = this.mSystemId;
 
         console.log(params)
@@ -860,12 +866,12 @@
 
       // 编辑器
       onEditChange({editor, html, text}) {
-        console.log('editor change!', editor, html, text)
-        this.addObject.content = html
+        this.editObject.mContent = html
+        this.editObject.mContents = text
       },
       onAddChange({editor, html, text}) {
-        console.log('editor change!', editor, html, text)
-        this.editObject.content = html
+        this.addObject.mContent = html
+        this.addObject.mContents = text
       },
 
       // 翻页器：当前页，同时上一页下一页也能获取当前页

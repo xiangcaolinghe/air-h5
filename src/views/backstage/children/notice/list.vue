@@ -377,6 +377,7 @@
           nEnclUrl : '',
           nEnclName : '',
           nContent: '',
+          nContents: '',
           nAuthor: '',
           nFrom: '',
           iId: ''
@@ -388,6 +389,7 @@
           nEnclUrl : '',
           nEnclName : '',
           nContent: '',
+          nContents: '',
           nAuthor: '',
           nFrom: '',
           iId: ''
@@ -462,6 +464,7 @@
           nEnclUrl : '',
           nEnclName : '',
           nContent: '',
+          nContents: '',
           nAuthor: '',
           nFrom: '',
           iId: ''
@@ -483,6 +486,7 @@
         let params = {};
         params['nTitle'] = this.addObject.nTitle;
         params['nContent'] = this.addObject.nContent;
+        params['nContents'] = this.addObject.nContents.replace(/[\r\n]/g,"");
         params['nImgUrl'] = this.addObject.nurl;
         params['nAuthor'] = this.addObject.nAuthor;
         params['nFrom'] = this.addObject.nFrom;
@@ -538,6 +542,7 @@
           nEnclUrl: '',
           nEnclName: '',
           nContent: '',
+          nContents: '',
           nAuthor: '',
           nFrom: '',
           iId: ''
@@ -583,6 +588,7 @@
         params['id'] = this.editObject.id;
         params['nTitle'] = this.editObject.nTitle;
         params['nContent'] = this.editObject.nContent;
+        params['nContents'] = this.editObject.nContents.replace(/[\r\n]/g,"");
         params['nImgUrl'] = this.editObject.nurl;
         params['nAuthor'] = this.editObject.nAuthor;
         params['nFrom'] = this.editObject.nFrom;
@@ -824,11 +830,14 @@
       // 编辑器
       onEditorChange({editor, html, text}) {
         console.log('editor change!', editor, html, text)
-        this.addObject.content = html
+        this.editObject.nContent = html
+        this.editObject.nContents = text
       },
       onAddChange({editor, html, text}) {
         console.log('editor change!', editor, html, text)
-        this.editObject.content = html
+
+        this.addObject.nContent = html
+        this.addObject.nContents = text
       },
     },
     created() {

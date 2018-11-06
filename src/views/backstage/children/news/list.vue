@@ -248,6 +248,7 @@
         addObject: {
           fTitle: '',
           fContent: '',
+          fContents: '',
           furl: '',
           fImgUrl: '',
           fAuthor: '',
@@ -258,6 +259,7 @@
         editObject: {
           fTitle: '',
           fContent: '',
+          fContents: '',
           furl: '',
           fImgUrl: '',
           fAuthor: '',
@@ -326,6 +328,7 @@
         this.addObject = {
           fTitle: '',
           fContent: '',
+          fContents: '',
           furl: '',
           fImgUrl: '',
           fEnclName : '',
@@ -350,6 +353,7 @@
         let params = {};
         params['fTitle'] = this.addObject.fTitle;
         params['fContent'] = this.addObject.fContent;
+        params['fContents'] = this.addObject.fContents.replace(/[\r\n]/g,"");
         params['fImgUrl'] = this.addObject.furl;
         params['fEnclUrl'] = this.addObject.fEnclUrl;
         params['fEnclName'] = this.addObject.fEnclName;
@@ -400,6 +404,7 @@
         this.editObject = {
           fTitle: '',
           fContent: '',
+          fContents: '',
           furl: '',
           fImgUrl: '',
           fEnclName : '',
@@ -442,11 +447,11 @@
         }
         this.editObject.fEnclUrl = arr.join(',');
         this.editObject.fEnclName = arr2.join(',');
-
         let params = {};
         params['id'] = this.editObject.id;
         params['fTitle'] = this.editObject.fTitle;
         params['fContent'] = this.editObject.fContent;
+        params['fContents'] = this.editObject.fContents.replace(/[\r\n]/g,"");
         params['fImgUrl'] = this.editObject.furl;
         params['fEnclUrl'] = this.editObject.fEnclUrl;
         params['fEnclName'] = this.editObject.fEnclName;
@@ -631,12 +636,14 @@
       },
       // 编辑器
       onEditorChange({editor, html, text}) {
-        console.log('editor change!', editor, html, text)
-        this.addObject.fContent = html
+        this.editObject.fContent = html
+        this.editObject.fContents = text
       },
       onAddChange({editor, html, text}) {
-        console.log('editor change!', editor, html, text)
-        this.editObject.fContent = html
+        this.addObject.fContent = html
+        this.addObject.fContents =text
+
+
       }
 
 
