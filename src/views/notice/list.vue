@@ -3,7 +3,7 @@
     <br>
     <div class="contain">
       <ul class="current_banner" ref="ulWidth">
-        <li v-for="i in typeList" :key="i.id"><a @click="switcher(i)" class="banner_color" :class="{active:isActive == i.id}">{{i.label}}</a></li>
+        <li v-for="i in typeList" :key="i.id"><a @click="switcher(i.id)" class="banner_color" :class="{active:isActive == i.id}">{{i.iName}}</a></li>
       </ul>
     </div>
     <br/>
@@ -27,9 +27,9 @@
                 <div class="shux"></div>
               </div>
               <ul class="content" >
-                <li class="title"><a><router-link :to="{path:'/notice/details',query:{id:i.id}}" :class="i.bs == 1 ? Red : Black">{{i.title}}</router-link></a></li>
-                <li class="contents"><router-link :to="{path:'/notice/details',query:{id:i.id}}">{{i.content}}</router-link></li>
-                <li class="time">{{i.date}}</li>
+                <li class="title"><a><router-link :to="{path:'/notice/details',query:{id:i.id}}" :class="i.nTop == 1 ? Red : Black">{{i.nTitle}}</router-link></a></li>
+                <li class="contents"><router-link :to="{path:'/notice/details',query:{id:i.id}}">{{i.nContents}}</router-link></li>
+                <li class="time">{{i.nReleaseTime}}</li>
                 <li><br/></li>
               </ul>
               <!--<div v-if="index<list.length-1" class="content-hr"></div>-->
@@ -63,7 +63,7 @@
     data(){
       return{
         currentPage: 1,      //当前页
-        total: 20,          //数据总条数
+        total: 0,          //数据总条数
         pageSize: 10,        //每页显示的数据条数
         month:'',
         day:'',
@@ -72,7 +72,8 @@
         contentList : [],
         widthStyle:'',
         Red : 'Red',
-        Black : 'Black'
+        Black : 'Black',
+        isActive : ''
       }
     },
     methods: {
@@ -121,20 +122,24 @@
       getPage(){
         // 分类
         let params = {};
-        params['id'] = 123;
-        API.get('static/notListSelect.json', params).then((res) => {
+
+        API.get('/ification/FindAll', params).then((res) => {
           console.log(res.data)
-          if (res.status == 200) {
-            this.typeList = res.data;
+          if (res.data.code == 200) {
+            this.typeList = res.data.data;
+
             console.log(this.typeList);
             // 第一个分类的列表
             this.isActive = this.typeList[0].id;
             let params2 = {};
-            params2['id'] = this.typeList[0].id;
-            API.get('static/news.json', params2).then((res) => {
+            params2['page'] = this.currentPage;
+            params2['count'] = this.pageSize;
+            params2['Iid'] = this.typeList[0].id;
+            API.get('/notice/FindByIid', params2).then((res) => {
               console.log(res.data)
-              if (res.status == 200) {
-                this.contentList = res.data;
+              if (res.data.code == 200) {
+                this.contentList = res.data.data;
+                this.total = res.data.count;
                 console.log(this.contentList);
               } else {
                 console.log(res.data)
@@ -155,11 +160,15 @@
         this.isActive = id.id;
         console.log(id)
         let params = {};
-        params['id'] = id;
-        API.get('static/news.json', params).then((res) => {
+        params['Iid'] = id;
+        params['page'] = this.currentPage;
+        params['count'] = this.pageSize;
+        console.log(params)
+        API.get('/notice/FindByIid', params).then((res) => {
           console.log(res.data)
-          if (res.status == 200) {
-            this.contentList = res.data;
+          if (res.data.code == 200) {
+            this.contentList = res.data.data;
+            this.total = res.data.count;
             console.log(this.contentList);
           } else {
             console.log(res.data)

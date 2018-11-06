@@ -16,24 +16,25 @@
                     <div class="tab-content">
                         <div class="item" :class="{active:isActive == 1}">
                             <div class="list" v-for="i in newsShow" :key="i.id" @click="newsGo(i.id)">
-                                <img :src="i.url" alt="" class="img">
-                                <div class="title" :class="i.bs == 1 ? Red : Black">{{i.title}}</div>
-                                <div class="article">{{i.content}}</div>
-                                <div class="time">发布时间：{{i.date}}</div>
+                                <img :src="i.fImgUrl" alt="" class="img" v-if="i.fImgUrl">
+                                <img src="../assets/images/news.jpg" alt="" class="img" v-else>
+                                <div class="title" :class="i.fTop == 1 ? Red : Black">{{i.fTitle}}</div>
+                                <div class="article">{{i.fContents}}</div>
+                                <div class="time">发布时间：{{i.fReleaseTime}}</div>
                             </div>
                         </div>
                         <div class="item common" :class="{active:isActive == 2}">
                             <div class="list" v-for="i in trendsShow" :key="i.id" @click="dynamicGo(i.id)">
-                                <div class="title" :class="i.bs == 1 ? Red : Black">{{i.title}}</div>
-                                <div class="article">{{i.content}}</div>
-                                <div class="time">发布时间：{{i.date}}</div>
+                                <div class="title" :class="i.bs == 1 ? Red : Black">{{i.fTitle}}</div>
+                                <div class="article">{{i.fContents}}}</div>
+                                <div class="time">发布时间：{{i.fReleaseTime}}</div>
                             </div>
                         </div>
                         <div class="item common" :class="{active:isActive == 3}" >
                             <div class="list" v-for="i in noticeShow" :key="i.id" @click="noticeGo(i.id)">
-                                <div class="title" :class="i.bs == 1 ? Red : Black">{{i.title}}</div>
-                                <div class="article">{{i.content}}</div>
-                                <div class="time">发布时间：{{i.date}}</div>
+                                <div class="title" :class="i.nTop == 1 ? Red : Black">{{i.nTitle}}</div>
+                                <div class="article">{{i.nContents}}</div>
+                                <div class="time">发布时间：{{i.nReleaseTime}}</div>
                             </div>
                         </div>
                     </div>
@@ -124,54 +125,68 @@
         }
 
       },
-      getShowList(){
+      getNewList(){
         // 新闻
-        let params1 = {};
-        params1['id'] = 123;
-        API.get('static/news.json', params1).then((res) => {
+        let params= {};
+        var arr = [];
+        API.get('/newsInfo/FindAllByrelease', params).then((res) => {
           console.log(res.data)
-          if (res.status == 200) {
-            console.log(res.data[0])
-            for(var i=0;i<3;i++){
-              this.newsShow.push(res.data[i])
+          if (res.data.code == 200) {
+            if(res.data.data.length<=3){
+              this.newsShow = res.data.data;
+            }else {
+              for(var i=0;i<3;i++){
+                arr.push(res.data.data[i])
+              }
+              console.log(this.newsShow);
+              this.newsShow = arr;
             }
-            console.log(this.newsShow);
-
           } else {
             console.log(res.data)
           }
         })
+      },
+      getTrendsList(){
         // 动态
-        let params2 = {};
-        params2['id'] = 123;
-        API.get('static/trends.json', params2).then((res) => {
+        let params = {};
+        var arr = [];
+        API.get('/newsInfo/FindAllByrelease', params).then((res) => {
           console.log(res.data)
-          if (res.status == 200) {
-            console.log(res.data[0])
-            for(var i=0;i<4;i++){
-              this.trendsShow.push(res.data[i])
+          if (res.data.code == 200) {
+            if(res.data.data.length<=4){
+              this.trendsShow = res.data.data;
+            }else {
+              for(var i=0;i<4;i++){
+                arr.push(res.data.data[i])
+              }
+              this.trendsShow =arr;
+              console.log(this.trendsShow);
             }
-            console.log(this.trendsShow);
-
           } else {
             console.log(res.data)
           }
         })
+      },
+      getNoticeList(){
         //公告
-        let params3 = {};
-        params3['id'] = 123;
-        API.get('static/notice.json', params3).then((res) => {
+        let params = {};
+        var arr = [];
+        API.get('/notice/FindAllByrelease', params).then((res) => {
           console.log(res.data)
-          if (res.status == 200) {
-            console.log(res.data[0])
-            for(var i=0;i<4;i++){
-              this.noticeShow.push(res.data[i])
-            }
-            console.log(this.noticeShow);
+           if (res.data.code == 200) {
+             if(res.data.data.length<=4){
+               this.noticeShow = res.data.data;
+             }else {
+               for(var i=0;i<4;i++){
+                 arr.push(res.data.data[i])
+               }
+               this.noticeShow = arr;
+             }
+             console.log(this.noticeShow);
 
-          } else {
-            console.log(res.data)
-          }
+           } else {
+             console.log(res.data)
+           }
         })
       },
       newsGo(id){
@@ -238,7 +253,9 @@
       },
     },
     created() {
-      this.getShowList()
+      this.getNewList()
+      this.getTrendsList()
+      this.getNoticeList()
 
     }
   }

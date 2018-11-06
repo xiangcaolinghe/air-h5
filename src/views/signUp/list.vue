@@ -5,11 +5,12 @@
         </div>
         <div class="list-content inner-c" >
             <router-link :to="{path:'/sign/detail',query:{id:i.id}}" class="cell" v-for="i in meetingList" :key="i.id">
-                <div class="img-box"><img src="./../../assets/images/erwm.png" class="img"></div>
+                <!--<div class="img-box"><img src="./../../assets/images/erwm.png" class="img"></div>-->
+                <div class="img-box"><img :src="i.mqrcodeUrl" class="img" style="width:260px;height:260px;"></div>
                 <div class="detail">
-                    <div class="title">{{i.meetingName}}</div>
-                    <div class="time"><i class="icon iconfont icon-shijian"></i>{{i.data[0]}} -- {{i.data[1]}}</div>
-                    <div class="address"><i class="icon iconfont icon-dingweiweizhi"></i>{{i.meetingPlace}}</div>
+                    <div class="title">{{i.mname}}</div>
+                    <div class="time"><i class="icon iconfont icon-shijian"></i>{{i.mstartTime}} -- {{i.mendTime}}</div>
+                    <div class="address"><i class="icon iconfont icon-dingweiweizhi"></i>{{i.maddress}}</div>
                 </div>
             </router-link>
         </div>
@@ -27,10 +28,10 @@
       getPage(){
         let params1 = {};
         params1['id'] = 123;
-        API.get('static/mettingDetails.json', params1).then((res) => {
+        API.get('/meeTing/FindAllByrelease', params1).then((res) => {
           console.log(res.data)
-          if (res.status == 200) {
-            this.meetingList = res.data;
+          if (res.data.code == 200) {
+            this.meetingList = res.data.data;
           } else {
             console.log(res.data)
           }
@@ -51,7 +52,7 @@
             margin-bottom: 30px;
             width:100%;
             .img {
-                width:100%;
+                width: 100%;
                 display: block;
             }
         }

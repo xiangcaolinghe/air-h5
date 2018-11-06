@@ -4,11 +4,9 @@
     <div class="contain">
       <ul class="current_position">
         <li>当前位置：</li>
-        <li><a href="/">首页</a>&nbsp;&nbsp;</li>
-        <li><i class="icon iconfont icon-youjiantou"></i>&nbsp;&nbsp;</li>
-        <li><a href="/notice/list">公告</a></li>
+        <li><router-link :to="{name:'backstage.news'}">公告管理</router-link></li>
         <li>&nbsp;&nbsp;<i class="icon iconfont icon-youjiantou"></i>&nbsp;&nbsp;&nbsp;</li>
-        <li><a href="/notice/details">详情</a></li>
+        <li><a href="javascript:;">详情</a></li>
       </ul>
     </div>
     <br/>
@@ -20,21 +18,21 @@
     <br/>
     <div class="news_tails">
       <div class="news_title">
-        {{datail.title}}
+        {{datail.nTitle}}
       </div>
       <br/><br/>
       <div class="dis">
-        <span>作者：{{datail.author}}</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-        <span>发布时间：{{datail.time}}</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-        <span>来源：{{datail.origin}}</span>
+        <span>作者：{{datail.nAuthor}}</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <span>发布时间：{{datail.nReleaseTime}}</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <span>来源：{{datail.nFrom}}</span>
       </div>
       <br/><br/>
       <div class="detail_content ql-snow" >
-        <div class="ql-editor" v-html="datail.content"></div>
+        <div class="ql-editor" v-html="datail.nContent"></div>
       </div>
       <br/><br/>
-      <div class="down_res">
-        <a href="datail.download_url" style="color: #df6657;text-align: left;">{{datail.download_name}}</a>
+      <div class="down_res" v-for="i in file">
+        <a :href="i.fenclUrl" style="color: #df6657;text-align: left;" >{{i.fenclName}}</a>
       </div>
       <br/><br/><br/>
     </div>
@@ -46,23 +44,23 @@
         //name: "details.vue"
       data(){
         return{
-          datail:{}
+          datail:{},
+          file : []
         }
       },
       methods:{
         getPage(){
           console.log(this.$route.query.id)
-          let params = {};
+          let params={};
           params['id'] = this.$route.query.id;
-          API.get('static/newsDetails.json', params).then((res) => {
+          API.get('/notice/FindById',params).then((res)=>{
             console.log(res.data)
-            if (res.status == 200) {
-              this.datail = res.data[0];
-              console.log(this.datail);
-            } else {
-              console.log(res.data)
+            if(res.data.code == 200) {
+              this.datail = res.data.data.data;
+              this.file = res.data.data.file
             }
           })
+          console.log(this.$route.query.id)
         }
       },
       created(){
@@ -74,7 +72,7 @@
 <style lang="less" scoped>
   @import '../../assets/styles/list_details.less';
   .ql-editor {
-    width: 75%;
+    width: 85%;
     margin: 0 auto;
   }
 </style>

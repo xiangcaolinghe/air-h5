@@ -76,7 +76,7 @@
 <style lang="less" scoped>
   @import '../../assets/styles/list_details.less';
   .ql-editor {
-    width: 75%;
+    width: 85%;
     margin: 0 auto;
   }
 </style>

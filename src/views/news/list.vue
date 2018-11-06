@@ -13,11 +13,14 @@
     <div class="title_hr"></div>
     <div class="contentList">
       <div v-for="(item,index) in newsList" :key="item.id" @click="newsGo(item.id)">
-        <div class="news_img"><img :src="item.url" style="width: 240px;"/></div>
+        <div class="news_img">
+          <img :src="item.fImgUrl" style="width: 240px;" v-if="item.fImgUrl"/>
+          <img src="../../assets/images/news.jpg" style="width: 240px;" v-else/>
+        </div>
         <ul class="content">
-          <li class="title"><a :class="item.bs == 1 ? Red : Black">{{item.title}}</a></li>
-          <li class="contents"><a>{{item.content}}</a></li>
-          <li class="time">{{item.date}}</li>
+          <li class="title"><a :class="item.fTop == 1 ? Red : Black">{{item.fTitle}}</a></li>
+          <li class="contents"><a>{{item.fContents}}</a></li>
+          <li class="time">{{item.fReleaseTime}}</li>
           <li><br/></li>
         </ul>
         <div v-if="index<newsList.length-1" class="content-hr"></div>
@@ -51,7 +54,7 @@
         return{
           newsList : [],
           currentPage: 1,      //当前页
-          total: 20,          //数据总条数
+          total: 0,          //数据总条数
           pageSize: 10,        //每页显示的数据条数
           Red : 'Red',
           Black : 'Black'
@@ -59,12 +62,14 @@
       },
       methods: {
         getPage(){
-          let params1 = {};
-          params1['id'] = 123;
-          API.get('static/news.json', params1).then((res) => {
+          let params = {};
+          params['page'] = this.currentPage;
+          params['count'] = this.pageSize;
+          API.get('/newsInfo/FindAllByrelease', params).then((res) => {
             console.log(res.data)
-            if (res.status == 200) {
-              this.newsList = res.data;
+            if (res.data.code  == 200) {
+              this.newsList = res.data.data;
+              this.total = res.data.count;
             } else {
               console.log(res.data)
             }
@@ -73,12 +78,17 @@
         newsGo(id){
           this.$router.push({name:'newDetails',query:{id:id}})
         },
-        handleSizeChange(val) {
-          this.pageSize = val;
-//        console.log(`每页 ${val} 条`);
-        },
+        // 翻页器：当前页，同时上一页下一页也能获取当前页
         handleCurrentChange(val) {
           this.currentPage = val;
+          this.getPage()
+          console.log(val);
+        },
+        // 翻页器：选择10条还是20条、
+        handleSizeChange(val) {
+          this.pageSize = val;
+          this.getPage()
+          console.log(val);
         },
       },
       created() {

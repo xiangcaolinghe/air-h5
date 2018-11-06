@@ -20,12 +20,12 @@
         </div>
         <div class="inner-c detail-table">
             <div class="info">
-                <div class="img"><img class="ewm pic" src="./../../assets/images/erwm.png"></div>
+                <div class="img"><img class="ewm pic" :src="datail.mQrcodeUrl"></div>
                 <div class="detail">
-                    <div class="title">{{meetingData.meetingName}}</div>
-                    <div class="time"><i class="icon iconfont icon-shijian"></i>{{meetingData.data[0]}} -- {{meetingData.data[1]}}</div>
-                    <div class="address"><i class="icon iconfont icon-dingweiweizhi"></i>{{meetingData.meetingPlace}}</div>
-                    <div class="btn"><router-link :to="{path:'/form',query:{id:meetingData.id}}">在线报名</router-link></div>
+                    <div class="title">{{datail.mName}}</div>
+                    <div class="time"><i class="icon iconfont icon-shijian"></i>{{datail.mStartTime}} -- {{datail.mEndTime}}</div>
+                    <div class="address"><i class="icon iconfont icon-dingweiweizhi"></i>{{datail.mAddress}}</div>
+                    <div class="btn"><router-link :to="{path:'/form',query:{id:datail.id}}">在线报名</router-link></div>
                     <div class="wechart">
                         <img src="" alt="">
                         <p class="name">扫描二维码报名</p>
@@ -44,7 +44,7 @@
                 <a name="detail"></a>
                 <div class="tab">
                   <div class="intro">
-                      {{meetingData.abstract}}
+                    {{datail.mBrief}}
                   </div>
                 </div>
                 <!--主办单位-->
@@ -52,7 +52,7 @@
                 <div class="tab">
                     <div class="title">主办单位</div>
                     <ul>
-                      <li v-for="item in meetingData.partakeHost">{{item}}</li>
+                      <li v-for="item in partakeHost">{{item}}</li>
                     </ul>
                 </div>
                 <!--参会相关单位-->
@@ -60,7 +60,7 @@
                 <div class="tab">
                     <div class="title">参会相关单位</div>
                     <ul>
-                      <li v-for="item in meetingData.partakeCompany">{{item}}</li>
+                      <li v-for="item in partakeCompany">{{item}}</li>
                     </ul>
                 </div>
                 <!--会议联系人-->
@@ -68,26 +68,25 @@
                 <div class="tab">
                     <div class="title">会议联系人</div>
                     <ul>
-                      <li>姓名 {{meetingData.contacts}}</li>
-                      <li>微信 {{meetingData.wx}}</li>
-                      <li>电话 {{meetingData.phone}}</li>
+                      <li>姓名 {{datail.mContacts}}</li>
+                      <li>微信 {{datail.mWechat}}</li>
+                      <li>电话 {{datail.mPhone}}</li>
                     </ul>
                 </div>
                 <!--会议日程-->
                 <a name="date"></a>
-                <div class="tab">
-                    <div class="title">会议日程</div>
-                  <div class="ql-snow" >
-                    <div class="ql-editor" v-html="meetingData.agenda"></div>
+                <div class="tab ql-snow">
+                  <div class="title">会议日程</div>
+                  <div class="ql-editor" v-html="datail.mContent" style="color: #666"></div>
+                  <div v-for="i in file" class="uploadBox">
+                    <a :href="i.fenclUrl" class="upload">{{i.fenclName}}</a>
                   </div>
-
-                    <span class="upload">附件点击下载.doc</span>
                 </div>
                 <!--备注-->
                 <div class="tab">
                     <div class="title">备注</div>
                     <ul>
-                        <li>请认真填写报名信息，报名信息审核通过后会短信通知详细参会信息。</li>
+                        <li>{{datail.mRemarks}}</li>
                     </ul>
                 </div>
             </div>
@@ -99,34 +98,22 @@
   export default {
     data () {
       return {
-        dialogTableVisible: false,
-        dialogFormVisible: false,
-        active:1,
-        meetingData : {
-          meetingName : '',
-          data : [],
-          meetingPlace : '',
-          abstract : '',
-          contacts : '',
-          wx : '',
-          phone : '',
-          remarks : '',
-          partakeHost : [],
-          partakeCompany : [],
-          agenda : '',
-          fileList : []
+        datail: {
+          mName: '',
+          mStartTime: '',
+          mEndTime: '',
+          mAddress: '',
+          mBrief: '',
+          mContacts: '',
+          mWechat: '',
+          mPhone: '',
+          mContent: '',
+          mRemarks: ''
         },
-        form: {
-          name: '',
-          shape: '1',
-          meeting:'',
-          mobile:'',
-          unit:'',
-          time: '',
-          traffic:'1',
-          date:'',
-          train:''
-        },
+        partakeHost: [],
+        partakeCompany: [],
+        file: [],
+        active: 1,
         formLabelWidth: '120px'
       }
     },
@@ -135,15 +122,15 @@
         this.active = id
       },
       getPage(){
-        console.log(this.$route.query.id)
-        let params1 = {};
-        params1['id'] = this.$route.query.id;
-        API.get('static/mettingDetails.json', params1).then((res) => {
+        let params = {};
+        params['id'] = this.$route.query.id;
+        API.get('/meeTing/FindById', params).then((res) => {
           console.log(res.data)
-          if (res.status == 200) {
-            this.meetingData = res.data[0];
-          } else {
-            console.log(res.data)
+          if(res.data.code == 200) {
+            this.datail = res.data.data.data;
+            this.file = res.data.data.file;
+            this.partakeHost = res.data.data.data.mHostUnit.split(',');
+            this.partakeCompany = res.data.data.data.mParticipatingUnits.split(',');
           }
         })
       }
