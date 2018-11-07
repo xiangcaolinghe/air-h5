@@ -1,5 +1,5 @@
 <template>
-  <div class="list">
+  <div class="list" v-bind:style="{ minHeight: offHeight + 'px' }">
     <br/><br/>
     <div class="contain">
       <div>
@@ -71,7 +71,8 @@
         meetingNoticeList:[],
         isActive:1,
         currentPlanName:'空域调整',
-        contentHidden: true
+        contentHidden: true,
+        offHeight : 0
       }
     },
     methods: {
@@ -188,9 +189,16 @@
           item.show=true;
         }
 
+      },
+      heightCen(){
+        let hei = document.documentElement.clientHeight-410;
+        console.log(hei)
+        this.offHeight = hei;
+        console.log(this.offHeight)
       }
     },
     mounted: function () {
+      this.heightCen();
       this.changeNoticeList=[
         {img: '/static/img/news-1.cf434b2.png',title: '玉树地震,西北空管局气象中心区域报室组织临时天气会商1',content:
           '西北空管局管制中心主动作为，承接咸阳机场运管委战略解码指标，努力促进航班正常性工作，取得了良好成绩，' +

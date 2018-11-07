@@ -34,7 +34,8 @@
         :page-sizes="[10, 20, 30, 40]"
         :page-size="pageSize"
         layout="total, sizes, prev, pager, next, jumper"
-        :total=parseInt(total)>
+        :total=parseInt(total)
+        v-show="pag">
       </el-pagination>
     </div>
   </div>
@@ -57,7 +58,8 @@
           total: 0,          //数据总条数
           pageSize: 10,        //每页显示的数据条数
           Red : 'Red',
-          Black : 'Black'
+          Black : 'Black',
+          pag : false
         }
       },
       methods: {
@@ -70,6 +72,11 @@
             if (res.data.code  == 200) {
               this.newsList = res.data.data;
               this.total = res.data.count;
+              if(this.total>0){
+                this.pag = true
+              }else {
+                this.pag = false
+              }
             } else {
               console.log(res.data)
             }

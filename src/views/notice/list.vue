@@ -1,5 +1,5 @@
 <template>
-  <div class="list" >
+  <div class="list" v-bind:style="{ minHeight: offHeight + 'px' }">
     <br>
     <div class="contain">
       <ul class="current_banner" ref="ulWidth">
@@ -43,7 +43,8 @@
               :page-sizes="[10, 20, 30, 40]"
               :page-size="pageSize"
               layout="total, sizes, prev, pager, next, jumper"
-              :total=parseInt(total)>
+              :total=parseInt(total)
+              v-show="pag">
             </el-pagination>
             <br/><br/>
           </div>
@@ -73,7 +74,9 @@
         widthStyle:'',
         Red : 'Red',
         Black : 'Black',
-        isActive : ''
+        isActive : '',
+        offHeight : 0,
+        pag:false
       }
     },
     methods: {
@@ -122,7 +125,6 @@
       getPage(){
         // 分类
         let params = {};
-
         API.get('/ification/FindAll', params).then((res) => {
           console.log(res.data)
           if (res.data.code == 200) {
@@ -140,6 +142,11 @@
               if (res.data.code == 200) {
                 this.contentList = res.data.data;
                 this.total = res.data.count;
+                if(this.total>0){
+                  this.pag = true
+                }else {
+                  this.pag = false
+                }
                 console.log(this.contentList);
               } else {
                 console.log(res.data)
@@ -157,8 +164,9 @@
       },
       // 点击分类
       switcher(id){
-        this.isActive = id.id;
-        console.log(id)
+        this.heightCen();
+        this.isActive = id;
+        console.log(this.isActive)
         let params = {};
         params['Iid'] = id;
         params['page'] = this.currentPage;
@@ -169,12 +177,23 @@
           if (res.data.code == 200) {
             this.contentList = res.data.data;
             this.total = res.data.count;
+            if(this.total>0){
+              this.pag = true
+            }else {
+              this.pag = false
+            }
             console.log(this.contentList);
           } else {
             console.log(res.data)
           }
         })
       },
+      heightCen(){
+        let hei = document.documentElement.clientHeight-410;
+        console.log(hei)
+        this.offHeight = hei;
+        console.log(this.offHeight)
+      }
     },
     mounted: function () {
       this.currentDate();
