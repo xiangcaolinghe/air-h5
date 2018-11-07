@@ -3,27 +3,27 @@
     <p class="titleH">
       <span>请填写报名表单</span>
     </p>
-      <el-form :model="form">
+      <el-form>
         <el-form-item label="报名形式：" :label-width="formLabelWidth">
-          <el-select v-model="form.shape" placeholder="请选择报名形式">
-            <el-option label="以个人形式报名" value="1"></el-option>
-            <el-option label="以单位集体形式报名" value="2"></el-option>
+          <el-select v-model="form.sForm" placeholder="请选择报名形式">
+            <el-option label="以个人形式报名" value="以个人形式报名"></el-option>
+            <el-option label="以单位集体形式报名" value="以单位集体形式报名"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="参会名称：" :label-width="formLabelWidth">
-          <el-input v-model="form.meeting" autocomplete="off" placeholder="请填写参会名称"></el-input>
+          <el-input v-model="form.sName" autocomplete="off" placeholder="请填写参会名称"></el-input>
         </el-form-item>
         <el-form-item label="参会人名称：" :label-width="formLabelWidth">
-          <el-input v-model="form.name" autocomplete="off" placeholder="请填写参会人名称"></el-input>
+          <el-input v-model="form.sPeopleName" autocomplete="off" placeholder="请填写参会人名称"></el-input>
         </el-form-item>
         <el-form-item label="所属单位：" :label-width="formLabelWidth">
-          <el-input v-model="form.unit" autocomplete="off" placeholder="请填写所属单位"></el-input>
+          <el-input v-model="form.sUnit" autocomplete="off" placeholder="请填写所属单位"></el-input>
         </el-form-item>
         <el-form-item label="联系方式：" :label-width="formLabelWidth">
-          <el-input v-model="form.mobile" autocomplete="off" placeholder="请填写联系方式"></el-input>
+          <el-input v-model="form.sMobile" autocomplete="off" placeholder="请填写联系方式"></el-input>
         </el-form-item>
         <el-form-item label="到会日期：" :label-width="formLabelWidth">
-          <el-input v-model="form.date" autocomplete="off" placeholder="请填写到会日期" @focus="openPick1"></el-input>
+          <el-input v-model="form.sTime" autocomplete="off" placeholder="请填写到会日期" @focus="openPick1"></el-input>
           <mt-datetime-picker
             ref="picker1"
             type="date"
@@ -33,16 +33,16 @@
           <!--v-model="form.date"-->
         </el-form-item>
         <el-form-item label="乘坐交通工具：" prop="resource" :label-width="formLabelWidth" class="jtgj">
-          <el-radio-group v-model="form.traffic" >
+          <el-radio-group v-model="form.sVehicle" >
             <el-radio label="1">火车</el-radio>
             <el-radio label="2">飞机</el-radio>
           </el-radio-group>
         </el-form-item>
         <el-form-item label="车次：" :label-width="formLabelWidth">
-          <el-input v-model="form.train" autocomplete="off" placeholder="请填写车次"></el-input>
+          <el-input v-model="form.sTrain" autocomplete="off" placeholder="请填写车次"></el-input>
         </el-form-item>
         <el-form-item label="时间：" :label-width="formLabelWidth">
-          <el-input v-model="form.time" autocomplete="off" placeholder="请填写时间" @focus="openPick2"></el-input>
+          <el-input v-model="form.sTrainTime" autocomplete="off" placeholder="请填写时间" @focus="openPick2"></el-input>
           <mt-datetime-picker
             ref="picker2"
             type="datetime"
@@ -67,22 +67,34 @@
           datail:{},
           formVis : true,
           formLabelWidth : '',
+          mId : '',
           form: {
-            name: '',
-            shape: '1',
-            meeting:'',
-            mobile:'',
-            unit:'',
-            time: '',
-            traffic:'1',
-            date:'',
-            train:'',
+            sForm: '',
+            sName: '',
+            sPeopleName:'',
+            sUnit:'',
+            sMobile:'',
+            sTime: '',
+            sVehicle:'1',
+            sTrain:'',
+            sTrainTime:'',
           },
           // pickerValue:'',
           startDate:new Date(),
         }
       },
       methods:{
+        getPage(){
+          console.log(window.location.href)
+          function getQueryString(name) {
+            var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i");
+            var r = window.location.search.substr(1).match(reg);
+            if (r != null) return unescape(r[2]);
+            return null;
+          }
+          this.mId = getQueryString('id')
+          console.log(this.mId)
+        },
         openPick1(){
           this.$refs.picker1.open();
         },
@@ -91,30 +103,40 @@
         },
         handleConfirm1 (data) {
           let date = moment(data).format('YYYY-MM-DD')
-          this.form.date = date
+          this.form.sTime = date
         },
         handleConfirm2 (data) {
           let date = moment(data).format('YYYY-MM-DD HH:mm:ss')
-          this.form.time = date
+          this.form.sTrainTime = date
         },
         save(){
           console.log(this.form)
           let params = {};
-          params['id'] = this.$route.query.id;
-         console.log(this.$route.query.id)
-          API.get('static/mettingDetails.json', params).then((res) => {
+          params['sForm'] = this.form.sForm;
+          params['sName'] = this.form.sName;
+          params['sPeopleName'] = this.form.sPeopleName;
+          params['sUnit'] = this.form.sUnit;
+          params['sMobile'] = this.form.sMobile;
+          params['sTime'] = this.form.sTime;
+          params['sVehicle'] = this.form.sVehicle;
+          params['sTrain'] = this.form.sTrain;
+          params['sTrainTime'] = this.form.sTrainTime;
+          params['mId'] = this.mId;
+          console.log(params)
+
+          API.post('/signup/create', params).then((res) => {
             console.log(res.data)
-            if (res.status == 200) {
-              this.form = {
-                name: '',
-                  shape: '1',
-                  meeting:'',
-                  mobile:'',
-                  unit:'',
-                  time: '',
-                  traffic:'1',
-                  date:'',
-                  train:'',
+            if (res.data.code == 200) {
+              this.form ={
+                  sForm: '',
+                  sName: '',
+                  sPeopleName:'',
+                  sUnit:'',
+                  sMobile:'',
+                  sTime: '',
+                  sVehicle:'1',
+                  sTrain:'',
+                  sTrainTime:'',
               },
               this.$message({
                 type: 'success',
@@ -129,6 +151,9 @@
           })
         }
       },
+      created() {
+        this.getPage()
+      }
     }
 </script>
 
