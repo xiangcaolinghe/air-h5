@@ -17,7 +17,7 @@
           <img :src="item.fImgUrl" style="width: 240px;" v-if="item.fImgUrl"/>
           <img src="../../assets/images/news.jpg" style="width: 240px;" v-else/>
         </div>
-        <ul class="content">
+        <ul class="content" style="height: 200px">
           <li class="title"><a :class="item.fTop == 1 ? Red : Black">{{item.fTitle}}</a></li>
           <li class="contents"><a>{{item.fContents}}</a></li>
           <li class="time">{{item.fReleaseTime}}</li>
