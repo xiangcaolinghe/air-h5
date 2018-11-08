@@ -104,8 +104,9 @@
             </div>
           </el-col>
         </el-row>
-        <div class="cell marbot20">
-            <span class="name padlet5">会议时间：</span>
+        <div class="cell">
+          <el-form-item label="会议时间：" prop="data">
+            <!--<span class="name padlet5">会议时间：</span>-->
             <el-date-picker
               class="flew-input"
               v-model="addObject.data"
@@ -118,6 +119,7 @@
               value-format="yyyy-MM-dd HH:mm:ss"
               style="width: 780px">
             </el-date-picker>
+          </el-form-item>
         </div>
         <div class="cell marbot20">
           <span class="name padlet5">会议简介：</span>
@@ -244,7 +246,7 @@
           </el-col>
         </el-row>
         <div class="cell marbot20">
-          <span class="name padlet5">会议时间：</span>
+          <span class="name padlet5"><i style="color: red;padding-right: 5px;">*</i>会议时间：</span>
           <el-date-picker
             class="flew-input"
             v-model="EditData"
@@ -411,6 +413,12 @@
           mContacts: [
             { required: true, message: '必填', trigger: 'blur' },
           ],
+          data: [
+            { required: true, message: '必填', trigger: 'blur' },
+          ],
+         /* EditData: [
+            { required: true, message: '必填', trigger: 'blur' },
+          ]*/
         },
         editObject: {
           id: '',
@@ -428,7 +436,7 @@
           mEnclName : '',
           mEnclUrl : ''
         },
-        EditData : '',
+        EditData : [],
         // 编辑的主办单位标签内容
         editValue: '',
         editVisible: false,
@@ -667,62 +675,74 @@
       },
       // 编辑保存
       editSave(formName) {
-        this.$refs[formName].validate((valid) => {
-          if (valid) {
-            console.log(this.editObject)
-            // 上传部分
-            var arr = [];
-            var arr2 = [];
-            for (var i = 0; i < this.EditfileList.length; i++) {
-              if (this.EditfileList[i].response && this.EditfileList[i].response.code == '200') {
-                arr.push(this.EditfileList[i].response.data.revealImage);
-                arr2.push(this.EditfileList[i].response.data.imageName);
-              } else {
-                arr.push(this.EditfileList[i].url)
-                arr2.push(this.EditfileList[i].name)
+        console.log(this.EditData)
+        if(!this.EditData){
+          this.$message({
+            type: 'error',
+            message: '会议时间必填!'
+          });
+        }else if(!this.EditData[0]){
+          this.$message({
+            type: 'error',
+            message: '会议时间必填!'
+          });
+        }else {
+          this.$refs[formName].validate((valid) => {
+            if (valid) {
+              console.log(this.editObject)
+              // 上传部分
+              var arr = [];
+              var arr2 = [];
+              for (var i = 0; i < this.EditfileList.length; i++) {
+                if (this.EditfileList[i].response && this.EditfileList[i].response.code == '200') {
+                  arr.push(this.EditfileList[i].response.data.revealImage);
+                  arr2.push(this.EditfileList[i].response.data.imageName);
+                } else {
+                  arr.push(this.EditfileList[i].url)
+                  arr2.push(this.EditfileList[i].name)
+                }
               }
+              this.editObject.mEnclUrl = arr.join(',');
+              this.editObject.mEnclName = arr2.join(',');
+              let params = {};
+              params['id'] = this.editObject.id;
+              params['mName'] = this.editObject.mName;
+              params['mStartTime'] = this.EditData[0];
+              params['mEndTime'] = this.EditData[1];
+              params['mAddress'] = this.editObject.mAddress;
+              params['mBrief'] = this.editObject.mBrief;
+              params['mContacts'] = this.editObject.mContacts;
+              params['mWechat'] = this.editObject.mWechat;
+              params['mPhone'] = this.editObject.mPhone;
+              params['mHostUnit'] = this.editObject.mHostUnit.join(",");
+              params['mParticipatingUnits'] = this.editObject.mParticipatingUnits.join(",");
+              params['mRemarks'] = this.editObject.mRemarks;
+              params['mEnclUrl'] = this.editObject.mEnclUrl;
+              params['mEnclName'] = this.editObject.mEnclName;
+              params['mContent'] = this.editObject.mContent;
+              params['mContents'] = this.editObject.mContents.replace(/[\r\n]/g, "");
+              params['mSystemId'] = this.mSystemId;
+
+              console.log(params)
+              API.put('/meeTing/update', params).then((res) => {
+                console.log(res.data)
+                if (res.data.code == 200) {
+                  this.editPop = false;
+                  this.getPage();
+                  this.$message({
+                    type: 'success',
+                    message: '编辑成功!'
+                  });
+                } else {
+                  this.$message({
+                    type: 'error',
+                    message: '编辑失败!'
+                  });
+                }
+              })
             }
-            this.editObject.mEnclUrl = arr.join(',');
-            this.editObject.mEnclName = arr2.join(',');
-            let params = {};
-
-            params['id'] = this.editObject.id;
-            params['mName'] = this.editObject.mName;
-            params['mStartTime'] = this.EditData[0];
-            params['mEndTime'] = this.EditData[1];
-            params['mAddress'] = this.editObject.mAddress;
-            params['mBrief'] = this.editObject.mBrief;
-            params['mContacts'] = this.editObject.mContacts;
-            params['mWechat'] = this.editObject.mWechat;
-            params['mPhone'] = this.editObject.mPhone;
-            params['mHostUnit'] = this.editObject.mHostUnit.join(",");
-            params['mParticipatingUnits'] = this.editObject.mParticipatingUnits.join(",");
-            params['mRemarks'] = this.editObject.mRemarks;
-            params['mEnclUrl'] = this.editObject.mEnclUrl;
-            params['mEnclName'] = this.editObject.mEnclName;
-            params['mContent'] = this.editObject.mContent;
-            params['mContents'] = this.editObject.mContents.replace(/[\r\n]/g, "");
-            params['mSystemId'] = this.mSystemId;
-
-            console.log(params)
-            API.put('/meeTing/update', params).then((res) => {
-              console.log(res.data)
-              if (res.data.code == 200) {
-                this.editPop = false;
-                this.getPage();
-                this.$message({
-                  type: 'success',
-                  message: '编辑成功!'
-                });
-              } else {
-                this.$message({
-                  type: 'error',
-                  message: '编辑失败!'
-                });
-              }
-            })
-          }
-        })
+          })
+        }
       },
       // 编辑上传功能成功
       succEdit(response, file, fileList) {
