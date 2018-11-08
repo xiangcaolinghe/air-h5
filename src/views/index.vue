@@ -8,9 +8,9 @@
                 <div class="news-bg"></div>
                 <div class="left">
                     <div class="tab">
-                        <div class="item newst" :class="{active:isActive == 1}" @click="newsTab(1)"><span>新闻<i class="newsts"></i></span></div>
-                        <div class="item newst" :class="{active:isActive == 2}" @click="newsTab(2)">动态<i class="newsts"></i></div>
-                        <div class="item newst" :class="{active:isActive == 3}" @click="newsTab(3)">公告<i class="newsts"></i></div>
+                        <div class="item newst" :class="{active:isActive == 1}" @click="newsTab(1)"><span>新闻<i class="newsts" v-show="newS"></i></span></div>
+                        <div class="item newst" :class="{active:isActive == 2}" @click="newsTab(2)">动态<i class="newsts" v-show="dynamicS"></i></div>
+                        <div class="item newst" :class="{active:isActive == 3}" @click="newsTab(3)">公告<i class="newsts" v-show="noticeS"></i></div>
                     </div>
                     <div class="more" @click="newsList()">查看更多</div>
                     <div class="tab-content">
@@ -92,6 +92,9 @@
     data () {
       return {
         loginShow : true,
+        newS : false,
+        dynamicS : false,
+        noticeS : false,
         isActive:1,
         newsShow : [],
         trendsShow : [],
@@ -129,6 +132,7 @@
         // 新闻
         let params= {};
         var arr = [];
+        var num = 0;
         API.get('/newsInfo/FindAllByrelease', params).then((res) => {
           console.log(res.data)
           if (res.data.code == 200) {
@@ -138,8 +142,16 @@
               for(var i=0;i<3;i++){
                 arr.push(res.data.data[i])
               }
-              console.log(this.newsShow);
               this.newsShow = arr;
+              for(var i=0;i<this.newsShow.length;i++){
+                if(this.newsShow[i].fTop == 1){
+                  num++;
+                }
+              }
+              if(num>0){
+                this.newS = true;
+              }
+              console.log(this.newsShow);
             }
           } else {
             console.log(res.data)
@@ -150,6 +162,7 @@
         // 动态
         let params = {};
         var arr = [];
+        var num = 0;
         API.get('/newsInfo/FindAllByrelease', params).then((res) => {
           console.log(res.data)
           if (res.data.code == 200) {
@@ -161,6 +174,14 @@
               }
               this.trendsShow =arr;
               console.log(this.trendsShow);
+              for(var i=0;i<this.trendsShow.length;i++){
+                if(this.trendsShow[i].fTop == 1){
+                  num++;
+                }
+              }
+              if(num>0){
+                this.dynamicS = true;
+              }
             }
           } else {
             console.log(res.data)
@@ -171,6 +192,7 @@
         //公告
         let params = {};
         var arr = [];
+        var num = 0;
         API.get('/notice/FindAllByrelease', params).then((res) => {
           console.log(res.data)
            if (res.data.code == 200) {
@@ -183,7 +205,14 @@
                this.noticeShow = arr;
              }
              console.log(this.noticeShow);
-
+             for(var i=0;i<this.noticeShow.length;i++){
+               if(this.noticeShow[i].nTop == 1){
+                 num++;
+               }
+             }
+             if(num>0){
+               this.noticeS = true;
+             }
            } else {
              console.log(res.data)
            }
