@@ -88,16 +88,21 @@
     </div>
     <!--添加弹框-->
     <el-dialog title="添加新闻" :visible.sync="addPop" class="tip-dialog" :close-on-click-modal="false">
+      <el-form :model="addObject" status-icon :rules="rules" ref="addObject" label-width="80px" class="demo-ruleForm">
       <div class="content">
         <div class="cell">
-          <span class="name">标题：</span>
-          <el-input v-model="addObject.fTitle" placeholder="请输入内容" class="flew-input"></el-input>
+          <el-form-item label="标题：" prop="fTitle">
+          <!--<span class="name">标题：</span>-->
+            <el-input v-model="addObject.fTitle" placeholder="请输入内容" class="flew-input"></el-input>
+          </el-form-item>
         </div>
         <el-row>
           <el-col :span="11">
             <div class="cell">
-              <span class="name">作者：</span>
-              <el-input v-model="addObject.fAuthor" placeholder="请输入内容" class="flew-input"></el-input>
+              <el-form-item label="作者：" prop="fAuthor">
+              <!--<span class="name">作者：</span>-->
+                <el-input v-model="addObject.fAuthor" placeholder="请输入内容" class="flew-input"></el-input>
+              </el-form-item>
             </div>
           </el-col>
           <el-col :span="11" :offset="2">
@@ -141,32 +146,38 @@
             </div>
           </el-col>
         </el-row>
-        <div class="cell">
+        <div class="cell" style="margin-top: 20px;">
           <span class="name">内容：</span>
           <quill-editor ref="myTextEditor"
                         v-model="addObject.fContent"
-                        :config="editorOption"
+                        :options="editorOption"
                         @change="onAddChange($event)">
           </quill-editor>
         </div>
       </div>
+      </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="addSave" class="confirmAdd">确 定</el-button>
+        <el-button type="primary" @click="addSave('addObject')" class="confirmAdd">确 定</el-button>
         <el-button @click="addPop = false" class="cancelAdd">取 消</el-button>
       </div>
     </el-dialog>
     <!--编辑弹框-->
     <el-dialog title="编辑" :visible.sync="editPop" class="tip-dialog" :close-on-click-modal="false">
+      <el-form :model="editObject" status-icon :rules="rules" ref="editObject" label-width="80px" class="demo-ruleForm">
       <div class="content">
         <div class="cell">
-          <span class="name">标题：</span>
-          <el-input v-model="editObject.fTitle" placeholder="请输入内容" class="flew-input"></el-input>
+          <el-form-item label="标题：" prop="fTitle">
+          <!--<span class="name">标题：</span>-->
+            <el-input v-model="editObject.fTitle" placeholder="请输入内容" class="flew-input"></el-input>
+          </el-form-item>
         </div>
         <el-row>
           <el-col :span="11">
             <div class="cell">
-              <span class="name">作者：</span>
-              <el-input v-model="editObject.fAuthor" placeholder="请输入内容" class="flew-input"></el-input>
+              <el-form-item label="作者：" prop="fAuthor">
+              <!--<span class="name">作者：</span>-->
+                <el-input v-model="editObject.fAuthor" placeholder="请输入内容" class="flew-input"></el-input>
+              </el-form-item>
             </div>
           </el-col>
           <el-col :span="11" :offset="2">
@@ -209,17 +220,18 @@
             </div>
           </el-col>
         </el-row>
-        <div class="cell">
+        <div class="cell" style="margin-top: 20px;">
           <span class="name">内容：</span>
           <quill-editor ref="myTextEditor"
                         v-model="editObject.fContent"
-                        :config="editorOption"
+                        :options="editorOption"
                         @change="onEditorChange($event)">
           </quill-editor>
         </div>
       </div>
+      </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="editSave" class="confirmTip">确 定</el-button>
+        <el-button type="primary" @click="editSave('editObject')" class="confirmTip">确 定</el-button>
         <el-button @click="editPop = false" class="cancelTip">取 消</el-button>
       </div>
     </el-dialog>
@@ -228,6 +240,12 @@
 
 <script>
   import {quillEditor} from 'vue-quill-editor'
+  import * as Quill from 'quill' //引入编辑器
+  //quill编辑器的字体
+  var fonts = ['SimSun', 'SimHei','Microsoft-YaHei','KaiTi','FangSong','Arial','Times-New-Roman','sans-serif'];
+  var Font = Quill.import('formats/font');
+  Font.whitelist = fonts; //将字体加入到白名单
+  Quill.register(Font, true);
 
   export default {
     name: '',
@@ -245,6 +263,16 @@
         multipleSelection: [],
         activeTableDataId: [],
         activeTableDataId2: '',
+        // 校验
+        rules: {
+          fTitle: [
+            { required: true, message: '必填', trigger: 'blur' },
+          ],
+          fAuthor: [
+            { required: true, message: '必填', trigger: 'blur' },
+          ],
+
+        },
         addObject: {
           fTitle: '',
           fContent: '',
@@ -272,8 +300,32 @@
         currentPage: 1,
         pageSize: 10,
         total: 0,
+        // 富文本配置
         editorOption: {
-          // something config
+          modules:{
+            toolbar:[
+              ['bold', 'italic', 'underline', 'strike'],
+              ['blockquote', 'code-block'],
+
+              [{ 'header': 1 }, { 'header': 2 }],
+              [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+              [{ 'script': 'sub'}, { 'script': 'super' }],
+              // [{ 'indent': '-1'}, { 'indent': '+1' }],
+              [{ 'direction': 'rtl' }],
+
+              [{ 'size': [] }],
+              [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
+
+              [{ 'color': [] }, { 'background': [] }],
+              [{ 'font': fonts }],    //把上面定义的字体数组放进来
+
+              [{ 'align': [] }],
+
+              ['clean'],
+              ['image','video']
+            ]
+          },
+          theme:'snow'
         },
         tableData: []
       }
@@ -338,43 +390,47 @@
         }
       },
       // 新增保存
-      addSave() {
-        // 上传数据
-        var arr = [];
-        var arr2 = [];
-        for (var i = 0; i < this.AddfileList.length; i++) {
-          if (this.AddfileList[i].response.code == '200') {
-            arr.push(this.AddfileList[i].response.data.revealImage);
-            arr2.push(this.AddfileList[i].response.data.imageName);
-          }
-        }
-        this.addObject.fEnclUrl = arr.join(',');
-        this.addObject.fEnclName = arr2.join(',');
-        let params = {};
-        params['fTitle'] = this.addObject.fTitle;
-        params['fContent'] = this.addObject.fContent;
-        params['fContents'] = this.addObject.fContents.replace(/[\r\n]/g,"");
-        params['fImgUrl'] = this.addObject.furl;
-        params['fEnclUrl'] = this.addObject.fEnclUrl;
-        params['fEnclName'] = this.addObject.fEnclName;
-        params['fAuthor'] = this.addObject.fAuthor;
-        params['fFrom'] = this.addObject.fFrom;
-        params['fSystemId'] = this.fSystemId;
-        console.log(params)
-        API.post('/newsInfo/create', params).then((res) => {
-          console.log(res.data)
-          if (res.data.code == 200) {
-            this.addPop = false;
-            this.getPage();
-            this.$message({
-              type: 'success',
-              message: '新增成功!'
-            });
-          } else {
-            this.$message({
-              type: 'error',
-              message: '新增失败!'
-            });
+      addSave(formName) {
+        this.$refs[formName].validate((valid) => {
+          if (valid) {
+            // 上传数据
+            var arr = [];
+            var arr2 = [];
+            for (var i = 0; i < this.AddfileList.length; i++) {
+              if (this.AddfileList[i].response.code == '200') {
+                arr.push(this.AddfileList[i].response.data.revealImage);
+                arr2.push(this.AddfileList[i].response.data.imageName);
+              }
+            }
+            this.addObject.fEnclUrl = arr.join(',');
+            this.addObject.fEnclName = arr2.join(',');
+            let params = {};
+            params['fTitle'] = this.addObject.fTitle;
+            params['fContent'] = this.addObject.fContent;
+            params['fContents'] = this.addObject.fContents.replace(/[\r\n]/g, "");
+            params['fImgUrl'] = this.addObject.furl;
+            params['fEnclUrl'] = this.addObject.fEnclUrl;
+            params['fEnclName'] = this.addObject.fEnclName;
+            params['fAuthor'] = this.addObject.fAuthor;
+            params['fFrom'] = this.addObject.fFrom;
+            params['fSystemId'] = this.fSystemId;
+            console.log(params)
+            API.post('/newsInfo/create', params).then((res) => {
+              console.log(res.data)
+              if (res.data.code == 200) {
+                this.addPop = false;
+                this.getPage();
+                this.$message({
+                  type: 'success',
+                  message: '新增成功!'
+                });
+              } else {
+                this.$message({
+                  type: 'error',
+                  message: '新增失败!'
+                });
+              }
+            })
           }
         })
       },
@@ -432,46 +488,50 @@
         })
       },
       // 编辑保存
-      editSave() {
-        // 上传部分
-        var arr = [];
-        var arr2 = [];
-        for (var i = 0; i < this.EditfileList.length; i++) {
-          if (this.EditfileList[i].response && this.EditfileList[i].response.code == '200') {
-            arr.push(this.EditfileList[i].response.data.revealImage);
-            arr2.push(this.EditfileList[i].response.data.imageName);
-          } else {
-            arr.push(this.EditfileList[i].url)
-            arr2.push(this.EditfileList[i].name)
-          }
-        }
-        this.editObject.fEnclUrl = arr.join(',');
-        this.editObject.fEnclName = arr2.join(',');
-        let params = {};
-        params['id'] = this.editObject.id;
-        params['fTitle'] = this.editObject.fTitle;
-        params['fContent'] = this.editObject.fContent;
-        params['fContents'] = this.editObject.fContents.replace(/[\r\n]/g,"");
-        params['fImgUrl'] = this.editObject.furl;
-        params['fEnclUrl'] = this.editObject.fEnclUrl;
-        params['fEnclName'] = this.editObject.fEnclName;
-        params['fAuthor'] = this.editObject.fAuthor;
-        params['fFrom'] = this.editObject.fFrom;
-        params['fSystemId'] = this.fSystemId;
-        console.log(params)
-        API.put('/newsInfo/newsUpdate', params).then((res) => {
-          if (res.data.code == 200) {
-            this.editPop = false;
-            this.getPage();
-            this.$message({
-              type: 'success',
-              message: '编辑成功!'
-            });
-          } else {
-            this.$message({
-              type: 'error',
-              message: '编辑失败!'
-            });
+      editSave(formName) {
+        this.$refs[formName].validate((valid) => {
+          if (valid) {
+            // 上传部分
+            var arr = [];
+            var arr2 = [];
+            for (var i = 0; i < this.EditfileList.length; i++) {
+              if (this.EditfileList[i].response && this.EditfileList[i].response.code == '200') {
+                arr.push(this.EditfileList[i].response.data.revealImage);
+                arr2.push(this.EditfileList[i].response.data.imageName);
+              } else {
+                arr.push(this.EditfileList[i].url)
+                arr2.push(this.EditfileList[i].name)
+              }
+            }
+            this.editObject.fEnclUrl = arr.join(',');
+            this.editObject.fEnclName = arr2.join(',');
+            let params = {};
+            params['id'] = this.editObject.id;
+            params['fTitle'] = this.editObject.fTitle;
+            params['fContent'] = this.editObject.fContent;
+            params['fContents'] = this.editObject.fContents.replace(/[\r\n]/g, "");
+            params['fImgUrl'] = this.editObject.furl;
+            params['fEnclUrl'] = this.editObject.fEnclUrl;
+            params['fEnclName'] = this.editObject.fEnclName;
+            params['fAuthor'] = this.editObject.fAuthor;
+            params['fFrom'] = this.editObject.fFrom;
+            params['fSystemId'] = this.fSystemId;
+            console.log(params)
+            API.put('/newsInfo/newsUpdate', params).then((res) => {
+              if (res.data.code == 200) {
+                this.editPop = false;
+                this.getPage();
+                this.$message({
+                  type: 'success',
+                  message: '编辑成功!'
+                });
+              } else {
+                this.$message({
+                  type: 'error',
+                  message: '编辑失败!'
+                });
+              }
+            })
           }
         })
       },
@@ -642,33 +702,7 @@
       onAddChange({editor, html, text}) {
         this.addObject.fContent = html
         this.addObject.fContents =text
-
-
       }
-
-
-
-      /*onEditorBlur(editor) {
-        console.log('editor blur!', editor)
-      },
-      onEditorFocus(editor) {
-        console.log('editor focus!', editor)
-      },
-      onEditorReady(editor) {
-        console.log('editor ready!', editor)
-      },
-
-      // 添加弹框
-      onAddBlur(editor) {
-        console.log('editor blur!', editor)
-      },
-      onAddFocus(editor) {
-        console.log('editor focus!', editor)
-      },
-      onAddReady(editor) {
-        console.log('editor ready!', editor)
-      },
-    */
     },
     created() {
       this.getPage();

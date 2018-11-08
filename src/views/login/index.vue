@@ -64,6 +64,7 @@
     methods: {
       //登陆
       login() {
+
         if (!this.userNum) {
           this.$message('请填写用户名');
           return
@@ -71,7 +72,8 @@
           this.$message('请输入密码');
           return
         } else {
-          let params = {};
+          this.$router.push({name: 'home'})
+          /*let params = {};
           params['userNum'] = this.userNum;
           params['userPassword'] = this.userPassword;
           API.get('static/userList.json', params).then((res) => {
@@ -88,7 +90,7 @@
                 message: '登录失败!'
               });
             }
-          })
+          })*/
         }
       },
       /*showRegister() {

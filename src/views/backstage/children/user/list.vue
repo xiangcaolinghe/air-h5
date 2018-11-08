@@ -58,7 +58,7 @@
           <span class="name">用户名：</span>
           <el-input v-model="addObject.uName" placeholder="请输入内容" class="flew-input"></el-input>
         </div>
-        <div class="cell qx">
+        <div class="cell qx" style="margin-top: 20px;">
           <span class="name">权限：</span>
           <div class="qx-div">
             <el-checkbox :indeterminate="isIndeterminate" v-model="checkAll" @change="AddAllhandleChecked">全选
@@ -83,7 +83,7 @@
           <el-input v-model="editObject.uName" placeholder="请输入内容" class="flew-input"
                     v-bind:disabled="look"></el-input>
         </div>
-        <div class="cell qx">
+        <div class="cell qx" style="margin-top: 20px;">
           <span class="name">权限：</span>
           <div class="qx-div">
             <el-checkbox :indeterminate="EditisIndeterminate" v-model="EditcheckAll" @change="EditAllhandleChecked"

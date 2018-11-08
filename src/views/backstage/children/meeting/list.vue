@@ -78,47 +78,55 @@
     </div>
     <!--添加弹框-->
     <el-dialog title="添加会议" :visible.sync="addPop" class="tip-dialog" :close-on-click-modal="false">
+      <el-form :model="addObject" status-icon :rules="rules" ref="addObject" label-width="120px" class="demo-ruleForm">
       <div class="content">
         <div class="cell">
-          <span class="name">会议名称：</span>
+          <el-form-item label="会议名称：" prop="mName">
+          <!--<span class="name">会议名称：</span>-->
           <el-input v-model="addObject.mName" placeholder="请输入内容" class="flew-input"></el-input>
+          </el-form-item>
         </div>
         <el-row>
           <el-col :span="11">
             <div class="cell">
-              <span class="name">会议联系人：</span>
+              <el-form-item label="会议联系人：" prop="mContacts">
+              <!--<span class="name">会议联系人：</span>-->
               <el-input v-model="addObject.mContacts" placeholder="请输入内容" class="flew-input"></el-input>
+              </el-form-item>
             </div>
           </el-col>
           <el-col :span="11" :offset="2">
             <div class="cell">
-              <span class="name">会议地址：</span>
+              <el-form-item label="会议地址：" prop="mAddress">
+              <!--<span class="name">会议地址：</span>-->
               <el-input v-model="addObject.mAddress" placeholder="请输入内容" class="flew-input"></el-input>
+              </el-form-item>
             </div>
           </el-col>
         </el-row>
-        <div class="cell">
-          <span class="name">会议简介：</span>
-          <el-input type="textarea" v-model="addObject.mBrief" class="flew-input"></el-input>
+        <div class="cell marbot20">
+            <span class="name padlet5">会议时间：</span>
+            <el-date-picker
+              class="flew-input"
+              v-model="addObject.data"
+              type="datetimerange"
+              :picker-options="pickerOptions2"
+              range-separator="至"
+              start-placeholder="开始日期"
+              end-placeholder="结束日期"
+              align="right"
+              value-format="yyyy-MM-dd HH:mm:ss"
+              style="width: 780px">
+            </el-date-picker>
         </div>
-        <div class="cell">
-          <span class="name">会议时间：</span>
-          <el-date-picker
-            class="flew-input"
-            v-model="addObject.data"
-            type="datetimerange"
-            :picker-options="pickerOptions2"
-            range-separator="至"
-            start-placeholder="开始日期"
-            end-placeholder="结束日期"
-            align="right"
-            value-format="yyyy-MM-dd HH:mm:ss">
-          </el-date-picker>
+        <div class="cell marbot20">
+          <span class="name padlet5">会议简介：</span>
+          <el-input type="textarea" v-model="addObject.mBrief" class="flew-input"></el-input>
         </div>
         <el-row>
           <el-col :span="11">
-            <div class="cell">
-              <span class="name">联系人微信：</span>
+            <div class="cell marbot20">
+              <span class="name padlet5">联系人微信：</span>
               <el-input v-model="addObject.mWechat" placeholder="请输入内容" class="flew-input"></el-input>
             </div>
           </el-col>
@@ -129,8 +137,8 @@
             </div>
           </el-col>
         </el-row>
-        <div class="cell">
-          <span class="name">主办单位：</span>
+        <div class="cell marbot20">
+          <span class="name padlet5">主办单位：</span>
           <el-tag
             :key="tag"
             v-for="tag in addObject.mHostUnit"
@@ -150,8 +158,8 @@
           </el-input>
           <el-button v-else class="button-new-tag" size="small" @click="AddshowInput">+ 添加主办单位</el-button>
         </div>
-        <div class="cell">
-          <span class="name">参会单位：</span>
+        <div class="cell marbot20">
+          <span class="name padlet5">参会单位：</span>
           <el-tag
             :key="tag"
             v-for="tag in addObject.mParticipatingUnits"
@@ -171,12 +179,12 @@
           </el-input>
           <el-button v-else class="button-new-tag" size="small" @click="AddshowInput2">+ 添加参会单位</el-button>
         </div>
-        <div class="cell">
-          <span class="name">备注：</span>
+        <div class="cell marbot20">
+          <span class="name padlet5">备注：</span>
           <el-input type="textarea" v-model="addObject.mRemarks" class="flew-input"></el-input>
         </div>
-        <div class="cell">
-          <span class="name">上传附件：</span>
+        <div class="cell marbot20">
+          <span class="name padlet5">上传附件：</span>
           <el-upload
             ref="Addupload"
             class="upload-demo"
@@ -193,7 +201,7 @@
           </el-upload>
         </div>
         <div class="cell">
-          <span class="name">会议日程：</span>
+          <span class="name padlet5">会议日程：</span>
           <quill-editor ref="myTextEditor"
                         v-model="addObject.mContent"
                         :config="editorOption"
@@ -201,38 +209,42 @@
           </quill-editor>
         </div>
       </div>
+      </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="addSave" class="confirmAdd">确 定</el-button>
+        <el-button type="primary" @click="addSave('addObject')" class="confirmAdd">确 定</el-button>
         <el-button @click="addPop = false" class="cancelAdd">取 消</el-button>
       </div>
     </el-dialog>
     <!--编辑弹框-->
     <el-dialog title="编辑" :visible.sync="editPop" class="tip-dialog" :close-on-click-modal="false">
+      <el-form :model="editObject" status-icon :rules="rules" ref="editObject" label-width="120px" class="demo-ruleForm">
       <div class="content">
         <div class="cell">
-          <span class="name">会议名称：</span>
+          <el-form-item label="会议名称：" prop="mName">
+          <!--<span class="name">会议名称：</span>-->
           <el-input v-model="editObject.mName" placeholder="请输入内容" class="flew-input"></el-input>
+          </el-form-item>
         </div>
         <el-row>
           <el-col :span="11">
             <div class="cell">
-              <span class="name">会议联系人：</span>
+              <el-form-item label="会议联系人：" prop="mContacts">
+              <!--<span class="name">会议联系人：</span>-->
               <el-input v-model="editObject.mContacts" placeholder="请输入内容" class="flew-input"></el-input>
+              </el-form-item>
             </div>
           </el-col>
           <el-col :span="11" :offset="2">
             <div class="cell">
-              <span class="name">会议地址：</span>
+              <el-form-item label="会议地址：" prop="mAddress">
+              <!--<span class="name">会议地址：</span>-->
               <el-input v-model="editObject.mAddress" placeholder="请输入内容" class="flew-input"></el-input>
+              </el-form-item>
             </div>
           </el-col>
         </el-row>
-        <div class="cell">
-          <span class="name">会议简介：</span>
-          <el-input type="textarea" v-model="editObject.mBrief" class="flew-input"></el-input>
-        </div>
-        <div class="cell">
-          <span class="name">会议时间：</span>
+        <div class="cell marbot20">
+          <span class="name padlet5">会议时间：</span>
           <el-date-picker
             class="flew-input"
             v-model="EditData"
@@ -242,13 +254,18 @@
             start-placeholder="开始日期"
             end-placeholder="结束日期"
             align="right"
-            value-format="yyyy-MM-dd HH:mm:ss">
+            value-format="yyyy-MM-dd HH:mm:ss"
+            style="width: 780px">
           </el-date-picker>
+        </div>
+        <div class="cell marbot20">
+          <span class="name padlet5">会议简介：</span>
+          <el-input type="textarea" v-model="editObject.mBrief" class="flew-input"></el-input>
         </div>
         <el-row>
           <el-col :span="11">
-            <div class="cell">
-              <span class="name">联系人微信：</span>
+            <div class="cell marbot20">
+              <span class="name padlet5">联系人微信：</span>
               <el-input v-model="editObject.mWechat" placeholder="请输入内容" class="flew-input"></el-input>
             </div>
           </el-col>
@@ -259,8 +276,8 @@
             </div>
           </el-col>
         </el-row>
-        <div class="cell">
-          <span class="name">主办单位：</span>
+        <div class="cell marbot20">
+          <span class="name padlet5">主办单位：</span>
           <el-tag
             :key="tag"
             v-for="tag in editObject.mHostUnit"
@@ -280,8 +297,8 @@
           </el-input>
           <el-button v-else class="button-new-tag" size="small" @click="EditshowInput">+ 添加主办单位</el-button>
         </div>
-        <div class="cell">
-          <span class="name">参会单位：</span>
+        <div class="cell marbot20">
+          <span class="name padlet5">参会单位：</span>
           <el-tag
             :key="tag"
             v-for="tag in editObject.mParticipatingUnits"
@@ -301,12 +318,12 @@
           </el-input>
           <el-button v-else class="button-new-tag" size="small" @click="EditshowInput2">+ 添加参会单位</el-button>
         </div>
-        <div class="cell">
-          <span class="name">备注：</span>
+        <div class="cell marbot20">
+          <span class="name padlet5">备注：</span>
           <el-input type="textarea" v-model="editObject.mRemarks" class="flew-input"></el-input>
         </div>
-        <div class="cell">
-          <span class="name">上传附件：</span>
+        <div class="cell marbot20">
+          <span class="name padlet5">上传附件：</span>
           <el-upload
             ref="Editupload"
             class="upload-demo"
@@ -321,7 +338,7 @@
           </el-upload>
         </div>
         <div class="cell">
-          <span class="name">会议日程：</span>
+          <span class="name padlet5">会议日程：</span>
           <quill-editor ref="myTextEditor"
                         v-model="editObject.mContent"
                         :config="editorOption"
@@ -329,8 +346,9 @@
           </quill-editor>
         </div>
       </div>
+      </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="editSave" class="confirmTip">确 定</el-button>
+        <el-button type="primary" @click="editSave('editObject')" class="confirmTip">确 定</el-button>
         <el-button @click="editPop = false" class="cancelTip">取 消</el-button>
       </div>
     </el-dialog>
@@ -339,7 +357,12 @@
 
 <script>
   import {quillEditor} from 'vue-quill-editor'
-
+  import * as Quill from 'quill' //引入编辑器
+  //quill编辑器的字体
+  var fonts = ['SimSun', 'SimHei','Microsoft-YaHei','KaiTi','FangSong','Arial','Times-New-Roman','sans-serif'];
+  var Font = Quill.import('formats/font');
+  Font.whitelist = fonts; //将字体加入到白名单
+  Quill.register(Font, true);
   export default {
     name: '',
     components: {quillEditor},
@@ -378,7 +401,17 @@
         addVisible: false,
         addValue2: '',
         addVisible2: false,
-
+        rules: {
+          mName: [
+            { required: true, message: '必填', trigger: 'blur' },
+          ],
+          mAddress: [
+            { required: true, message: '必填', trigger: 'blur' },
+          ],
+          mContacts: [
+            { required: true, message: '必填', trigger: 'blur' },
+          ],
+        },
         editObject: {
           id: '',
           mName: '',
@@ -408,8 +441,32 @@
         currentPage: 1,
         pageSize: 10,
         total: 0,
+        // 富文本配置
         editorOption: {
-          // something config
+          modules:{
+            toolbar:[
+              ['bold', 'italic', 'underline', 'strike'],
+              ['blockquote', 'code-block'],
+
+              [{ 'header': 1 }, { 'header': 2 }],
+              [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+              [{ 'script': 'sub'}, { 'script': 'super' }],
+              // [{ 'indent': '-1'}, { 'indent': '+1' }],
+              [{ 'direction': 'rtl' }],
+
+              [{ 'size': [] }],
+              [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
+
+              [{ 'color': [] }, { 'background': [] }],
+              [{ 'font': fonts }],    //把上面定义的字体数组放进来
+
+              [{ 'align': [] }],
+
+              ['clean'],
+              ['image','video']
+            ]
+          },
+          theme:'snow'
         },
         pickerOptions2: {
           shortcuts: [{
@@ -501,51 +558,55 @@
         }
       },
       // 新增保存
-      addSave() {
-        console.log(this.addObject)
-        // 上传数据
-        var arr = [];
-        var arr2 = [];
-        for (var i = 0; i < this.AddfileList.length; i++) {
-          if (this.AddfileList[i].response.code == '200') {
-            arr.push(this.AddfileList[i].response.data.revealImage);
-            arr2.push(this.AddfileList[i].response.data.imageName);
-          }
-        }
-        this.addObject.mEnclUrl = arr.join(',');
-        this.addObject.mEnclName = arr2.join(',');
-        let params = {};
-        params['mName'] = this.addObject.mName;
-        params['mStartTime'] = this.addObject.data[0];
-        params['mEndTime'] = this.addObject.data[1];
-        params['mAddress'] = this.addObject.mAddress;
-        params['mBrief'] = this.addObject.mBrief;
-        params['mContacts'] = this.addObject.mContacts;
-        params['mWechat'] = this.addObject.mWechat;
-        params['mPhone'] = this.addObject.mPhone;
-        params['mHostUnit'] = this.addObject.mHostUnit.join(",");
-        params['mParticipatingUnits'] = this.addObject.mParticipatingUnits.join(",");
-        params['mRemarks'] = this.addObject.mRemarks;
-        params['mEnclUrl'] = this.addObject.mEnclUrl;
-        params['mEnclName'] = this.addObject.mEnclName;
-        params['mContent'] = this.addObject.mContent;
-        params['mContents'] = this.addObject.mContents.replace(/[\r\n]/g,"");
-        params['mSystemId'] = this.mSystemId;
-        console.log(params)
-        API.post('/meeTing/create', params).then((res) => {
-          console.log(res.data)
-          if (res.data.code == 200) {
-            this.addPop = false;
-            this.getPage();
-            this.$message({
-              type: 'success',
-              message: '新增成功!'
-            });
-          } else {
-            this.$message({
-              type: 'error',
-              message: '新增失败!'
-            });
+      addSave(formName) {
+        this.$refs[formName].validate((valid) => {
+          if (valid) {
+            console.log(this.addObject)
+            // 上传数据
+            var arr = [];
+            var arr2 = [];
+            for (var i = 0; i < this.AddfileList.length; i++) {
+              if (this.AddfileList[i].response.code == '200') {
+                arr.push(this.AddfileList[i].response.data.revealImage);
+                arr2.push(this.AddfileList[i].response.data.imageName);
+              }
+            }
+            this.addObject.mEnclUrl = arr.join(',');
+            this.addObject.mEnclName = arr2.join(',');
+            let params = {};
+            params['mName'] = this.addObject.mName;
+            params['mStartTime'] = this.addObject.data[0];
+            params['mEndTime'] = this.addObject.data[1];
+            params['mAddress'] = this.addObject.mAddress;
+            params['mBrief'] = this.addObject.mBrief;
+            params['mContacts'] = this.addObject.mContacts;
+            params['mWechat'] = this.addObject.mWechat;
+            params['mPhone'] = this.addObject.mPhone;
+            params['mHostUnit'] = this.addObject.mHostUnit.join(",");
+            params['mParticipatingUnits'] = this.addObject.mParticipatingUnits.join(",");
+            params['mRemarks'] = this.addObject.mRemarks;
+            params['mEnclUrl'] = this.addObject.mEnclUrl;
+            params['mEnclName'] = this.addObject.mEnclName;
+            params['mContent'] = this.addObject.mContent;
+            params['mContents'] = this.addObject.mContents.replace(/[\r\n]/g, "");
+            params['mSystemId'] = this.mSystemId;
+            console.log(params)
+            API.post('/meeTing/create', params).then((res) => {
+              console.log(res.data)
+              if (res.data.code == 200) {
+                this.addPop = false;
+                this.getPage();
+                this.$message({
+                  type: 'success',
+                  message: '新增成功!'
+                });
+              } else {
+                this.$message({
+                  type: 'error',
+                  message: '新增失败!'
+                });
+              }
+            })
           }
         })
       },
@@ -605,57 +666,61 @@
         })
       },
       // 编辑保存
-      editSave() {
-        console.log(this.editObject)
-        // 上传部分
-        var arr = [];
-        var arr2 = [];
-        for (var i = 0; i < this.EditfileList.length; i++) {
-          if (this.EditfileList[i].response && this.EditfileList[i].response.code == '200') {
-            arr.push(this.EditfileList[i].response.data.revealImage);
-            arr2.push(this.EditfileList[i].response.data.imageName);
-          } else {
-            arr.push(this.EditfileList[i].url)
-            arr2.push(this.EditfileList[i].name)
-          }
-        }
-        this.editObject.mEnclUrl = arr.join(',');
-        this.editObject.mEnclName = arr2.join(',');
-        let params = {};
+      editSave(formName) {
+        this.$refs[formName].validate((valid) => {
+          if (valid) {
+            console.log(this.editObject)
+            // 上传部分
+            var arr = [];
+            var arr2 = [];
+            for (var i = 0; i < this.EditfileList.length; i++) {
+              if (this.EditfileList[i].response && this.EditfileList[i].response.code == '200') {
+                arr.push(this.EditfileList[i].response.data.revealImage);
+                arr2.push(this.EditfileList[i].response.data.imageName);
+              } else {
+                arr.push(this.EditfileList[i].url)
+                arr2.push(this.EditfileList[i].name)
+              }
+            }
+            this.editObject.mEnclUrl = arr.join(',');
+            this.editObject.mEnclName = arr2.join(',');
+            let params = {};
 
-        params['id'] = this.editObject.id;
-        params['mName'] = this.editObject.mName;
-        params['mStartTime'] = this.EditData[0];
-        params['mEndTime'] = this.EditData[1];
-        params['mAddress'] = this.editObject.mAddress;
-        params['mBrief'] = this.editObject.mBrief;
-        params['mContacts'] = this.editObject.mContacts;
-        params['mWechat'] = this.editObject.mWechat;
-        params['mPhone'] = this.editObject.mPhone;
-        params['mHostUnit'] = this.editObject.mHostUnit.join(",");
-        params['mParticipatingUnits'] = this.editObject.mParticipatingUnits.join(",");
-        params['mRemarks'] = this.editObject.mRemarks;
-        params['mEnclUrl'] = this.editObject.mEnclUrl;
-        params['mEnclName'] = this.editObject.mEnclName;
-        params['mContent'] = this.editObject.mContent;
-        params['mContents'] = this.editObject.mContents.replace(/[\r\n]/g,"");
-        params['mSystemId'] = this.mSystemId;
+            params['id'] = this.editObject.id;
+            params['mName'] = this.editObject.mName;
+            params['mStartTime'] = this.EditData[0];
+            params['mEndTime'] = this.EditData[1];
+            params['mAddress'] = this.editObject.mAddress;
+            params['mBrief'] = this.editObject.mBrief;
+            params['mContacts'] = this.editObject.mContacts;
+            params['mWechat'] = this.editObject.mWechat;
+            params['mPhone'] = this.editObject.mPhone;
+            params['mHostUnit'] = this.editObject.mHostUnit.join(",");
+            params['mParticipatingUnits'] = this.editObject.mParticipatingUnits.join(",");
+            params['mRemarks'] = this.editObject.mRemarks;
+            params['mEnclUrl'] = this.editObject.mEnclUrl;
+            params['mEnclName'] = this.editObject.mEnclName;
+            params['mContent'] = this.editObject.mContent;
+            params['mContents'] = this.editObject.mContents.replace(/[\r\n]/g, "");
+            params['mSystemId'] = this.mSystemId;
 
-        console.log(params)
-        API.put('/meeTing/update', params).then((res) => {
-          console.log(res.data)
-          if (res.data.code == 200) {
-            this.editPop = false;
-            this.getPage();
-            this.$message({
-              type: 'success',
-              message: '编辑成功!'
-            });
-          } else {
-            this.$message({
-              type: 'error',
-              message: '编辑失败!'
-            });
+            console.log(params)
+            API.put('/meeTing/update', params).then((res) => {
+              console.log(res.data)
+              if (res.data.code == 200) {
+                this.editPop = false;
+                this.getPage();
+                this.$message({
+                  type: 'success',
+                  message: '编辑成功!'
+                });
+              } else {
+                this.$message({
+                  type: 'error',
+                  message: '编辑失败!'
+                });
+              }
+            })
           }
         })
       },
@@ -935,6 +1000,12 @@
       width: 90px;
       margin-left: 10px;
       vertical-align: bottom;
+    }
+    .marbot20 {
+      margin-bottom: 20px;
+    }
+    .padlet5 {
+      padding-left: 5px;
     }
   }
 

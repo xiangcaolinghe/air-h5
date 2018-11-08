@@ -73,9 +73,9 @@
         </div>
         <!--会议日程-->
         <a name="date"></a>
-        <div class="tab">
-          <div class="title">会议日程</div>
-          <div v-html="datail.mContent"></div>
+        <div class="tab ql-snow">
+          <div class="title ">会议日程</div>
+          <div class="ql-editor" v-html="datail.mContent" style="color: #666"></div>
           <div v-for="i in file" class="uploadBox">
             <a :href="i.fenclUrl" class="upload">{{i.fenclName}}</a>
           </div>

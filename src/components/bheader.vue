@@ -209,7 +209,7 @@
     bottom: 0;
     left: 0;
     right: 0;
-    font-size: 18px;
+    /*font-size: 18px;*/
     /*font-weight: bold;*/
     .pass-top{
       .el-dialog {
