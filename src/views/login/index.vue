@@ -72,10 +72,11 @@
           this.$message('请输入密码');
           return
         } else {
-          this.$router.push({name: 'home'})
-          /*let params = {};
-          params['userNum'] = this.userNum;
-          params['userPassword'] = this.userPassword;
+          // this.$router.push({name: 'home'})
+          let params = {};
+          params['uName'] = this.userNum;
+          params['uPasswd'] = this.userPassword;
+          console.log(params)
           API.post('/ususer/login', params).then((res) => {
             console.log(res.data)
             if (res.data.code == 200) {
@@ -83,7 +84,8 @@
                 type: 'success',
                 message: '登录成功!'
               });
-              storage.set('token', '3333333333333');
+              storage.set('userName', res.data.data.uName);
+              storage.set('token', res.data.data.token);
               this.$router.push({name: 'home'})
             } else {
               this.$message({
@@ -91,7 +93,7 @@
                 message: '登录失败!'
               });
             }
-          })*/
+          })
         }
       },
       /*showRegister() {

@@ -8,7 +8,7 @@
         </span>
           <span class="welcome">
             <span class="user">
-              <i class="iconfont icon icon-yonghu"></i><strong>欢迎您：admin</strong>
+              <i class="iconfont icon icon-yonghu"></i><strong>欢迎您：{{userName}}</strong>
             </span>
             <span class="user" @click="OpenPassword">
               <strong style="font-size: 13px;">修改密码</strong>
@@ -98,10 +98,11 @@
             pass: '',
             checkPass: ''
           },
+          userName : storage.get('userName'),
           rules2: {
             passOld: [
               { required: true, message: '请输入旧密码', trigger: 'blur' },
-              { min: 6, message: '长度至少6位', trigger: 'blur' }
+              // { min: 6, message: '长度至少6位', trigger: 'blur' }
             ],
             pass: [
               { validator: validatePass, trigger: 'blur' },
@@ -119,6 +120,9 @@
       methods:{
         OpenPassword(){
           this.editPassword = true
+          if(this.$refs.ruleForm2){
+            this.$refs.ruleForm2.clearValidate();
+          }
         },
         // 修改密码提交
         submitForm(formName) {
@@ -126,12 +130,15 @@
             console.log(this.ruleForm2)
             if (valid) {
               let params={};
-              params['passOld'] = this.ruleForm2.passOld;
-              params['pass'] = this.ruleForm2.pass;
-              params['checkPass'] = this.ruleForm2.checkPass;
-              API.get('static/userList.json',params).then((res)=>{
-                if(res.status == 200) {
-                  // this.editPassword  = false;
+              params['uName'] = storage.get('userName');
+              params['id'] = storage.get('token');
+              params['uPasswd'] = this.ruleForm2.passOld;
+              params['NewuPasswd'] = this.ruleForm2.pass;
+
+              API.post('/ususer/changepasswd',params).then((res)=>{
+                console.log(res.data)
+                if(res.data.code == 200) {
+                  this.editPassword  = false;
                   this.$message({
                     type: 'success',
                     message: '密码修改成功!'
