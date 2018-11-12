@@ -527,6 +527,11 @@
           nFrom: '',
           iId: ''
         }
+        if(this.$refs.addObject){
+          this.$refs.addObject.clearValidate();
+        }else {
+          return
+        }
       },
       // 新增保存
       addSave(formName) {
@@ -595,6 +600,9 @@
       },
       // 编辑
       editOpen(id) {
+        if(this.$refs.editObject){
+          this.$refs.editObject.clearValidate();
+        }
         this.editPop = true;
         this.EditfileList = [];
         this.editObject = {

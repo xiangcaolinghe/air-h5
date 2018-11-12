@@ -64,7 +64,7 @@
     methods: {
       //登陆
       login() {
-
+        storage.set('token', '3333333333333');
         if (!this.userNum) {
           this.$message('请填写用户名');
           return
@@ -76,8 +76,9 @@
           /*let params = {};
           params['userNum'] = this.userNum;
           params['userPassword'] = this.userPassword;
-          API.get('static/userList.json', params).then((res) => {
-            if (res.status == 200) {
+          API.post('/ususer/login', params).then((res) => {
+            console.log(res.data)
+            if (res.data.code == 200) {
               this.$message({
                 type: 'success',
                 message: '登录成功!'

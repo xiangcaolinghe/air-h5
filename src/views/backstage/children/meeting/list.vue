@@ -134,8 +134,10 @@
           </el-col>
           <el-col :span="11" :offset="2">
             <div class="cell">
-              <span class="name">联系人电话：</span>
+              <el-form-item label="联系人电话：" prop="mPhone">
+              <!--<span class="name">联系人电话：</span>-->
               <el-input v-model="addObject.mPhone" placeholder="请输入内容" class="flew-input"></el-input>
+              </el-form-item>
             </div>
           </el-col>
         </el-row>
@@ -273,8 +275,10 @@
           </el-col>
           <el-col :span="11" :offset="2">
             <div class="cell">
-              <span class="name">联系人电话：</span>
+              <el-form-item label="联系人电话：" prop="mPhone">
+              <!--<span class="name">联系人电话：</span>-->
               <el-input v-model="editObject.mPhone" placeholder="请输入内容" class="flew-input"></el-input>
+              </el-form-item>
             </div>
           </el-col>
         </el-row>
@@ -369,6 +373,19 @@
     name: '',
     components: {quillEditor},
     data() {
+      var checkPhone = (rule, value, callback) => {
+        if (!value) {
+          return ;
+        } else {
+          const reg = /^1[3|4|5|7|8][0-9]\d{8}$/
+          console.log(reg.test(value));
+          if (reg.test(value)) {
+            callback();
+          } else {
+            return callback(new Error('请输入正确的手机号'));
+          }
+        }
+      };
       return {
         loading: false,
         editPop: false,
@@ -416,9 +433,13 @@
           data: [
             { required: true, message: '必填', trigger: 'blur' },
           ],
-         /* EditData: [
-            { required: true, message: '必填', trigger: 'blur' },
-          ]*/
+          mPhone: [
+            {validator: checkPhone, trigger: 'blur'}
+          ]
+
+          /* EditData: [
+             { required: true, message: '必填', trigger: 'blur' },
+           ]*/
         },
         editObject: {
           id: '',
@@ -564,6 +585,11 @@
           mEnclName : '',
           mEnclUrl : ''
         }
+        if(this.$refs.addObject){
+          this.$refs.addObject.clearValidate();
+        }else {
+          return
+        }
       },
       // 新增保存
       addSave(formName) {
@@ -628,6 +654,9 @@
       },
       //编辑
       editOpen(id) {
+        if(this.$refs.editObject){
+          this.$refs.editObject.clearValidate();
+        }
         this.editObject = {
           mName: '',
           mAddress: '',
@@ -755,6 +784,10 @@
       // 文件上传部分
       handleExceed(files, fileList) {
         this.$message.warning(`当前已有${fileList.length} 个文件，限制选择5个文件，本次选择了 ${files.length} 个文件`);
+      },
+      // 校验重置
+      closeDialog(){
+        this.$refs['addObject'].resetFields();
       },
       // 单个删除
       del(id) {

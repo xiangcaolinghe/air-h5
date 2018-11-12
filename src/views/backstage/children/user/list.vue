@@ -53,13 +53,16 @@
     </div>
     <!--添加弹框-->
     <el-dialog title="添加用户" :visible.sync="addPop" class="tip-dialog" :close-on-click-modal="false">
+      <el-form :model="addObject" status-icon :rules="rules" ref="addObject" label-width="80px" class="demo-ruleForm">
       <div class="content">
         <div class="cell">
-          <span class="name">用户名：</span>
+          <el-form-item label="用户名：" prop="uName">
+          <!--<span class="name">用户名：</span>-->
           <el-input v-model="addObject.uName" placeholder="请输入内容" class="flew-input"></el-input>
+          </el-form-item>
         </div>
-        <div class="cell qx" style="margin-top: 20px;">
-          <span class="name">权限：</span>
+        <div class="cell qx">
+          <span class="name" style="padding-left: 15px;">权限：</span>
           <div class="qx-div">
             <el-checkbox :indeterminate="isIndeterminate" v-model="checkAll" @change="AddAllhandleChecked">全选
             </el-checkbox>
@@ -70,21 +73,25 @@
           </div>
         </div>
       </div>
+      </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="addSave" class="confirmAdd">确 定</el-button>
+        <el-button type="primary" @click="addSave('addObject')" class="confirmAdd">确 定</el-button>
         <el-button @click="addPop = false" class="cancelAdd">取 消</el-button>
       </div>
     </el-dialog>
     <!--编辑弹框-->
     <el-dialog v-bind:title="title" :visible.sync="editPop" class="tip-dialog" :close-on-click-modal="false">
+      <el-form :model="editObject" status-icon :rules="rules" ref="editObject" label-width="80px" class="demo-ruleForm">
       <div class="content">
         <div class="cell">
-          <span class="name">用户名：</span>
+          <el-form-item label="用户名：" prop="uName">
+          <!--<span class="name">用户名：</span>-->
           <el-input v-model="editObject.uName" placeholder="请输入内容" class="flew-input"
                     v-bind:disabled="look"></el-input>
+          </el-form-item>
         </div>
-        <div class="cell qx" style="margin-top: 20px;">
-          <span class="name">权限：</span>
+        <div class="cell qx">
+          <span class="name" style="padding-left: 15px;">权限：</span>
           <div class="qx-div">
             <el-checkbox :indeterminate="EditisIndeterminate" v-model="EditcheckAll" @change="EditAllhandleChecked"
                          v-bind:disabled="look">全选
@@ -97,8 +104,9 @@
           </div>
         </div>
       </div>
+      </el-form>
       <div slot="footer" class="dialog-footer" v-show="!look">
-        <el-button type="primary" @click="editSave" class="confirmTip">确 定</el-button>
+        <el-button type="primary" @click="editSave('editObject')" class="confirmTip">确 定</el-button>
         <el-button @click="editPop = false" class="cancelTip">取 消</el-button>
       </div>
     </el-dialog>
@@ -143,7 +151,12 @@
           userName: '',
           powerList: [],
           id: ''
-        }
+        },
+        rules: {
+          uName: [
+            { required: true, message: '必填', trigger: 'blur' },
+          ]
+        },
       }
     },
     methods: {
@@ -189,28 +202,37 @@
           uName: '',
           powerList: []
         }
+        if(this.$refs.addObject){
+          this.$refs.addObject.clearValidate();
+        }else {
+          return
+        }
       },
       // 新增保存
-      addSave() {
-        let params = {};
-        params['uName'] = this.addObject.uName;
-        params['qId'] = this.addObject.powerList;
-        params['uSystemId'] = this.uSystemId;
-        console.log(params)
-        API.post('/ususer/create', params).then((res) => {
-          console.log(res.data)
-          if (res.data.code == 200) {
-            this.addPop = false;
-            this.getPage();
-            this.$message({
-              type: 'success',
-              message: '新增成功!'
-            });
-          } else {
-            this.$message({
-              type: 'error',
-              message: '新增失败!'
-            });
+      addSave(formName) {
+        this.$refs[formName].validate((valid) => {
+          if (valid) {
+            let params = {};
+            params['uName'] = this.addObject.uName;
+            params['qId'] = this.addObject.powerList;
+            params['uSystemId'] = this.uSystemId;
+            console.log(params)
+            API.post('/ususer/create', params).then((res) => {
+              console.log(res.data)
+              if (res.data.code == 200) {
+                this.addPop = false;
+                this.getPage();
+                this.$message({
+                  type: 'success',
+                  message: '新增成功!'
+                });
+              } else {
+                this.$message({
+                  type: 'error',
+                  message: '新增失败!'
+                });
+              }
+            })
           }
         })
       },
@@ -244,6 +266,9 @@
       },
       // 编辑
       editOpen(id) {
+        if(this.$refs.editObject){
+          this.$refs.editObject.clearValidate();
+        }
         this.look = false;
         this.title = "编辑";
         this.EditcheckedCities = [];
@@ -279,38 +304,42 @@
         })
       },
       // 编辑保存
-      editSave() {
-        console.log(this.editObject.powerList)
-        console.log(this.editObject)
-        var params = {
-          qId : []
-        };
-        params['id'] = this.editObject.id;
-        params['uName'] = this.editObject.uName;
-        console.log(this.editObject.powerList)
-        console.log(params.qId)
-        /*for(var i=0;i<this.editObject.powerList.length;i++){
+      editSave(formName) {
+        this.$refs[formName].validate((valid) => {
+          if (valid) {
+            console.log(this.editObject.powerList)
+            console.log(this.editObject)
+            var params = {
+              qId: []
+            };
+            params['id'] = this.editObject.id;
+            params['uName'] = this.editObject.uName;
+            console.log(this.editObject.powerList)
+            console.log(params.qId)
+            /*for(var i=0;i<this.editObject.powerList.length;i++){
           params.qId[i] = this.editObject.powerList[i]
         }*/
-        params['qId'] = this.editObject.powerList.join(',');
-        params['uSystemId'] = this.uSystemId;
+            params['qId'] = this.editObject.powerList.join(',');
+            params['uSystemId'] = this.uSystemId;
 
 
-        console.log(params)
-        API.put('/ususer/update', params).then((res) => {
-          console.log(res.data)
-          if (res.data.code == 200) {
-            this.editPop = false;
-            this.getPage();
-            this.$message({
-              type: 'success',
-              message: '编辑成功!'
-            });
-          } else {
-            this.$message({
-              type: 'error',
-              message: '编辑失败!'
-            });
+            console.log(params)
+            API.put('/ususer/update', params).then((res) => {
+              console.log(res.data)
+              if (res.data.code == 200) {
+                this.editPop = false;
+                this.getPage();
+                this.$message({
+                  type: 'success',
+                  message: '编辑成功!'
+                });
+              } else {
+                this.$message({
+                  type: 'error',
+                  message: '编辑失败!'
+                });
+              }
+            })
           }
         })
       },

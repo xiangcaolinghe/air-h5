@@ -44,27 +44,35 @@
     </div>
     <!--添加弹框-->
     <el-dialog title="添加分类" :visible.sync="addPop" class="tip-dialog small-dia" :close-on-click-modal="false">
+      <el-form :model="addObject" status-icon :rules="rules" ref="addObject" label-width="80px" class="demo-ruleForm">
       <div class="content">
         <div class="cell">
-          <span class="name">分类：</span>
+          <el-form-item label="分类：" prop="iName">
+          <!--<span class="name">分类：</span>-->
           <el-input v-model="addObject.iName" placeholder="请输入内容" class="flew-input"></el-input>
+          </el-form-item>
         </div>
       </div>
+      </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="addSave" class="confirmAdd">确 定</el-button>
+        <el-button type="primary" @click="addSave('addObject')" class="confirmAdd">确 定</el-button>
         <el-button @click="addPop = false" class="cancelAdd">取 消</el-button>
       </div>
     </el-dialog>
     <!--编辑弹框-->
     <el-dialog title="编辑" :visible.sync="editPop" class="tip-dialog small-dia" :close-on-click-modal="false">
+      <el-form :model="editObject" status-icon :rules="rules" ref="editObject" label-width="80px" class="demo-ruleForm">
       <div class="content">
         <div class="cell">
-          <span class="name">分类：</span>
+          <el-form-item label="分类：" prop="iName">
+          <!--<span class="name">分类：</span>-->
           <el-input v-model="editObject.iName" placeholder="请输入内容" class="flew-input"></el-input>
+          </el-form-item>
         </div>
       </div>
+      </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="editSave" class="confirmTip">确 定</el-button>
+        <el-button type="primary" @click="editSave('editObject')" class="confirmTip">确 定</el-button>
         <el-button @click="editPop = false" class="cancelTip">取 消</el-button>
       </div>
     </el-dialog>
@@ -93,7 +101,12 @@
         editObject: {
           iName: '',
         },
-        tableData: []
+        tableData: [],
+        rules: {
+          iName: [
+            { required: true, message: '必填', trigger: 'blur' },
+          ]
+        },
       }
     },
     computed: {},
@@ -116,32 +129,44 @@
         this.addObject = {
           iName: '',
         }
+        if(this.$refs.addObject){
+          this.$refs.addObject.clearValidate();
+        }else {
+          return
+        }
       },
       // 新增保存
-      addSave() {
-        let params = {};
-        params['iName'] = this.addObject.iName;
-        params['iSystemId'] = this.iSystemId;
-        console.log(params)
-        API.post('/ification/create', params).then((res) => {
-          console.log(res.data)
-          if (res.data.code == 200) {
-            this.addPop = false;
-            this.getPage();
-            this.$message({
-              type: 'success',
-              message: '新增成功!'
-            });
-          } else {
-            this.$message({
-              type: 'error',
-              message: '新增失败!'
-            });
+      addSave(formName) {
+        this.$refs[formName].validate((valid) => {
+          if (valid) {
+            let params = {};
+            params['iName'] = this.addObject.iName;
+            params['iSystemId'] = this.iSystemId;
+            console.log(params)
+            API.post('/ification/create', params).then((res) => {
+              console.log(res.data)
+              if (res.data.code == 200) {
+                this.addPop = false;
+                this.getPage();
+                this.$message({
+                  type: 'success',
+                  message: '新增成功!'
+                });
+              } else {
+                this.$message({
+                  type: 'error',
+                  message: '新增失败!'
+                });
+              }
+            })
           }
         })
       },
       // 编辑
       editOpen(id) {
+        if(this.$refs.editObject){
+          this.$refs.editObject.clearValidate();
+        }
         this.editPop = true
         let params = {};
         params['id'] = id;
@@ -156,25 +181,29 @@
         })
       },
       // 编辑保存
-      editSave() {
-        console.log(this.editObject)
-        let params = {};
-        params['id'] = this.editObject.id;
-        params['iName'] = this.editObject.iName;
-        API.put('/ification/ificatUpdate', params).then((res) => {
-          console.log(res.data)
-          if (res.data.code == 200) {
-            this.editPop = false;
-            this.getPage();
-            this.$message({
-              type: 'success',
-              message: '编辑成功!'
-            });
-          } else {
-            this.$message({
-              type: 'error',
-              message: '编辑失败!'
-            });
+      editSave(formName) {
+        this.$refs[formName].validate((valid) => {
+          if (valid) {
+            console.log(this.editObject)
+            let params = {};
+            params['id'] = this.editObject.id;
+            params['iName'] = this.editObject.iName;
+            API.put('/ification/ificatUpdate', params).then((res) => {
+              console.log(res.data)
+              if (res.data.code == 200) {
+                this.editPop = false;
+                this.getPage();
+                this.$message({
+                  type: 'success',
+                  message: '编辑成功!'
+                });
+              } else {
+                this.$message({
+                  type: 'error',
+                  message: '编辑失败!'
+                });
+              }
+            })
           }
         })
       },

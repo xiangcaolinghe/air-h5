@@ -15,7 +15,9 @@ import BackstageClassify from '@/views/backstage/children/classify/list'
 Vue.use(Router)
 
 export default new Router({
-  mode: 'history',
+  // mode: 'history',
+  mode: 'hash',
+  base: '/yiTownWebApp/',
   routes: [
     {
       path: '/login',
