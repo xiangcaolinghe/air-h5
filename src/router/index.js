@@ -4,6 +4,7 @@ import Router from 'vue-router'
 import Login from '@/views/login/index'
 // 后台
 import Backstage from '@/views/backstage/app'
+import BackstageIndex from '@/views/backstage/children/index/list'
 import BackstageNews from '@/views/backstage/children/news/list'
 import BackstageNewsDetai from '@/views/backstage/children/news/details'
 import BackstageNotice from '@/views/backstage/children/notice/list'
@@ -31,12 +32,20 @@ export default new Router({
       path: '/',
       name: 'home',
       component: Backstage,
-      redirect: '/news',
+      redirect: '/index',
       meta: {
         auth: true,
         hideLeft:true
       },
       children:[
+        {
+          path: 'index',
+          name: 'backstage.index',
+          component: BackstageIndex,
+          meta: {
+            auth: true
+          }
+        },
         {
           path: 'news',
           name: 'backstage.news',

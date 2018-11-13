@@ -64,7 +64,7 @@
     methods: {
       //登陆
       login() {
-        storage.set('token', '3333333333333');
+        // storage.set('token', '3333333333333');
         if (!this.userNum) {
           this.$message('请填写用户名');
           return
@@ -86,6 +86,7 @@
               });
               storage.set('userName', res.data.data.uName);
               storage.set('token', res.data.data.token);
+              storage.setJson('auth', res.data.data.diction);
               this.$router.push({name: 'home'})
             } else {
               this.$message({

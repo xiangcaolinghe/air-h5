@@ -332,12 +332,13 @@
     },
     computed: {},
     methods: {
+
       // 页面初始化
       getPage() {
         let params = {};
         params['page'] = this.currentPage;
         params['count'] = this.pageSize;
-        API.get('/newsInfo/FindAll', params).then((res) => {
+        API.get('/newsInfo/FindAll', params,{token:storage.get('token')}).then((res) => {
           if (res.data.code == 200) {
             console.log(res.data)
             this.tableData = res.data.data;
@@ -714,6 +715,7 @@
     },
     created() {
       this.getPage();
+
     },
     mounted() {
       // you can use current editor object to do something(editor methods)

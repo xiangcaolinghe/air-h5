@@ -37,12 +37,12 @@ class API {
       for(let a in newArr){
         pa[newArr[a]]=headers[newArr[a]];
       }
-      console.log(pa)
+      // console.log(pa)
       // pa['Content-Type'] =  'application/x-www-form-urlencoded;charset=utf-8';
     }else {
       // headers['Content-Type'] =  'application/x-www-form-urlencoded;charset=utf-8';
     }
-    console.log(headers)
+    // console.log(headers)
     return headers;
 
   }
@@ -53,10 +53,13 @@ class API {
     if (!headers) {
       config.headers['Content-Type'] =  'application/x-www-form-urlencoded;charset=utf-8';
     } else {
+
       config.headers=API.sigHeaders(headers)
       config.headers['Content-Type'] =  'application/x-www-form-urlencoded;charset=utf-8';
+
     }
     config.url=uri;
+    console.log(config)
     return axios.get(uri,config);
   }
 
@@ -69,7 +72,7 @@ class API {
 
   static post(uri,params,headers){
     var data=qs.stringify(params);
-    console.log(data)
+    // console.log(data)
     if (!headers) {
       config.headers['Content-Type'] =  'application/x-www-form-urlencoded;charset=utf-8';
     } else {

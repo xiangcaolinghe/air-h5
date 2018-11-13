@@ -475,7 +475,7 @@
         let params = {};
         params['page'] = this.currentPage;
         params['count'] = this.pageSize;
-        API.get('/notice/FindAll', params).then((res) => {
+        API.get('/notice/FindAll', params,{Authorization:storage.get('token')}).then((res) => {
           if (res.data.code == 200) {
             console.log(res.data)
             this.tableData = res.data.data;

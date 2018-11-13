@@ -25,11 +25,12 @@
 
           <div class="nav-left active">
             <ul>
-              <li><router-link :to="{name:'home'}" class="left-c" :class="{active: $route.name == 'backstage.news'}"><i class="icon iconfont icon-xinwen"></i>新闻管理</router-link></li>
-              <li><router-link :to="{name:'backstage.notice'}" class="left-c" :class="{active: $route.name == 'backstage.notice'}"><i class="icon iconfont icon-gonggao"></i>公告管理</router-link></li>
-              <li><router-link :to="{name:'backstage.meeting'}" class="left-c" :class="{active: $route.name == 'backstage.meeting'}"><i class="icon iconfont icon-huiyi"></i>会议管理</router-link></li>
-              <li><router-link :to="{name:'backstage.user'}" class="left-c" :class="{active: $route.name == 'backstage.user'}"><i class="icon iconfont icon-yonghuguanli"></i>用户管理</router-link></li>
-              <li><router-link :to="{name:'backstage.classify'}" class="left-c" :class="{active: $route.name == 'backstage.classify'}"><i class="icon iconfont icon-yijianfankui"></i>分类管理</router-link></li>
+              <li><router-link :to="{name:'home'}" class="left-c" :class="{active: $route.name == 'backstage.index'}"><i class="icon iconfont icon-xinwen"></i>首页</router-link></li>
+              <li v-show="newsS"><router-link :to="{name:'backstage.news'}" class="left-c" :class="{active: $route.name == 'backstage.news'}"><i class="icon iconfont icon-xinwen"></i>新闻管理</router-link></li>
+              <li v-show="noticeS"><router-link :to="{name:'backstage.notice'}" class="left-c" :class="{active: $route.name == 'backstage.notice'}"><i class="icon iconfont icon-gonggao"></i>公告管理</router-link></li>
+              <li v-show="meetingS"><router-link :to="{name:'backstage.meeting'}" class="left-c" :class="{active: $route.name == 'backstage.meeting'}"><i class="icon iconfont icon-huiyi"></i>会议管理</router-link></li>
+              <li v-show="userS"><router-link :to="{name:'backstage.user'}" class="left-c" :class="{active: $route.name == 'backstage.user'}"><i class="icon iconfont icon-yonghuguanli"></i>用户管理</router-link></li>
+              <li v-show="classifyS"><router-link :to="{name:'backstage.classify'}" class="left-c" :class="{active: $route.name == 'backstage.classify'}"><i class="icon iconfont icon-yijianfankui"></i>分类管理</router-link></li>
             </ul>
           </div>
         </div>
@@ -88,6 +89,11 @@
           }
         };
         return{
+          newsS : false,
+          noticeS : false,
+          meetingS : false,
+          userS : false,
+          classifyS : false,
           isActive:1,
           isLeftActive:1,
           isLeftNav: 1,
@@ -114,10 +120,28 @@
               { required: true, message: '请再次输入密码', trigger: 'blur' },
               { min: 6, message: '长度至少6位', trigger: 'blur' }
             ]
-          }
+          },
+          auth : []
         }
       },
       methods:{
+        getAuto() {
+          this.auth = storage.getJson('auth')
+          console.log(this.auth)
+          for(var i=0;i<this.auth.length;i++){
+            if(this.auth[i] == 1){
+              this.newsS = true
+            }else if(this.auth[i] == 2){
+              this.noticeS = true
+            }else if(this.auth[i] == 3){
+              this.meetingS = true
+            }else if(this.auth[i] == 4){
+              this.userS = true
+            }else if(this.auth[i] == 5){
+              this.classifyS = true
+            }
+          }
+        },
         OpenPassword(){
           this.editPassword = true
           if(this.$refs.ruleForm2){
@@ -135,7 +159,7 @@
               params['uPasswd'] = this.ruleForm2.passOld;
               params['NewuPasswd'] = this.ruleForm2.pass;
 
-              API.post('/ususer/changepasswd',params).then((res)=>{
+              API.post('/ususer/changepasswd',params,{token:storage.get('token')}).then((res)=>{
                 console.log(res.data)
                 if(res.data.code == 200) {
                   this.editPassword  = false;
@@ -196,9 +220,10 @@
       },
       mounted(){
         let hei = document.documentElement.clientHeight-110;
-        console.log(hei)
+        // console.log(hei)
         this.offHeight = hei;
-        console.log(this.offHeight)
+        // console.log(this.offHeight)
+        this.getAuto()
       }
     }
 </script>
