@@ -194,6 +194,7 @@
             let params = {};
             params['id'] = this.editObject.id;
             params['iName'] = this.editObject.iName;
+            params['iSystemId'] = storage.get('sysid');
             API.put('/ification/ificatUpdate', params,{Authorization:storage.get('token')}).then((res) => {
               console.log(res.data)
               if (res.data.code == 200) {
