@@ -361,7 +361,7 @@
         tipPop: false,
         innerTipPop: false,
         dialogVisible: false,
-        nSystemId : 1,
+        // nSystemId : 1,
         // 搜索部分初始化
         SearchInp: '',
         SearchValue: '',
@@ -563,7 +563,7 @@
             params['nEnclUrl'] = this.addObject.nEnclUrl;
             params['nEnclName'] = this.addObject.nEnclName;
             params['iId'] = this.addObject.iId;
-            params['nSystemId'] = this.nSystemId;
+            params['nSystemId'] = storage.get('sysid');
             console.log(params)
             API.post('/notice/create', params,{Authorization:storage.get('token')}).then((res) => {
               console.log(res.data)
@@ -676,7 +676,7 @@
             params['nEnclUrl'] = this.editObject.nEnclUrl;
             params['nEnclName'] = this.editObject.nEnclName;
             params['iId'] = this.editObject.iId;
-            params['nSystemId'] = this.nSystemId;
+            params['nSystemId'] = storage.get('sysid');
             console.log(params)
             API.put('/notice/noticeUpdate', params,{Authorization:storage.get('token')}).then((res) => {
               if (res.data.code == 200) {

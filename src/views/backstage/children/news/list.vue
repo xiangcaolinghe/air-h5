@@ -256,7 +256,7 @@
         editPop: false,
         addPop: false,
         fb: true,
-        fSystemId: 1,
+        // fSystemId: 1,
         // 搜索初始化
         SearchInp: '',
         // 删除选择初始化
@@ -423,7 +423,7 @@
             params['fEnclName'] = this.addObject.fEnclName;
             params['fAuthor'] = this.addObject.fAuthor;
             params['fFrom'] = this.addObject.fFrom;
-            params['fSystemId'] = this.fSystemId;
+            params['fSystemId'] = storage.get('sysid');
             console.log(params)
             API.post('/newsInfo/create', params,{Authorization:storage.get('token')}).then((res) => {
               console.log(res.data)
@@ -532,7 +532,7 @@
             params['fEnclName'] = this.editObject.fEnclName;
             params['fAuthor'] = this.editObject.fAuthor;
             params['fFrom'] = this.editObject.fFrom;
-            params['fSystemId'] = this.fSystemId;
+            params['fSystemId'] = storage.get('sysid');
             console.log(params)
             API.put('/newsInfo/newsUpdate', params,{Authorization:storage.get('token')}).then((res) => {
               if (res.data.code == 200) {

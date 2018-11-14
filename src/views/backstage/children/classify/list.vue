@@ -90,7 +90,7 @@
         loading: false,
         editPop: false,
         addPop: false,
-        iSystemId : 1,
+        // iSystemId : 1,
         // 删除选择初始化
         multipleSelection: [],
         activeTableDataId: [],
@@ -143,7 +143,7 @@
           if (valid) {
             let params = {};
             params['iName'] = this.addObject.iName;
-            params['iSystemId'] = this.iSystemId;
+            params['iSystemId'] = storage.get('sysid');
             console.log(params)
             API.post('/ification/create', params,{Authorization:storage.get('token')}).then((res) => {
               console.log(res.data)

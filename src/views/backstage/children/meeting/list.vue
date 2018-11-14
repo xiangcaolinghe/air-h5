@@ -391,7 +391,7 @@
         editPop: false,
         addPop: false,
         data:'',
-        mSystemId : 1,
+        // mSystemId : 1,
         // 搜索初始化
         SearchInp: '',
         // 删除选择初始化
@@ -627,7 +627,7 @@
             params['mEnclName'] = this.addObject.mEnclName;
             params['mContent'] = this.addObject.mContent;
             params['mContents'] = this.addObject.mContents.replace(/[\r\n]/g, "");
-            params['mSystemId'] = this.mSystemId;
+            params['mSystemId'] = storage.get('sysid');
             console.log(params)
             API.post('/meeTing/create', params,{Authorization:storage.get('token')}).then((res) => {
               console.log(res.data)
@@ -758,7 +758,7 @@
               params['mEnclName'] = this.editObject.mEnclName;
               params['mContent'] = this.editObject.mContent;
               params['mContents'] = this.editObject.mContents.replace(/[\r\n]/g, "");
-              params['mSystemId'] = this.mSystemId;
+              params['mSystemId'] = storage.get('sysid');
 
               console.log(params)
               API.put('/meeTing/update', params,{Authorization:storage.get('token')}).then((res) => {
