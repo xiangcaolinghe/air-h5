@@ -163,7 +163,7 @@
       // 页面初始化
       getPage() {
         let params = {};
-        API.get('/ususer/FindAll', params).then((res) => {
+        API.get('/ususer/FindAll', params,{Authorization:storage.get('token')}).then((res) => {
           if (res.data.code == 200) {
             console.log(res.data)
             this.tableData = res.data.data;
@@ -171,7 +171,7 @@
             console.log(res.data)
           }
         })
-        API.get('/juris/FindAll', params).then((res) => {
+        API.get('/juris/FindAll', params,{Authorization:storage.get('token')}).then((res) => {
           console.log(res.data)
           if (res.data.code == 200) {
             this.power = res.data.data;
@@ -184,7 +184,7 @@
       search() {
         let params = {};
         params['name'] = this.SearchInp;
-        API.get('/ususer/FindByName', params).then((res) => {
+        API.get('/ususer/FindByName', params,{Authorization:storage.get('token')}).then((res) => {
           console.log(res.data)
           if (res.data.code == 200) {
             this.tableData = res.data.data;
@@ -217,7 +217,7 @@
             params['qId'] = this.addObject.powerList;
             params['uSystemId'] = this.uSystemId;
             console.log(params)
-            API.post('/ususer/create', params).then((res) => {
+            API.post('/ususer/create', params,{Authorization:storage.get('token')}).then((res) => {
               console.log(res.data)
               if (res.data.code == 200) {
                 this.addPop = false;
@@ -280,7 +280,7 @@
         this.editPop = true;
         let params = {};
         params['id'] = id;
-        API.get('/ususer/FindByid', params).then((res) => {
+        API.get('/ususer/FindByid', params,{Authorization:storage.get('token')}).then((res) => {
           console.log(res.data)
           if (res.data.code == 200) {
             this.editObject = res.data.data;
@@ -324,7 +324,7 @@
 
 
             console.log(params)
-            API.put('/ususer/update', params).then((res) => {
+            API.put('/ususer/update', params,{Authorization:storage.get('token')}).then((res) => {
               console.log(res.data)
               if (res.data.code == 200) {
                 this.editPop = false;
@@ -398,7 +398,7 @@
         }).then(() => {
           let params = {};
           params['id'] = this.activeTableDataId2;
-          API.delete('/ususer/delete', params).then((res) => {
+          API.delete('/ususer/delete', params,{Authorization:storage.get('token')}).then((res) => {
             console.log(res)
             if (res.status == 200) {
               this.$message({
@@ -427,7 +427,7 @@
           /*this.tableData = this.tableData.filter(ele => {
             return ele.id != id;
           })*/
-          API.delete('/ususer/delete', params).then((res) => {
+          API.delete('/ususer/delete', params,{Authorization:storage.get('token')}).then((res) => {
             if (res.status == 200) {
               this.getPage();
               this.$message({

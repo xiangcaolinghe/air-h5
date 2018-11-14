@@ -338,7 +338,7 @@
         let params = {};
         params['page'] = this.currentPage;
         params['count'] = this.pageSize;
-        API.get('/newsInfo/FindAll', params,{token:storage.get('token')}).then((res) => {
+        API.get('/newsInfo/FindAll', params,{Authorization:storage.get('token')}).then((res) => {
           if (res.data.code == 200) {
             console.log(res.data)
             this.tableData = res.data.data;
@@ -364,7 +364,7 @@
         params['title'] = this.SearchInp;
         params['page'] = this.currentPage;
         params['count'] = this.pageSize;
-        API.get('/newsInfo/FindBytitle', params).then((res) => {
+        API.get('/newsInfo/FindBytitle', params,{Authorization:storage.get('token')}).then((res) => {
           console.log(res.data)
           if (res.data.code == 200) {
             this.tableData = res.data.data;
@@ -421,7 +421,7 @@
             params['fFrom'] = this.addObject.fFrom;
             params['fSystemId'] = this.fSystemId;
             console.log(params)
-            API.post('/newsInfo/create', params).then((res) => {
+            API.post('/newsInfo/create', params,{Authorization:storage.get('token')}).then((res) => {
               console.log(res.data)
               if (res.data.code == 200) {
                 this.addPop = false;
@@ -479,7 +479,7 @@
         }
         let params = {};
         params['id'] = id;
-        API.get('/newsInfo/FindById', params).then((res) => {
+        API.get('/newsInfo/FindById', params,{Authorization:storage.get('token')}).then((res) => {
           console.log(res.data)
           if (res.data.code == 200) {
             this.editObject = res.data.data.data;
@@ -526,7 +526,7 @@
             params['fFrom'] = this.editObject.fFrom;
             params['fSystemId'] = this.fSystemId;
             console.log(params)
-            API.put('/newsInfo/newsUpdate', params).then((res) => {
+            API.put('/newsInfo/newsUpdate', params,{Authorization:storage.get('token')}).then((res) => {
               if (res.data.code == 200) {
                 this.editPop = false;
                 this.getPage();
@@ -576,7 +576,7 @@
         }).then(() => {
           let params = {};
           params['id'] = id;
-          API.delete('/newsInfo/newsDelete', params).then((res) => {
+          API.delete('/newsInfo/newsDelete', params,{Authorization:storage.get('token')}).then((res) => {
             if (res.data.code == 200) {
               this.getPage();
               this.$message({
@@ -616,7 +616,7 @@
         }).then(() => {
           let params = {};
           params['id'] = this.activeTableDataId2;
-          API.delete('/newsInfo/newsDelete', params).then((res) => {
+          API.delete('/newsInfo/newsDelete', params,{Authorization:storage.get('token')}).then((res) => {
             console.log(res.data)
             if (res.data.code == 200) {
               this.$message({
@@ -639,7 +639,7 @@
         params['id'] = id;
         params['fTop'] = fTop;
         console.log(params)
-        API.post('/newsInfo/newsupdatetop', params).then((res) => {
+        API.post('/newsInfo/newsupdatetop', params,{Authorization:storage.get('token')}).then((res) => {
           console.log(res.data)
           if (res.data.code == 200) {
             this.getPage()
@@ -657,7 +657,7 @@
         params['id'] = id;
         params['fStatus'] = fStatus;
         console.log(params)
-        API.post('/newsInfo/newsrelease', params).then((res) => {
+        API.post('/newsInfo/newsrelease', params,{Authorization:storage.get('token')}).then((res) => {
           console.log(res.data)
           if (res.data.code == 200) {
             this.getPage()
@@ -675,7 +675,7 @@
         params['id'] = id;
         params['fStatus'] = fStatus;
         console.log(params)
-        API.post('/newsInfo/newsrelease', params).then((res) => {
+        API.post('/newsInfo/newsrelease', params,{Authorization:storage.get('token')}).then((res) => {
           console.log(res.data)
           if (res.data.code == 200) {
             this.getPage()

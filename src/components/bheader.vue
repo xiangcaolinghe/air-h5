@@ -194,7 +194,9 @@
             cancelButtonText: '取消',
             type: 'warning'
           }).then(() => {
-            storage.delete('token');
+            storage.delete('Authorization');
+            storage.delete('userName');
+            storage.delete('auth');
             this.$message({
               type: 'success',
               message: '您已成功退出!'

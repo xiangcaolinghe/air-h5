@@ -533,7 +533,7 @@
         let params = {};
         params['page'] = this.currentPage;
         params['count'] = this.pageSize;
-        API.get('/meeTing/FindAll', params).then((res) => {
+        API.get('/meeTing/FindAll', params,{Authorization:storage.get('token')}).then((res) => {
           if (res.data.code == 200) {
             console.log(res.data)
             this.tableData = res.data.data;
@@ -556,7 +556,7 @@
         console.log(this.SearchInp)
         let params = {};
         params['name'] = this.SearchInp;
-        API.get('/meeTing/FindByName', params).then((res) => {
+        API.get('/meeTing/FindByName', params,{Authorization:storage.get('token')}).then((res) => {
           if (res.data.code == 200) {
             console.log(res.data)
             this.tableData = res.data.data;
@@ -625,7 +625,7 @@
             params['mContents'] = this.addObject.mContents.replace(/[\r\n]/g, "");
             params['mSystemId'] = this.mSystemId;
             console.log(params)
-            API.post('/meeTing/create', params).then((res) => {
+            API.post('/meeTing/create', params,{Authorization:storage.get('token')}).then((res) => {
               console.log(res.data)
               if (res.data.code == 200) {
                 this.addPop = false;
@@ -679,7 +679,7 @@
         let params = {};
         params['id'] = id;
         console.log(params)
-        API.get('/meeTing/FindById', params).then((res) => {
+        API.get('/meeTing/FindById', params,{Authorization:storage.get('token')}).then((res) => {
           console.log(res.data)
           if (res.data.code == 200) {
             this.editObject = res.data.data.data;
@@ -753,7 +753,7 @@
               params['mSystemId'] = this.mSystemId;
 
               console.log(params)
-              API.put('/meeTing/update', params).then((res) => {
+              API.put('/meeTing/update', params,{Authorization:storage.get('token')}).then((res) => {
                 console.log(res.data)
                 if (res.data.code == 200) {
                   this.editPop = false;
@@ -798,7 +798,7 @@
         }).then(() => {
           let params = {};
           params['id'] = id;
-          API.delete('/meeTing/delete', params).then((res) => {
+          API.delete('/meeTing/delete', params,{Authorization:storage.get('token')}).then((res) => {
             if (res.data.code == 200) {
               this.getPage();
               this.$message({
@@ -838,7 +838,7 @@
         }).then(() => {
           let params = {};
           params['id'] = this.activeTableDataId2;
-          API.delete('/meeTing/delete', params).then((res) => {
+          API.delete('/meeTing/delete', params,{Authorization:storage.get('token')}).then((res) => {
             console.log(res)
             if (res.status == 200) {
               this.$message({
@@ -862,7 +862,7 @@
         params['id'] = id;
         params['mStatus'] = mstatus;
         console.log(params)
-        API.post('/meeTing/release', params).then((res) => {
+        API.post('/meeTing/release', params,{Authorization:storage.get('token')}).then((res) => {
           console.log(res.data)
           if (res.data.code == 200) {
             this.getPage()
@@ -880,7 +880,7 @@
         params['id'] = id;
         params['mStatus'] = mstatus;
         console.log(params)
-        API.post('/meeTing/release', params).then((res) => {
+        API.post('/meeTing/release', params,{Authorization:storage.get('token')}).then((res) => {
           console.log(res.data)
           if (res.data.code == 200) {
             this.getPage()

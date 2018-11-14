@@ -83,8 +83,14 @@ class API {
     return axios.post(uri,data,config);
   }
 
-  static put(uri,params){
+  static put(uri,params,headers){
     var data=qs.stringify(params);
+    if (!headers) {
+      config.headers['Content-Type'] =  'application/x-www-form-urlencoded;charset=utf-8';
+    } else {
+      config.headers=API.sigHeaders(headers)
+      config.headers['Content-Type'] =  'application/x-www-form-urlencoded;charset=utf-8';
+    }
     // config.params=API.sigParams(uri,params);
     return axios.put(uri,data,config);
   }

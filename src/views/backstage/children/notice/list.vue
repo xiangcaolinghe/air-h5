@@ -501,7 +501,7 @@
         params['page'] = this.currentPage;
         params['count'] = this.pageSize;
         console.log(params)
-        API.get('/notice/FindBytitle', params).then((res) => {
+        API.get('/notice/FindBytitle', params,{Authorization:storage.get('token')}).then((res) => {
           console.log(res.data)
           if (res.data.code == 200) {
             this.tableData = res.data.data;
@@ -560,7 +560,7 @@
             params['iId'] = this.addObject.iId;
             params['nSystemId'] = this.nSystemId;
             console.log(params)
-            API.post('/notice/create', params).then((res) => {
+            API.post('/notice/create', params,{Authorization:storage.get('token')}).then((res) => {
               console.log(res.data)
               if (res.data.code == 200) {
                 this.addPop = false;
@@ -619,7 +619,7 @@
         }
         let params = {};
         params['id'] = id;
-        API.get('/notice/FindById', params).then((res) => {
+        API.get('/notice/FindById', params,{Authorization:storage.get('token')}).then((res) => {
           console.log(res.data)
           if (res.data.code == 200) {
             this.editObject = res.data.data.data;
@@ -669,7 +669,7 @@
             params['iId'] = this.editObject.iId;
             params['nSystemId'] = this.nSystemId;
             console.log(params)
-            API.put('/notice/noticeUpdate', params).then((res) => {
+            API.put('/notice/noticeUpdate', params,{Authorization:storage.get('token')}).then((res) => {
               if (res.data.code == 200) {
                 this.editPop = false;
                 this.getPage();
@@ -719,7 +719,7 @@
         }).then(() => {
           let params = {};
           params['id'] = id;
-          API.delete('/notice/noticeDelete', params).then((res) => {
+          API.delete('/notice/noticeDelete', params,{Authorization:storage.get('token')}).then((res) => {
             if (res.data.code == 200) {
               this.getPage();
               this.$message({
@@ -759,7 +759,7 @@
         }).then(() => {
           let params = {};
           params['id'] = this.activeTableDataId2;
-          API.delete('/notice/noticeDelete', params).then((res) => {
+          API.delete('/notice/noticeDelete', params,{Authorization:storage.get('token')}).then((res) => {
             console.log(res.data)
             if (res.data.code == 200) {
               this.$message({
@@ -782,7 +782,7 @@
         params['id'] = id;
         params['nTop'] = nTop;
         console.log(params)
-        API.post('/notice/noticeupdatetop', params).then((res) => {
+        API.post('/notice/noticeupdatetop', params,{Authorization:storage.get('token')}).then((res) => {
           console.log(res.data)
           if (res.data.code == 200) {
             this.getPage()
@@ -800,7 +800,7 @@
         params['id'] = id;
         params['nStatus'] = nStatus;
         console.log(params)
-        API.post('/notice/noticerelease', params).then((res) => {
+        API.post('/notice/noticerelease', params,{Authorization:storage.get('token')}).then((res) => {
           console.log(res.data)
           if (res.data.code == 200) {
             this.getPage()
@@ -818,7 +818,7 @@
         params['id'] = id;
         params['nStatus'] = nStatus;
         console.log(params)
-        API.post('/notice/noticerelease', params).then((res) => {
+        API.post('/notice/noticerelease', params,{Authorization:storage.get('token')}).then((res) => {
           console.log(res.data)
           if (res.data.code == 200) {
             this.getPage()
@@ -833,7 +833,7 @@
       //分类
       classify() {
         let params = {};
-        API.get('/ification/FindAll', params).then((res) => {
+        API.get('/ification/FindAll', params,{Authorization:storage.get('token')}).then((res) => {
           if(res.data.code == 200){
             this.options = res.data.data;
           }

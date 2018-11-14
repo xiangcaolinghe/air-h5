@@ -122,7 +122,7 @@
         getDetail() {
           let params = {};
           params['id'] = this.$route.query.id;
-          API.get('/meeTing/FindById', params).then((res) => {
+          API.get('/meeTing/FindById', params,{Authorization:storage.get('token')}).then((res) => {
             console.log(res.data)
             if(res.data.code == 200) {
               this.datail = res.data.data.data;

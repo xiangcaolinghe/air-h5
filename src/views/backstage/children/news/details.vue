@@ -55,7 +55,7 @@
         getDetail(){
           let params={};
           params['id'] = this.$route.query.id;
-          API.get('/newsInfo/FindById',params).then((res)=>{
+          API.get('/newsInfo/FindById',params,{Authorization:storage.get('token')}).then((res)=>{
             console.log(res.data)
             if(res.data.code == 200) {
               this.datail = res.data.data.data;

@@ -114,7 +114,7 @@
       // 页面初始化
       getPage() {
         let params = {};
-        API.get('/ification/FindAll', params).then((res) => {
+        API.get('/ification/FindAll', params,{Authorization:storage.get('token')}).then((res) => {
           if (res.data.code == 200) {
             console.log(res.data)
             this.tableData = res.data.data;
@@ -143,7 +143,7 @@
             params['iName'] = this.addObject.iName;
             params['iSystemId'] = this.iSystemId;
             console.log(params)
-            API.post('/ification/create', params).then((res) => {
+            API.post('/ification/create', params,{Authorization:storage.get('token')}).then((res) => {
               console.log(res.data)
               if (res.data.code == 200) {
                 this.addPop = false;
@@ -170,7 +170,7 @@
         this.editPop = true
         let params = {};
         params['id'] = id;
-        API.get('/ification/FindByid', params).then((res) => {
+        API.get('/ification/FindByid', params,{Authorization:storage.get('token')}).then((res) => {
           console.log(res.data)
           if (res.data.code == 200) {
             // this.editObject.title = '12345'
@@ -188,7 +188,7 @@
             let params = {};
             params['id'] = this.editObject.id;
             params['iName'] = this.editObject.iName;
-            API.put('/ification/ificatUpdate', params).then((res) => {
+            API.put('/ification/ificatUpdate', params,{Authorization:storage.get('token')}).then((res) => {
               console.log(res.data)
               if (res.data.code == 200) {
                 this.editPop = false;
@@ -216,7 +216,7 @@
         }).then(() => {
           let params = {};
           params['id'] = id;
-          API.delete('/ification/ificatDelete', params).then((res) => {
+          API.delete('/ification/ificatDelete', params,{Authorization:storage.get('token')}).then((res) => {
             if (res.data.code == 200) {
               this.getPage();
               this.$message({
@@ -257,7 +257,7 @@
         }).then(() => {
           let params = {};
           params['id'] = this.activeTableDataId2;
-          API.delete('/ification/ificatDelete', params).then((res) => {
+          API.delete('/ification/ificatDelete', params,{Authorization:storage.get('token')}).then((res) => {
             console.log(res.data)
             if (res.data.code == 200) {
               this.$message({

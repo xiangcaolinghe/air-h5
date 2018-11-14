@@ -85,7 +85,7 @@
                 message: '登录成功!'
               });
               storage.set('userName', res.data.data.uName);
-              storage.set('token', res.data.data.token);
+              storage.set('Authorization', res.data.data.token);
               storage.setJson('auth', res.data.data.diction);
               this.$router.push({name: 'home'})
             } else {
