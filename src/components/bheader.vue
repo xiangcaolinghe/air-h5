@@ -197,6 +197,7 @@
             storage.delete('Authorization');
             storage.delete('userName');
             storage.delete('auth');
+            storage.delete('token');
             this.$message({
               type: 'success',
               message: '您已成功退出!'
