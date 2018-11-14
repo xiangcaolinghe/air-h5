@@ -478,15 +478,18 @@
         API.get('/notice/FindAll', params,{Authorization:storage.get('token')}).then((res) => {
           if (res.data.code == 200) {
             console.log(res.data)
+            console.log(res.data)
             this.tableData = res.data.data;
             this.total = res.data.count;
             for (var i = 0; i < this.tableData.length; i++) {
               if (this.tableData[i].nStatus == '1') {
                 this.tableData[i].fbStatus = true;
-              } else {
+              }  else {
                 this.tableData[i].fbStatus = false;
               }
             }
+          } else if(res.data.code == 1001){
+            this.signOut()
           } else {
             console.log(res.data)
           }
@@ -506,6 +509,8 @@
           if (res.data.code == 200) {
             this.tableData = res.data.data;
             this.total = res.data.count;
+          } else if(res.data.code == 1001){
+            this.signOut()
           } else {
             console.log(res.data)
           }
@@ -569,6 +574,8 @@
                   type: 'success',
                   message: '新增成功!'
                 });
+              } else if(res.data.code == 1001){
+                this.signOut()
               } else {
                 this.$message({
                   type: 'error',
@@ -631,6 +638,8 @@
               obj.push({url: res.data.data.file[i].fenclUrl, name: res.data.data.file[i].fenclName})
             }
             this.EditfileList = obj;
+          } else if(res.data.code == 1001){
+            this.signOut()
           } else {
             console.log(res.data)
           }
@@ -677,6 +686,8 @@
                   type: 'success',
                   message: '编辑成功!'
                 });
+              } else if(res.data.code == 1001){
+                this.signOut()
               } else {
                 this.$message({
                   type: 'error',
@@ -726,6 +737,8 @@
                 type: 'success',
                 message: '删除成功!'
               });
+            } else if(res.data.code == 1001){
+              this.signOut()
             } else {
               this.$message({
                 type: 'error',
@@ -767,6 +780,8 @@
                 message: '删除成功!'
               });
               this.getPage();
+            } else if(res.data.code == 1001){
+              this.signOut()
             } else {
               this.$message({
                 type: 'error',
@@ -786,6 +801,8 @@
           console.log(res.data)
           if (res.data.code == 200) {
             this.getPage()
+          } else if(res.data.code == 1001){
+            this.signOut()
           } else {
             this.$message({
               type: 'error',
@@ -804,6 +821,8 @@
           console.log(res.data)
           if (res.data.code == 200) {
             this.getPage()
+          } else if(res.data.code == 1001){
+            this.signOut()
           } else {
             this.$message({
               type: 'error',
@@ -822,6 +841,8 @@
           console.log(res.data)
           if (res.data.code == 200) {
             this.getPage()
+          } else if(res.data.code == 1001){
+            this.signOut()
           } else {
             this.$message({
               type: 'error',
@@ -836,6 +857,8 @@
         API.get('/ification/FindAll', params,{Authorization:storage.get('token')}).then((res) => {
           if(res.data.code == 200){
             this.options = res.data.data;
+          }else if(res.data.code == 1001){
+            this.signOut()
           }
           console.log(this.options)
         })
@@ -913,6 +936,17 @@
         this.addObject.nContent = html
         this.addObject.nContents = text
       },
+      signOut(){
+        this.$message({
+          type: 'error',
+          message: '登录失效，请重新登录!'
+        });
+        storage.delete('Authorization');
+        storage.delete('userName');
+        storage.delete('auth');
+        storage.delete('token');
+        this.$router.push({name:'login'})
+      }
     },
     created() {
       this.classify()

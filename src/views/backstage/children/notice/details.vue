@@ -59,10 +59,22 @@
           if(res.data.code == 200) {
             this.datail = res.data.data.data;
             this.file = res.data.data.file
+          }else if(res.data.code == 1001){
+            this.signOut()
           }
         })
         console.log(this.$route.query.id)
-
+      },
+      signOut(){
+        this.$message({
+          type: 'error',
+          message: '登录失效，请重新登录!'
+        });
+        storage.delete('Authorization');
+        storage.delete('userName');
+        storage.delete('auth');
+        storage.delete('token');
+        this.$router.push({name:'login'})
       }
     }
   }

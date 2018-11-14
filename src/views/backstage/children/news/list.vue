@@ -352,6 +352,8 @@
             }
             console.log(this.tableData)
             //this.currentPage = 4
+          } else if(res.data.code == 1001){
+            this.signOut()
           } else {
             // console.log(res.data)
           }
@@ -369,6 +371,8 @@
           if (res.data.code == 200) {
             this.tableData = res.data.data;
             this.total = res.data.count;
+          } else if(res.data.code == 1001){
+            this.signOut()
           } else {
             console.log(res.data)
           }
@@ -430,6 +434,8 @@
                   type: 'success',
                   message: '新增成功!'
                 });
+              } else if(res.data.code == 1001){
+                this.signOut()
               } else {
                 this.$message({
                   type: 'error',
@@ -491,6 +497,8 @@
               obj.push({url: res.data.data.file[i].fenclUrl, name: res.data.data.file[i].fenclName})
             }
             this.EditfileList = obj;
+          } else if(res.data.code == 1001){
+            this.signOut()
           } else {
             console.log(res.data)
           }
@@ -534,6 +542,8 @@
                   type: 'success',
                   message: '编辑成功!'
                 });
+              } else if(res.data.code == 1001){
+                this.signOut()
               } else {
                 this.$message({
                   type: 'error',
@@ -583,6 +593,8 @@
                 type: 'success',
                 message: '删除成功!'
               });
+            } else if(res.data.code == 1001){
+              this.signOut()
             } else {
               this.$message({
                 type: 'error',
@@ -624,6 +636,8 @@
                 message: '删除成功!'
               });
               this.getPage();
+            } else if(res.data.code == 1001){
+              this.signOut()
             } else {
               this.$message({
                 type: 'error',
@@ -643,6 +657,8 @@
           console.log(res.data)
           if (res.data.code == 200) {
             this.getPage()
+          } else if(res.data.code == 1001){
+            this.signOut()
           } else {
             this.$message({
               type: 'error',
@@ -661,6 +677,8 @@
           console.log(res.data)
           if (res.data.code == 200) {
             this.getPage()
+          } else if(res.data.code == 1001){
+            this.signOut()
           } else {
             this.$message({
               type: 'error',
@@ -679,6 +697,8 @@
           console.log(res.data)
           if (res.data.code == 200) {
             this.getPage()
+          } else if(res.data.code == 1001){
+            this.signOut()
           } else {
             this.$message({
               type: 'error',
@@ -711,6 +731,17 @@
       onAddChange({editor, html, text}) {
         this.addObject.fContent = html
         this.addObject.fContents =text
+      },
+      signOut(){
+        this.$message({
+          type: 'error',
+          message: '登录失效，请重新登录!'
+        });
+        storage.delete('Authorization');
+        storage.delete('userName');
+        storage.delete('auth');
+        storage.delete('token');
+        this.$router.push({name:'login'})
       }
     },
     created() {

@@ -167,7 +167,9 @@
                     type: 'success',
                     message: '密码修改成功!'
                   });
-                }else {
+                } else if(res.data.code == 1001){
+                  this.signOut()
+                } else {
                   this.$message({
                     type: 'error',
                     message: '密码修改失败!'
@@ -219,6 +221,17 @@
               done();
             })
             .catch(_ => {});
+        },
+        signOut(){
+          this.$message({
+            type: 'error',
+            message: '登录失效，请重新登录!'
+          });
+          storage.delete('Authorization');
+          storage.delete('userName');
+          storage.delete('auth');
+          storage.delete('token');
+          this.$router.push({name:'login'})
         }
       },
       mounted(){

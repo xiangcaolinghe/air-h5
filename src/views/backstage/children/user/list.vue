@@ -167,6 +167,8 @@
           if (res.data.code == 200) {
             console.log(res.data)
             this.tableData = res.data.data;
+          } else if(res.data.code == 1001){
+            this.signOut()
           } else {
             console.log(res.data)
           }
@@ -175,6 +177,8 @@
           console.log(res.data)
           if (res.data.code == 200) {
             this.power = res.data.data;
+          } else if(res.data.code == 1001){
+            this.signOut()
           } else {
             console.log(res.data)
           }
@@ -188,6 +192,8 @@
           console.log(res.data)
           if (res.data.code == 200) {
             this.tableData = res.data.data;
+          } else if(res.data.code == 1001){
+            this.signOut()
           } else {
             console.log(res.data)
           }
@@ -226,6 +232,8 @@
                   type: 'success',
                   message: '新增成功!'
                 });
+              } else if(res.data.code == 1001){
+                this.signOut()
               } else {
                 this.$message({
                   type: 'error',
@@ -298,6 +306,8 @@
             }
             console.log(this.EditcheckedCities)
             console.log(this.editObject.powerList)
+          } else if(res.data.code == 1001){
+            this.signOut()
           } else {
             console.log(res.data)
           }
@@ -333,6 +343,8 @@
                   type: 'success',
                   message: '编辑成功!'
                 });
+              } else if(res.data.code == 1001){
+                this.signOut()
               } else {
                 this.$message({
                   type: 'error',
@@ -406,6 +418,8 @@
                 message: '删除成功!'
               });
               this.getPage();
+            } else if(res.data.code == 1001){
+              this.signOut()
             } else {
               this.$message({
                 type: 'error',
@@ -434,6 +448,8 @@
                 type: 'success',
                 message: '删除成功!'
               });
+            } else if(res.data.code == 1001){
+              this.signOut()
             } else {
               this.$message({
                 type: 'error',
@@ -456,6 +472,17 @@
         this.editPop = true;
         this.title = "详情";
       },
+      signOut(){
+        this.$message({
+          type: 'error',
+          message: '登录失效，请重新登录!'
+        });
+        storage.delete('Authorization');
+        storage.delete('userName');
+        storage.delete('auth');
+        storage.delete('token');
+        this.$router.push({name:'login'})
+      }
     },
     created() {
       this.getPage();
