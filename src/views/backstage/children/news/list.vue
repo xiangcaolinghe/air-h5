@@ -586,6 +586,7 @@
         }).then(() => {
           let params = {};
           params['id'] = id;
+          params['fSystemId'] = storage.get('sysid');
           API.delete('/newsInfo/newsDelete', params,{Authorization:storage.get('token')}).then((res) => {
             if (res.data.code == 200) {
               this.getPage();
@@ -628,6 +629,7 @@
         }).then(() => {
           let params = {};
           params['id'] = this.activeTableDataId2;
+          params['fSystemId'] = storage.get('sysid');
           API.delete('/newsInfo/newsDelete', params,{Authorization:storage.get('token')}).then((res) => {
             console.log(res.data)
             if (res.data.code == 200) {
@@ -652,6 +654,7 @@
         let params = {};
         params['id'] = id;
         params['fTop'] = fTop;
+        params['fSystemId'] = storage.get('sysid');
         console.log(params)
         API.post('/newsInfo/newsupdatetop', params,{Authorization:storage.get('token')}).then((res) => {
           console.log(res.data)
@@ -672,6 +675,7 @@
         let params = {};
         params['id'] = id;
         params['fStatus'] = fStatus;
+        params['fSystemId'] = storage.get('sysid');
         console.log(params)
         API.post('/newsInfo/newsrelease', params,{Authorization:storage.get('token')}).then((res) => {
           console.log(res.data)
@@ -692,6 +696,7 @@
         let params = {};
         params['id'] = id;
         params['fStatus'] = fStatus;
+        params['fSystemId'] = storage.get('sysid');
         console.log(params)
         API.post('/newsInfo/newsrelease', params,{Authorization:storage.get('token')}).then((res) => {
           console.log(res.data)
@@ -741,6 +746,7 @@
         storage.delete('userName');
         storage.delete('auth');
         storage.delete('token');
+        storage.delete('sysid');
         this.$router.push({name:'login'})
       }
     },

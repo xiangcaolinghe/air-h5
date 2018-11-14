@@ -808,6 +808,7 @@
         }).then(() => {
           let params = {};
           params['id'] = id;
+          params['mSystemId'] = storage.get('sysid');
           API.delete('/meeTing/delete', params,{Authorization:storage.get('token')}).then((res) => {
             if (res.data.code == 200) {
               this.getPage();
@@ -850,6 +851,7 @@
         }).then(() => {
           let params = {};
           params['id'] = this.activeTableDataId2;
+          params['mSystemId'] = storage.get('sysid');
           API.delete('/meeTing/delete', params,{Authorization:storage.get('token')}).then((res) => {
             console.log(res)
             if (res.status == 200) {
@@ -875,6 +877,7 @@
         let params = {};
         params['id'] = id;
         params['mStatus'] = mstatus;
+        params['mSystemId'] = storage.get('sysid');
         console.log(params)
         API.post('/meeTing/release', params,{Authorization:storage.get('token')}).then((res) => {
           console.log(res.data)
@@ -895,6 +898,7 @@
         let params = {};
         params['id'] = id;
         params['mStatus'] = mstatus;
+        params['mSystemId'] = storage.get('sysid');
         console.log(params)
         API.post('/meeTing/release', params,{Authorization:storage.get('token')}).then((res) => {
           console.log(res.data)
@@ -1035,6 +1039,7 @@
         storage.delete('userName');
         storage.delete('auth');
         storage.delete('token');
+        storage.delete('sysid');
         this.$router.push({name:'login'})
       }
     },

@@ -87,6 +87,7 @@
               storage.set('userName', res.data.data.uName);
               storage.set('Authorization', res.data.data.token);
               storage.set('token', res.data.data.token);
+              storage.set('sysid', res.data.data.id);
               storage.setJson('auth', res.data.data.diction);
               this.$router.push({name: 'home'})
             } else {

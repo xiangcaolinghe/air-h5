@@ -224,6 +224,7 @@
         }).then(() => {
           let params = {};
           params['id'] = id;
+          params['iSystemId'] = storage.get('sysid');
           API.delete('/ification/ificatDelete', params,{Authorization:storage.get('token')}).then((res) => {
             if (res.data.code == 200) {
               this.getPage();
@@ -267,6 +268,7 @@
         }).then(() => {
           let params = {};
           params['id'] = this.activeTableDataId2;
+          params['iSystemId'] = storage.get('sysid');
           API.delete('/ification/ificatDelete', params,{Authorization:storage.get('token')}).then((res) => {
             console.log(res.data)
             if (res.data.code == 200) {
@@ -295,6 +297,7 @@
         storage.delete('userName');
         storage.delete('auth');
         storage.delete('token');
+        storage.delete('sysid');
         this.$router.push({name:'login'})
       }
     },

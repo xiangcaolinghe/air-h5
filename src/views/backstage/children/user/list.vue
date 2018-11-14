@@ -410,6 +410,7 @@
         }).then(() => {
           let params = {};
           params['id'] = this.activeTableDataId2;
+          params['uSystemId'] = storage.get('sysid');
           API.delete('/ususer/delete', params,{Authorization:storage.get('token')}).then((res) => {
             console.log(res)
             if (res.status == 200) {
@@ -438,6 +439,7 @@
         }).then(() => {
           let params = {};
           params['id'] = id;
+          params['uSystemId'] = storage.get('sysid');
           /*this.tableData = this.tableData.filter(ele => {
             return ele.id != id;
           })*/
@@ -481,6 +483,7 @@
         storage.delete('userName');
         storage.delete('auth');
         storage.delete('token');
+        storage.delete('sysid');
         this.$router.push({name:'login'})
       }
     },

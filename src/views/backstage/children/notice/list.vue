@@ -730,6 +730,7 @@
         }).then(() => {
           let params = {};
           params['id'] = id;
+          params['nSystemId'] = storage.get('sysid');
           API.delete('/notice/noticeDelete', params,{Authorization:storage.get('token')}).then((res) => {
             if (res.data.code == 200) {
               this.getPage();
@@ -772,6 +773,7 @@
         }).then(() => {
           let params = {};
           params['id'] = this.activeTableDataId2;
+          params['nSystemId'] = storage.get('sysid');
           API.delete('/notice/noticeDelete', params,{Authorization:storage.get('token')}).then((res) => {
             console.log(res.data)
             if (res.data.code == 200) {
@@ -796,6 +798,7 @@
         let params = {};
         params['id'] = id;
         params['nTop'] = nTop;
+        params['nSystemId'] = storage.get('sysid');
         console.log(params)
         API.post('/notice/noticeupdatetop', params,{Authorization:storage.get('token')}).then((res) => {
           console.log(res.data)
@@ -816,6 +819,7 @@
         let params = {};
         params['id'] = id;
         params['nStatus'] = nStatus;
+        params['nSystemId'] = storage.get('sysid');
         console.log(params)
         API.post('/notice/noticerelease', params,{Authorization:storage.get('token')}).then((res) => {
           console.log(res.data)
@@ -836,6 +840,7 @@
         let params = {};
         params['id'] = id;
         params['nStatus'] = nStatus;
+        params['nSystemId'] = storage.get('sysid');
         console.log(params)
         API.post('/notice/noticerelease', params,{Authorization:storage.get('token')}).then((res) => {
           console.log(res.data)
@@ -945,6 +950,7 @@
         storage.delete('userName');
         storage.delete('auth');
         storage.delete('token');
+        storage.delete('sysid');
         this.$router.push({name:'login'})
       }
     },

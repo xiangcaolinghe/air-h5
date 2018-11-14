@@ -144,6 +144,7 @@
           storage.delete('userName');
           storage.delete('auth');
           storage.delete('token');
+          storage.delete('sysid');
           this.$router.push({name:'login'})
         }
       }

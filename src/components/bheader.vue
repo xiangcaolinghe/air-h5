@@ -200,6 +200,7 @@
             storage.delete('userName');
             storage.delete('auth');
             storage.delete('token');
+            storage.delete('sysid');
             this.$message({
               type: 'success',
               message: '您已成功退出!'
@@ -231,6 +232,7 @@
           storage.delete('userName');
           storage.delete('auth');
           storage.delete('token');
+          storage.delete('sysid');
           this.$router.push({name:'login'})
         }
       },
