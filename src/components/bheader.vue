@@ -182,11 +182,11 @@
           if (valid) {
             let params = {};
             params['uName'] = storage.get('userName');
-            params['id'] = storage.get('token');
+            params['id'] = storage.get('sysid');
             params['uPasswd'] = this.ruleForm2.passOld;
             params['NewuPasswd'] = this.ruleForm2.pass;
-
-            API.post('/ususer/changepasswd', params, {token: storage.get('token')}).then((res) => {
+            console.log(params)
+            API.post('/ususer/changepasswd', params, {Authorization: storage.get('token')}).then((res) => {
               console.log(res.data)
               if (res.data.code == 200) {
                 this.editPassword = false;
