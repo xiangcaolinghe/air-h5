@@ -210,7 +210,8 @@
                 class="avatar-uploader"
                 action="http://192.168.3.41:8083/newsInfo/newsFile"
                 :show-file-list="false"
-                :on-success="succImgAdd">
+                :on-success="succImgAdd"
+                :headers="myHeaders">
                 <img v-if="addObject.nImgUrl" :src="addObject.nImgUrl" class="avatar">
                 <i v-else class="el-icon-plus avatar-uploader-icon"></i>
               </el-upload>
@@ -229,7 +230,8 @@
                 :limit="5"
                 :on-exceed="handleExceed"
                 :on-success="succAdd"
-                :on-remove="remAdd">
+                :on-remove="remAdd"
+                :headers="myHeaders">
                 <el-button size="small" type="primary" slot="trigger">选择文件</el-button>
                 <!--<div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>-->
               </el-upload>
@@ -298,7 +300,8 @@
                 class="avatar-uploader"
                 action="http://192.168.3.41:8083/newsInfo/newsFile"
                 :show-file-list="false"
-                :on-success="succImgEdit">
+                :on-success="succImgEdit"
+                :headers="myHeaders">
                 <img v-if="editObject.nImgUrl" :src="editObject.nImgUrl" class="avatar">
                 <i v-else class="el-icon-plus avatar-uploader-icon"></i>
               </el-upload>
@@ -316,7 +319,8 @@
                 :limit="5"
                 :on-exceed="handleExceed"
                 :on-success="succEdit"
-                :on-remove="remEdit">
+                :on-remove="remEdit"
+                :headers="myHeaders">
                 <el-button size="small" type="primary" slot="trigger">选择文件</el-button>
                 <!--<div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>-->
               </el-upload>
@@ -405,6 +409,7 @@
           nFrom: '',
           iId: ''
         },
+        myHeaders :{Authorization:storage.get('token')},
         editObject: {
           nTitle: '',
           nImgUrl : '',

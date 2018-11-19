@@ -141,47 +141,51 @@
             </div>
           </el-col>
         </el-row>
-        <div class="cell marbot20">
+        <div class="cell">
           <span class="name padlet5">主办单位：</span>
-          <el-tag
-            :key="tag"
-            v-for="tag in addObject.mHostUnit"
-            closable
-            :disable-transitions="false"
-            @close="AddhandleClose(tag)">
-            {{tag}}
-          </el-tag>
-          <el-input
-            class="input-new-tag"
-            v-if="addVisible"
-            v-model="addValue"
-            ref="saveTagInput"
-            size="small"
-            @keyup.enter.native="AddhandleInputConfirm"
-          >
-          </el-input>
-          <el-button v-else class="button-new-tag" size="small" @click="AddshowInput">+ 添加主办单位</el-button>
+          <div class="el-cont-box">
+            <el-tag
+              :key="tag"
+              v-for="tag in addObject.mHostUnit"
+              closable
+              :disable-transitions="false"
+              @close="AddhandleClose(tag)">
+              {{tag}}
+            </el-tag>
+            <el-input
+              class="input-new-tag"
+              v-if="addVisible"
+              v-model="addValue"
+              ref="saveTagInput"
+              size="small"
+              @keyup.enter.native="AddhandleInputConfirm"
+            >
+            </el-input>
+            <el-button v-else class="button-new-tag" size="small" @click="AddshowInput">+ 添加主办单位</el-button>
+          </div>
         </div>
-        <div class="cell marbot20">
+        <div class="cell">
           <span class="name padlet5">参会单位：</span>
-          <el-tag
-            :key="tag"
-            v-for="tag in addObject.mParticipatingUnits"
-            closable
-            :disable-transitions="false"
-            @close="AddhandleClose2(tag)">
-            {{tag}}
-          </el-tag>
-          <el-input
-            class="input-new-tag"
-            v-if="addVisible2"
-            v-model="addValue2"
-            ref="saveTagInput"
-            size="small"
-            @keyup.enter.native="AddhandleInputConfirm2"
-          >
-          </el-input>
-          <el-button v-else class="button-new-tag" size="small" @click="AddshowInput2">+ 添加参会单位</el-button>
+          <div class="el-cont-box">
+            <el-tag
+              :key="tag"
+              v-for="tag in addObject.mParticipatingUnits"
+              closable
+              :disable-transitions="false"
+              @close="AddhandleClose2(tag)">
+              {{tag}}
+            </el-tag>
+            <el-input
+              class="input-new-tag"
+              v-if="addVisible2"
+              v-model="addValue2"
+              ref="saveTagInput"
+              size="small"
+              @keyup.enter.native="AddhandleInputConfirm2"
+            >
+            </el-input>
+            <el-button v-else class="button-new-tag" size="small" @click="AddshowInput2">+ 添加参会单位</el-button>
+          </div>
         </div>
         <div class="cell marbot20">
           <span class="name padlet5">备注：</span>
@@ -199,7 +203,8 @@
             :limit="5"
             :on-exceed="handleExceed"
             :on-success="succAdd"
-            :on-remove="remAdd">
+            :on-remove="remAdd"
+            :headers="myHeaders">
             <el-button size="small" type="primary" slot="trigger">选择文件</el-button>
             <!--<div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>-->
           </el-upload>
@@ -282,47 +287,51 @@
             </div>
           </el-col>
         </el-row>
-        <div class="cell marbot20">
+        <div class="cell">
           <span class="name padlet5">主办单位：</span>
-          <el-tag
-            :key="tag"
-            v-for="tag in editObject.mHostUnit"
-            closable
-            :disable-transitions="false"
-            @close="EdithandleClose(tag)">
-            {{tag}}
-          </el-tag>
-          <el-input
-            class="input-new-tag"
-            v-if="editVisible"
-            v-model="editValue"
-            ref="saveTagInput"
-            size="small"
-            @keyup.enter.native="EdithandleInputConfirm"
-          >
-          </el-input>
-          <el-button v-else class="button-new-tag" size="small" @click="EditshowInput">+ 添加主办单位</el-button>
+          <div class="el-cont-box">
+            <el-tag
+              :key="tag"
+              v-for="tag in editObject.mHostUnit"
+              closable
+              :disable-transitions="false"
+              @close="EdithandleClose(tag)">
+              {{tag}}
+            </el-tag>
+            <el-input
+              class="input-new-tag"
+              v-if="editVisible"
+              v-model="editValue"
+              ref="saveTagInput"
+              size="small"
+              @keyup.enter.native="EdithandleInputConfirm"
+            >
+            </el-input>
+            <el-button v-else class="button-new-tag" size="small" @click="EditshowInput">+ 添加主办单位</el-button>
+          </div>
         </div>
-        <div class="cell marbot20">
+        <div class="cell">
           <span class="name padlet5">参会单位：</span>
-          <el-tag
-            :key="tag"
-            v-for="tag in editObject.mParticipatingUnits"
-            closable
-            :disable-transitions="false"
-            @close="EdithandleClose2(tag)">
-            {{tag}}
-          </el-tag>
-          <el-input
-            class="input-new-tag"
-            v-if="editVisible2"
-            v-model="editValue2"
-            ref="saveTagInput"
-            size="small"
-            @keyup.enter.native="EdithandleInputConfirm2"
-          >
-          </el-input>
-          <el-button v-else class="button-new-tag" size="small" @click="EditshowInput2">+ 添加参会单位</el-button>
+          <div class="el-cont-box">
+            <el-tag
+              :key="tag"
+              v-for="tag in editObject.mParticipatingUnits"
+              closable
+              :disable-transitions="false"
+              @close="EdithandleClose2(tag)">
+              {{tag}}
+            </el-tag>
+            <el-input
+              class="input-new-tag"
+              v-if="editVisible2"
+              v-model="editValue2"
+              ref="saveTagInput"
+              size="small"
+              @keyup.enter.native="EdithandleInputConfirm2"
+            >
+            </el-input>
+            <el-button v-else class="button-new-tag" size="small" @click="EditshowInput2">+ 添加参会单位</el-button>
+          </div>
         </div>
         <div class="cell marbot20">
           <span class="name padlet5">备注：</span>
@@ -339,7 +348,8 @@
             :limit="5"
             :on-exceed="handleExceed"
             :on-success="succEdit"
-            :on-remove="remEdit">
+            :on-remove="remEdit"
+            :headers="myHeaders">
             <el-button size="small" type="primary" slot="trigger">选择文件</el-button>
           </el-upload>
         </div>
@@ -415,6 +425,7 @@
           mEnclName : '',
           mEnclUrl : ''
         },
+        myHeaders :{Authorization:storage.get('token')},
         // 新增的主办单位标签内容
         addValue: '',
         addVisible: false,
@@ -927,11 +938,20 @@
         });
       },
       AddhandleInputConfirm() {
-        console.log(this.addObject.mHostUnit)
         let inputValue = this.addValue;
         if (inputValue) {
-          // this.dynamicTags.push(inputValue);
+          for(var i=0;i<this.addObject.mHostUnit.length;i++){
+            if(this.addObject.mHostUnit[i] == inputValue){
+              this.$message({
+                type: 'error',
+                message: '不可以重复!'
+              });
+              return
+            }
+          }
           this.addObject.mHostUnit.push(inputValue)
+          // this.dynamicTags.push(inputValue);
+          console.log(this.addObject.mHostUnit)
         }
         this.addVisible = false;
         this.addValue = '';
@@ -952,6 +972,15 @@
         console.log(this.addObject.mParticipatingUnits)
         let inputValue = this.addValue2;
         if (inputValue) {
+          for(var i=0;i<this.addObject.mParticipatingUnits.length;i++){
+            if(this.addObject.mParticipatingUnits[i] == inputValue){
+              this.$message({
+                type: 'error',
+                message: '不可以重复!'
+              });
+              return
+            }
+          }
           // this.dynamicTags.push(inputValue);
           this.addObject.mParticipatingUnits.push(inputValue)
         }
@@ -974,6 +1003,15 @@
         console.log(this.editObject.mHostUnit)
         let inputValue = this.editValue;
         if (inputValue) {
+          for(var i=0;i<this.editObject.mHostUnit.length;i++){
+            if(this.editObject.mHostUnit[i] == inputValue){
+              this.$message({
+                type: 'error',
+                message: '不可以重复!'
+              });
+              return
+            }
+          }
           // this.dynamicTags.push(inputValue);
           this.editObject.mHostUnit.push(inputValue)
         }
@@ -996,6 +1034,15 @@
         console.log(this.editObject.mParticipatingUnits)
         let inputValue = this.editValue2;
         if (inputValue) {
+          for(var i=0;i<this.editObject.mParticipatingUnits.length;i++){
+            if(this.editObject.mParticipatingUnits[i] == inputValue){
+              this.$message({
+                type: 'error',
+                message: '不可以重复!'
+              });
+              return
+            }
+          }
           // this.dynamicTags.push(inputValue);
           this.editObject.mParticipatingUnits.push(inputValue)
         }
@@ -1061,6 +1108,7 @@
   .backstage-meeting-page {
     .quill-editor {
       margin-left: 35px!important;
+      width: 1120px!important;
     }
     .tip-dialog {
       .el-dialog__body {

@@ -80,11 +80,10 @@
 </template>
 
 <script>
-  import {quillEditor} from 'vue-quill-editor'
 
   export default {
     name: '',
-    components: {quillEditor},
+    components: {},
     data() {
       return {
         loading: false,

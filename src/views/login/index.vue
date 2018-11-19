@@ -14,7 +14,7 @@
             </div>
             <div class="cell password">
               <span class="name">密码</span>
-              <input type="text" class="input" placeholder="请输入密码" v-model="userPassword">
+              <input type="password" class="input" placeholder="请输入密码" v-model="userPassword">
             </div>
             <button class="login-btn" @click="login">登陆</button>
             <!--<div class="tip">没有账号？ <span class="link" @click="showRegister">立即注册</span></div>-->
