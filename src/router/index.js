@@ -20,7 +20,9 @@ import signUpDetail from '@/views/signUp/detail'
 Vue.use(Router)
 
 export default new Router({
-  mode: 'history',
+  // mode: 'history',
+  mode: 'hash',
+  base: '/yiTownWebApp/',
   routes: [
     {
       path: '/',

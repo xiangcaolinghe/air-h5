@@ -17,7 +17,7 @@
                         <div class="item" :class="{active:isActive == 1}">
                             <div class="list" v-for="i in newsShow" :key="i.id" @click="newsGo(i.id)">
                                 <img :src="i.fImgUrl" alt="" class="img" v-if="i.fImgUrl">
-                                <img src="../assets/images/news.jpg" alt="" class="img" v-else>
+                                <img src="../assets/news.jpg" alt="" class="img" v-else>
                                 <div class="title" :class="i.fTop == 1 ? Red : Black">{{i.fTitle}}</div>
                                 <div class="article">{{i.fContents}}</div>
                                 <div class="time">发布时间：{{i.fReleaseTime}}</div>
