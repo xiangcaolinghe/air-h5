@@ -41,12 +41,12 @@
                 </div>
                 <div class="right">
                     <div class="nav-table">
-                        <div class="cell" :style="{background:Color}"><i class="icon iconfont icon-ji"></i><p class="name">换季管理</p></div>
-                        <div class="cell"><i class="icon iconfont icon-tongji1"></i><p class="name">月度管理</p></div>
-                        <div class="cell"><i class="icon iconfont icon-tongji"></i><p class="name">区内管理</p></div>
-                        <div class="cell"><i class="icon iconfont icon-flightSchedule"></i><p class="name">飞行程序</p></div>
-                        <div class="cell" :style="{background:Color}"><div class="mask"><i class="icon iconfont icon-hangxian" :style="{color:Color}"></i></div><p class="name">临时航线</p></div>
-                        <div class="cell"><div class="mask"><i class="icon iconfont icon-feihangxiaoshi"></i></div><p class="name">ARINC424</p></div>
+                        <div class="cell" :class="{Boxactive:boxShadow=='hj'}" @click="subsystem('hj')"><i class="icon iconfont icon-ji"></i><p class="name">换季管理</p></div>
+                        <div class="cell" :class="{Boxactive:boxShadow=='yd'}" @click="subsystem('yd')"><i class="icon iconfont icon-tongji1"></i><p class="name">月度管理</p></div>
+                        <div class="cell" :class="{Boxactive:boxShadow=='qn'}" @click="subsystem('qn')"><i class="icon iconfont icon-tongji"></i><p class="name">区内管理</p></div>
+                        <div class="cell" :class="{Boxactive:boxShadow=='fx'}" @click="subsystem('fx')"><i class="icon iconfont icon-flightSchedule"></i><p class="name">飞行程序</p></div>
+                        <div class="cell" :class="{Boxactive:boxShadow=='ls'}" @click="subsystem('ls')"><div class="mask"><i class="icon iconfont icon-hangxian"></i></div><p class="name">临时航线</p></div>
+                        <div class="cell" :class="{Boxactive:boxShadow=='ar'}" @click="subsystem('ar')"><div class="mask"><i class="icon iconfont icon-feihangxiaoshi"></i></div><p class="name">ARINC424</p></div>
                     </div>
                     <div class="input-table loginTab" v-show="loginShow">
                         <div class="cell"><span class="mask"><i class="icon iconfont icon-wode"></i></span><input type="text" class="input" placeholder="请输入您的用户名" v-model="userName"></div>
@@ -99,6 +99,8 @@
         newsShow : [],
         trendsShow : [],
         noticeShow : [],
+        // Boxactive : false,
+        boxShadow:'',
         bj:{
           qd : '',
           tj : '',
@@ -108,7 +110,6 @@
         passWord : '',
         code : '',
         // Color : '#026ab3',
-        Color : '#ccc',
         Red : 'Red',
         Black : 'Black'
       }
@@ -231,6 +232,11 @@
       Lookzxjy(){
         console.log(this.bj)
       },
+      // 进入子系统
+      subsystem(flag){
+        // alert(flag)
+        this.boxShadow = flag
+      },
       // 登录
       login(){
 
@@ -292,6 +298,10 @@
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="less">
+  .Boxactive {
+    border: 1px solid #ccc;
+    box-shadow: 0 0 10px #1e6da5;
+  }
   .Red {
     color: #CF2727!important; ;
   }
