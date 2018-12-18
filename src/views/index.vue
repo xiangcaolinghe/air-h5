@@ -53,6 +53,8 @@
                         <div class="cell"><span class="mask"><i class="icon iconfont icon-mima"></i></span><input type="text" class="input" placeholder="请输入您的密码" v-model="passWord"></div>
                         <div class="cell"><input type="text" class="code input" placeholder="短信验证" v-model="code"><span class="code-btn" @click="validate">获取验证码</span></div>
                         <div class="cell button" @click="login">登陆</div>
+                        <div class="cell button" @click="dialogFormVisible = true" label="left">注册</div>
+
                     </div>
                   <div class="loginTab" v-show="!loginShow">
                     <p>欢迎 <span>管理员</span> 登录</p>
@@ -83,6 +85,50 @@
               <router-link :to="{name:'sign.list'}" class="cell"><img src="./../assets/images/module-01.png" alt="" class="img"><p class="words">会议报名系统</p></router-link>
             </div>
         </div>
+      <!--对话框-->
+      <el-dialog :visible.sync="dialogFormVisible" class="sign-dialog">
+       <p style="font-size: 24px;font-weight: bolder">注册</p><br/>
+        <el-form label-width="90px" :model="form">
+          <el-form-item label="用户名：" >
+            <el-input v-model="form.username" autocomplete="off" placeholder="请填写您的用户名"></el-input>
+          </el-form-item>
+          <el-form-item label="密码：">
+            <el-input v-model="form.password" autocomplete="off" placeholder="请填写您的密码"></el-input>
+          </el-form-item>
+          <el-form-item label="所属单位：">
+            <el-input v-model="form.unit" autocomplete="off" placeholder="请填写您的所属单位"></el-input>
+          </el-form-item>
+          <el-form-item label="部  门：">
+            <el-input v-model="form.department" autocomplete="off" placeholder="请填写您的部门"></el-input>
+          </el-form-item>
+          <el-form-item label="姓  名：">
+            <el-input v-model="form.name" autocomplete="off" placeholder="请填写您的真实姓名"></el-input>
+          </el-form-item>
+          <el-form-item label="身份证号：">
+            <el-input v-model="form.id_number" autocomplete="off" placeholder="请填写您的身份证号"></el-input>
+          </el-form-item>
+          <el-form-item label="手机号： ">
+            <el-input v-model="form.phone" autocomplete="off" placeholder="请填写您的手机号" style="width: 40%;text-align: left"></el-input>
+            <el-input v-model="reg_code" autocomplete="off" placeholder="短信验证" style="width: 30%"></el-input>&nbsp;&nbsp;
+            <span class="code-btn" @click="register_validate">获取验证码</span>
+          </el-form-item>
+          <el-form-item label="证件附件：">
+            <el-upload
+              class="upload-demo"
+              action=""
+              :on-preview="handlePreview"
+              :on-remove="handleRemove"
+              :file-list="fileList2"
+              list-type="picture">
+              <el-button size="small" type="primary" style="float: left">点击上传</el-button>
+            </el-upload>
+          </el-form-item>
+        </el-form>
+        <div slot="footer" class="dialog-footer">
+          <el-button type="primary" @click="register" class="confirm">注 册</el-button>
+          <el-button @click="cancel" class="cancel">取 消</el-button>
+        </div>
+      </el-dialog>
     </div>
 </template>
 
@@ -111,7 +157,20 @@
         code : '',
         // Color : '#026ab3',
         Red : 'Red',
-        Black : 'Black'
+        Black : 'Black',
+        dialogFormVisible: false,
+        form: {
+          username: '',
+          password: '',
+          unit: '',
+          department: '',
+          name: '',
+          id_number: '',
+          accessory: '',
+          phone: ''
+        },
+        fileList2: [],
+        reg_code: ''
       }
     },
     methods:{
@@ -286,6 +345,85 @@
           })
         }
       },
+      // 注册验证码
+      register_validate(){
+        console.log(this.form.phone)
+        let val = /^1[34578]\d{9}$/;
+        if(!val.test(this.form.phone)){
+          this.$message({
+            type: 'error',
+            message: '请输入正确的手机号!'
+          });
+        }else{
+          let params = {};
+          params['form.phone'] = this.form.phone;
+          API.get('static/news.json', params).then((res) => {
+            if (res.status == 200) {
+            } else {
+              console.log(res.data)
+            }
+          })
+        }
+      },
+      //注册
+      register(){
+        if(!this.form.username){
+          this.$message({
+            type: 'error',
+            message: '请输入用户名!'
+          });
+        }else if(!this.form.password){
+          this.$message({
+            type: 'error',
+            message: '请输入密码!'
+          });
+        }else if(!this.form.unit){
+          this.$message({
+            type: 'error',
+            message: '请输入单位!'
+          });
+        }else if(!this.form.department){
+          this.$message({
+            type: 'error',
+            message: '请输入部门!'
+          });
+        }else if(!this.form.name){
+          this.$message({
+            type: 'error',
+            message: '请输入姓名!'
+          });
+        }else if(!this.form.phone){
+          this.$message({
+            type: 'error',
+            message: '请输入手机号!'
+          });
+        }else if(!this.reg_code){
+          this.$message({
+            type: 'error',
+            message: '请输入验证码!'
+          });
+        }else {
+          this.dialogFormVisible = false;
+        }
+      },
+      cancel(){
+        this.dialogFormVisible = false;
+        this.form.name = '';
+        this.form.unit = '';
+        this.form.password = '';
+        this.form.phone = '';
+        this.form.department = '';
+        this.form.id_number = '';
+        this.form.accessory = '';
+        this.form.username = '';
+        this.reg_code = '';
+      },
+      handleRemove(file, fileList) {
+        console.log(file, fileList);
+      },
+      handlePreview(file) {
+        console.log(file);
+      }
     },
     created() {
       this.getNewList()
@@ -298,6 +436,33 @@
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="less">
+  .el-form-item__label{
+    font-size: 20px;
+  }
+  .el-input{
+    width: 80%;
+    float: left;
+  }
+  .sign-dialog{
+    width: 100%;
+    .el-dialog__header{
+      .el-dialog__title{
+        font-size: 18px;
+        font-weight: bold;
+      }
+    }
+    .code-btn {
+      display: block;
+      height:40px;
+      background: #409EFF;
+      width:80px;
+      float: left;
+      color:#fff;
+      text-align: center;
+      font-size: 12px;
+      cursor: pointer;
+    }
+  }
   .Boxactive {
     border: 1px solid #ccc;
     box-shadow: 0 0 10px #1e6da5;
@@ -359,6 +524,7 @@
                 }
             }
             .trends {
+                margin-top: 60px;
                 height:352px;
                 .title {
                     font-size: 24px;
@@ -658,7 +824,8 @@
         }
       .loginTab {
         width: 380px;
-        height: 275px;
+        /*height: 275px;*/
+        height: 355px;
         p:nth-of-type(1) {
           text-align: center;
           font-size: 16px;
