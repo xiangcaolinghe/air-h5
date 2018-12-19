@@ -88,12 +88,15 @@
       <!--对话框-->
       <el-dialog :visible.sync="dialogFormVisible" class="sign-dialog">
        <p style="font-size: 24px;font-weight: bolder">注册</p><br/>
-        <el-form label-width="90px" :model="form">
+        <el-form label-width="20%" :model="form">
           <el-form-item label="用户名：" >
             <el-input v-model="form.username" autocomplete="off" placeholder="请填写您的用户名"></el-input>
           </el-form-item>
           <el-form-item label="密码：">
-            <el-input v-model="form.password" autocomplete="off" placeholder="请填写您的密码"></el-input>
+            <el-input v-model="form.password" autocomplete="off" type="password" placeholder="请填写您的密码"></el-input>
+          </el-form-item>
+          <el-form-item label="确认密码：">
+            <el-input v-model="respassword" autocomplete="off" type="password" @blur="verify_pas" placeholder="请再次填写您的密码"></el-input>
           </el-form-item>
           <el-form-item label="所属单位：">
             <el-input v-model="form.unit" autocomplete="off" placeholder="请填写您的所属单位"></el-input>
@@ -109,7 +112,7 @@
           </el-form-item>
           <el-form-item label="手机号： ">
             <el-input v-model="form.phone" autocomplete="off" placeholder="请填写您的手机号" style="width: 40%;text-align: left"></el-input>
-            <el-input v-model="reg_code" autocomplete="off" placeholder="短信验证" style="width: 30%"></el-input>&nbsp;&nbsp;
+            <el-input v-model="reg_code" autocomplete="off" placeholder="短信验证" style="width: 30%"></el-input>
             <span class="code-btn" @click="register_validate">获取验证码</span>
           </el-form-item>
           <el-form-item label="证件附件：">
@@ -169,6 +172,7 @@
           accessory: '',
           phone: ''
         },
+        respassword: '',
         fileList2: [],
         reg_code: ''
       }
@@ -372,39 +376,78 @@
             type: 'error',
             message: '请输入用户名!'
           });
-        }else if(!this.form.password){
+          return;
+        }
+        if(!this.form.password){
           this.$message({
             type: 'error',
             message: '请输入密码!'
           });
-        }else if(!this.form.unit){
+          return;
+        }else{
+          if(this.form.password != this.respassword){
+            this.$message({
+              type: 'error',
+              message: '密码和重复密码不一致!'
+            });
+            return;
+          }
+        }
+        if(!this.form.unit){
           this.$message({
             type: 'error',
             message: '请输入单位!'
           });
-        }else if(!this.form.department){
+          return;
+        }
+        if(!this.form.department){
           this.$message({
             type: 'error',
             message: '请输入部门!'
           });
-        }else if(!this.form.name){
+          return;
+        }
+        if(!this.form.name) {
           this.$message({
             type: 'error',
             message: '请输入姓名!'
           });
-        }else if(!this.form.phone){
+          return;
+        }
+        if(!this.form.phone) {
           this.$message({
             type: 'error',
             message: '请输入手机号!'
           });
-        }else if(!this.reg_code){
+          return;
+        }else if(this.form.phone) {
+          let val = /^1[34578]\d{9}$/;
+          if (!val.test(this.form.phone)) {
+            this.$message({
+              type: 'error',
+              message: '请输入正确的手机号!'
+            });
+            return;
+          }
+        }
+        if(!this.reg_code){
           this.$message({
             type: 'error',
             message: '请输入验证码!'
           });
-        }else {
-          this.dialogFormVisible = false;
+          return;
         }
+        this.dialogFormVisible = false;
+        this.form.name = '';
+        this.form.unit = '';
+        this.form.password = '';
+        this.form.phone = '';
+        this.form.department = '';
+        this.form.id_number = '';
+        this.form.accessory = '';
+        this.form.username = '';
+        this.reg_code = '';
+
       },
       cancel(){
         this.dialogFormVisible = false;
@@ -423,6 +466,16 @@
       },
       handlePreview(file) {
         console.log(file);
+      },
+      //验证密码是否一致
+      verify_pas(){
+        if(this.form.password != this.respassword){
+          this.$message({
+            type: 'error',
+            message: '密码和重复密码不一致!'
+          });
+          return;
+        }
       }
     },
     created() {
@@ -461,6 +514,7 @@
       text-align: center;
       font-size: 12px;
       cursor: pointer;
+      margin-left: 10px;
     }
   }
   .Boxactive {
