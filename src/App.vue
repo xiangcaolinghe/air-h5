@@ -3,6 +3,7 @@
     <c-header v-show="!formShow"></c-header>
     <router-view/>
     <c-footer v-show="!formShow"></c-footer>
+    <!-- <iframe id="child" src="http://192.168.206.117/cros/cros.html"></iframe> -->
   </div>
 </template>
 

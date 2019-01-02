@@ -1,53 +1,58 @@
-/**
- * Created by zhaochengyu on 2017/2/27.
- */
+import {compile, uncompile} from './utils';
 
 class LocalStorageUtils {
 
+  constructor(){}
 
   /**
    * 从LocalStorage中取value，value为字符串
    * @param key
    */
   get(key) {
-
     if (window.localStorage) {
+      // key = compile(key);
       let storage = window.localStorage;
-      return storage.getItem(key);
+      return uncompile(storage.getItem(key));
     }
     return false;
-
-  }
-  getJson(key) {
-
-    if (window.localStorage) {
-      let storage = window.localStorage;
-      return JSON.parse(storage.getItem(key));
-    }
-    return false;
-
   }
 
   /**
-   *
-   * @param key
-   * @param value 字符串
+   * @param {String} key 
+   */
+  getJson(key) {
+    if (window.localStorage) {
+      // key = compile(key);
+      let storage = window.localStorage;
+      return JSON.parse(uncompile(storage.getItem(key)));
+    }
+    return false;
+  }
+
+  /**
+   * @param {String} key
+   * @param {String} value 字符串
    */
   set(key, value) {
-
     if (window.localStorage) {
+      // key = compile(key);
+      value = compile(value);
       let storage = window.localStorage;
       storage.setItem(key, value);
     }
-
   }
+
+  /**
+   * @param {String} key 
+   * @param {Object} value 任意对象
+   */
   setJson(key, value) {
-
     if (window.localStorage) {
+      // key = compile(key);
+      value = compile(JSON.stringify(value));
       let storage = window.localStorage;
-      storage.setItem(key, JSON.stringify(value));
+      storage.setItem(key, value);
     }
-
   }
 
   /**
@@ -55,8 +60,8 @@ class LocalStorageUtils {
    * @param key
    */
   delete(key) {
-
     if (window.localStorage) {
+      // key = compile(key);
       let storage = window.localStorage;
       storage.removeItem(key);
     }
@@ -75,19 +80,17 @@ class LocalStorageUtils {
 
   /**
    *更新
-   * @param key
-   * @param value
+   * @param {String} key
+   * @param {String} value 字符串
    */
   update(key, value) {
     if (window.localStorage) {
-
+      // key = compile(key);
+      value = compile(value);
       if(null!=this.get(key)){
         this.set(key,value);
-
       }
-
     }
-
   }
 
   getKeys(){
@@ -96,6 +99,7 @@ class LocalStorageUtils {
       for(var i=0;i<window.localStorage.length;i++){
         let k=window.localStorage.key(i);
         keys[i]=k;
+        // keys[i]=uncompile(k);
       }
       return keys;
     }
