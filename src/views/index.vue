@@ -268,6 +268,7 @@
 
 <script>
 import config from "@/config/config.js";
+import md5 from 'js-md5';
 
 export default {
   //    name: 'HelloWorld',
@@ -493,12 +494,12 @@ export default {
           // 子系统
           params["MenuId"] = this.subSys;
           params["uName"] = this.userName;
-          params["uPasswd"] = this.passWord;
-          // //console.log(params);
+          params["uPasswd"] = md5(this.userName + this.passWord);
+          console.log(params);
           // this.loginSubsystem("res.data.dat");
           API.post(config.loginURL + "/user/ReceptionLogin", params).then(
             res => {
-              //console.log(res.data)
+              console.log(res.data)
               if (res.data.code == 200) {
                 //登录成功后 执行跳转，把数据传过去
                 this.loginSubsystem(res.data.data);
@@ -542,10 +543,10 @@ export default {
 
       let params = {};
       // 验证码
-      params["phone"] = this.phoneNum;
+      params["userId"] = this.IdNum;
       params["type"] = 2;
       // //console.log(params)
-      API.get(config.loginURL + "/code/verificationCode", params).then(res => {
+      API.get(config.loginURL + "/code/userVerificationCode", params).then(res => {
         // //console.log(res.data)
         if (res.data.code == 200) {
           this.$message({
@@ -781,6 +782,8 @@ export default {
     this.getTrendsList();
     this.getNoticeList();
     this.getIndexMenu();
+
+
   }
 };
 </script>
