@@ -93,7 +93,7 @@
             } else {
               this.$message({
                 type: 'error',
-                message: '登录失败!'
+                message: '登录失败!'+ res.data.message
               });
             }
           })

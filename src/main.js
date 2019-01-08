@@ -30,7 +30,7 @@ router.beforeEach(function (to, from, next) {
     return
   }
   if (meta) {
-    if (token == null) {
+    if (token) {
       next({name:'login'})
       return
     }
