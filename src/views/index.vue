@@ -108,7 +108,7 @@
               </span>
               <input type="password" class="input" placeholder="请输入您的密码" v-model="passWord">
             </div>
-            <div class="cell button" @click="login">登陆</div>
+            <div class="cell button" @click="login">登录</div>
             <el-row :gutter="20">
               <el-col :span="12"><div class="cell button" @click="PhoneLogin">手机验证方式登录</div></el-col>
               <el-col :span="12"><div class="cell button" @click="dialogFormVisible = true" label="left">注册</div></el-col>
@@ -309,11 +309,11 @@ export default {
     return {
       indexMenus: [],
       menuSubsystem: {
-        换季管理: {
+        换季申请: {
           url: "/season/#/quarterly",
           class: "icon iconfont icon-ji"
         },
-        月度管理: {
+        月度申请: {
           url: "/monthly/#/",
           class: "icon iconfont icon-tongji1"
         },
@@ -494,7 +494,7 @@ export default {
     },
     // 进入子系统
     subsystem(flag) {
-      // alert(flag)
+      alert(flag)
       this.boxShadow = flag;
       let menus = this.indexMenus;
       //遍历从后台拿到的子系统ID 赋值
@@ -921,6 +921,7 @@ export default {
         .then(response => {
           if (response.data.code == 200) {
             this.indexMenus = response.data.data;
+            console.log(this.indexMenus)
           } else {
             console.log(response);
             this.$message({
