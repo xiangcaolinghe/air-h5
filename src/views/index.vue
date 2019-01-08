@@ -108,15 +108,12 @@
               </span>
               <input type="password" class="input" placeholder="请输入您的密码" v-model="passWord">
             </div>
-            <!--<div class="cell"><input type="text" class="code input" placeholder="短信验证" v-model="code"><span
-            class="code-btn" @click="validate">获取验证码</span></div>-->
             <div class="cell button" @click="login">登陆</div>
-            <div class="cell button" @click="dialogFormVisible = true" label="left">注册</div>
+            <el-row :gutter="20">
+              <el-col :span="12"><div class="cell button" @click="PhoneLogin">手机验证方式登录</div></el-col>
+              <el-col :span="12"><div class="cell button" @click="dialogFormVisible = true" label="left">注册</div></el-col>
+            </el-row>
           </div>
-          <!--<div class="loginTab" v-show="!loginShow">
-            <p>欢迎 <span>管理员</span> 登录</p>
-            <p @click="quit">【退出登录】</p>
-          </div>-->
         </div>
       </div>
       <div class="trends inner-c">
@@ -231,7 +228,7 @@
         <el-button @click="cancel" class="cancel">取 消</el-button>
       </div>
     </el-dialog>
-    <!--手机验证-->
+    <!--手机校验-->
     <el-dialog
       :visible.sync="PhoneDia"
       width="25%"
@@ -263,6 +260,42 @@
         <el-button type="primary" @click="verCode">确 定</el-button>
       </span>
     </el-dialog>
+    <!--手机验证登录-->
+    <el-dialog
+      :visible.sync="PhoneDiaLogin"
+      width="25%"
+      title="手机验证登录"
+      :show-close="false"
+      :close-on-click-modal="false"
+      :close-on-press-escape="false"
+      class="pf2"
+    >
+      <el-form ref="phoLog" :model="phoLog" label-width="70px" class="PhoneForm">
+        <div class="PhoneForm-box pb2">
+          <el-col :span="16" style="margin-bottom: 15px;">
+            <span>手机号：</span>
+            <input type="text" v-model="phoLog.phone">
+          </el-col>
+          <el-col :span="8">
+            <el-button
+              size="medium"
+              v-bind:disabled="codePhon"
+              @click="Countdown2"
+            >获取验证码{{auth_time}}</el-button>
+          </el-col>
+          <el-col :span="24">
+            <span>验证码：</span>
+            <input type="text" v-model="phoLog.code">
+          </el-col>
+
+        </div>
+      </el-form>
+
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="PhoneDiaLogin = false">取 消</el-button>
+        <el-button type="primary" @click="phoneCodeLogin">确 定</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 
@@ -291,6 +324,7 @@ export default {
       },
       openURL: "",
       PhoneDia: false,
+      PhoneDiaLogin: false,
       codePhon: false,
       auth_time: "",
       // loginShow: true,
@@ -334,7 +368,11 @@ export default {
       // 首次登录用户手机号
       phoneNum: "",
       // 首次登录用户id
-      IdNum: ""
+      IdNum: "",
+      phoLog : {
+        phone : '',
+        code : ''
+      }
     };
   },
   methods: {
@@ -503,10 +541,15 @@ export default {
               if (res.data.code == 200) {
                 //登录成功后 执行跳转，把数据传过去
                 this.loginSubsystem(res.data.data);
+                this.phoLog.code = "";
                 this.passWord = "";
                 this.FirstCode = "";
                 this.phoneNum = "";
                 this.IdNum = "";
+                this.$message({
+                  type: "success",
+                  message: "登录成功！"
+                });
               } else if (res.data.code == 10004) {
                 this.$message({
                   type: "error",
@@ -521,6 +564,11 @@ export default {
                 this.PhoneDia = true;
                 this.phoneNum = res.data.data.uMobilephone;
                 this.IdNum = res.data.data.id;
+              } else if(res.data.code == 10021){
+                this.$message({
+                  type: "error",
+                  message: res.data.message
+                });
               }
             }
           );
@@ -545,13 +593,18 @@ export default {
       // 验证码
       params["userId"] = this.IdNum;
       params["type"] = 2;
-      // //console.log(params)
+      //console.log(params)
       API.get(config.loginURL + "/code/userVerificationCode", params).then(res => {
-        // //console.log(res.data)
+        console.log(res.data)
         if (res.data.code == 200) {
           this.$message({
             type: "success",
             message: "验证码发送成功!"
+          });
+        }else {
+          this.$message({
+            type: "error",
+            message: res.data.message
           });
         }
       });
@@ -564,28 +617,26 @@ export default {
       params["code"] = this.FirstCode;
       params["MenuId"] = this.subSys;
       params["uName"] = this.userName;
-      params["uPasswd"] = this.passWord;
-      //console.log(params)
-      API.post(config.loginURL + "/code/checkCode", params).then(res => {
-        //console.log(res.data)
+      params["uPasswd"] = md5(this.userName + this.passWord);
+      console.log(params)
+      API.post(config.loginURL + "/user/ReceptionLogin", params).then(res => {
+        console.log(res.data)
         if (res.data.code == 200) {
-          if (res.data.message == "验证成功") {
-            //登录成功后 执行跳转，把数据传过去
-            this.loginSubsystem(res.data.data);
-            this.$message({
-              type: "success",
-              message: res.data.message
-            });
-            this.passWord = "";
-            this.FirstCode = "";
-            this.phoneNum = "";
-            this.IdNum = "";
-          } else {
-            this.$message({
-              type: "error",
-              message: res.data.data
-            });
-          }
+          //登录成功后 执行跳转，把数据传过去
+          this.loginSubsystem(res.data.data);
+          this.$message({
+            type: "success",
+            message: "登录成功！"
+          });
+          this.passWord = "";
+          this.FirstCode = "";
+          this.phoneNum = "";
+          this.IdNum = "";
+        }else {
+          this.$message({
+            type: "error",
+            message: res.data.message
+          });
         }
       });
     },
@@ -599,6 +650,116 @@ export default {
         token: data.jwt
       });
       window.open(this.openURL);
+    },
+    // 手机验证码登录
+    PhoneLogin(){
+      if (this.subSys == "") {
+        this.$message({
+          type: "error",
+          message: "请先选择子系统!"
+        });
+      }else {
+        this.PhoneDiaLogin = true;
+      }
+    },
+    // 手机验证码登录获取验证码、倒计时
+    Countdown2() {
+      if(this.phoLog.phone == ''){
+        this.$message({
+          type: "error",
+          message: "请输入手机号!"
+        });
+      }else {
+        this.codePhon = true;
+        this.auth_time = 60;
+        var auth_timetimer = setInterval(() => {
+          this.auth_time--;
+          if (this.auth_time <= 0) {
+            this.auth_time = "";
+            this.codePhon = false;
+            clearInterval(auth_timetimer);
+          }
+        }, 1000);
+
+        let params = {};
+        // 验证码
+        params["phone"] = this.phoLog.phone;
+        params["type"] = 2;
+        console.log(params)
+        API.get(config.loginURL + "/code/verificationCode", params).then(res => {
+          console.log(res.data)
+          if (res.data.code == 200) {
+            this.$message({
+              type: "success",
+              message: "验证码发送成功!"
+            });
+          }else {
+            this.$message({
+              type: "error",
+              message: res.data.message
+            });
+          }
+        });
+      }
+    },
+    // 手机验证码点击确定登录
+    phoneCodeLogin(){
+      if(this.phoLog.phone == ''){
+        this.$message({
+          type: "error",
+          message: "请输入手机号!"
+        });
+      }else if(this.phoLog.code == ''){
+        this.$message({
+          type: "error",
+          message: "请先输入验证码!"
+        });
+      }else {
+        let params = {};
+        // 子系统
+        params["MenuId"] = this.subSys;
+        params["code"] = this.phoLog.code;
+        params["phone"] = this.phoLog.phone;
+        console.log(params)
+        API.post(config.loginURL + "/user/ReceptionLogin", params).then(
+          res => {
+            console.log(res.data)
+            if (res.data.code == 200) {
+              //登录成功后 执行跳转，把数据传过去
+              this.loginSubsystem(res.data.data);
+              this.phoLog.code = "";
+              this.passWord = "";
+              this.FirstCode = "";
+              this.phoneNum = "";
+              this.IdNum = "";
+              this.$message({
+                type: "success",
+                message: "登录成功！"
+              });
+              this.PhoneDiaLogin = false;
+            } else if (res.data.code == 10004) {
+              this.$message({
+                type: "error",
+                message: res.data.message
+              });
+            } else if (res.data.code == 10005) {
+              this.$message({
+                type: "error",
+                message: res.data.message
+              });
+            } else if (res.data.code == 10014) {
+              this.PhoneDia = true;
+              this.phoneNum = res.data.data.uMobilephone;
+              this.IdNum = res.data.data.id;
+            }else if(res.data.code == 10021){
+              this.$message({
+                type: "error",
+                message: res.data.message
+              });
+            }
+          }
+        );
+      }
     },
     // 退出
     quit() {
@@ -796,8 +957,19 @@ export default {
   .rrr {
     color: #026ab3 !important;
   }
+.pf2 .el-dialog__body {
+  padding: 10px 20px 0px;
+}
+  .pf2 .el-dialog__footer {
+    padding: 20px 20px 20px;
+  }
 </style>
 <style scoped lang="less">
+  .pf2 {
+    el-dialog__body {
+
+    }
+  }
 .PhoneForm {
   text-align: left;
   p {
@@ -805,6 +977,9 @@ export default {
   }
   .PhoneForm-box {
     margin: 5px 0;
+  }
+  .pb2 {
+    overflow: hidden;
   }
 
   input {
